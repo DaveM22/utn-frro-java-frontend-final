@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 
 @Component({
@@ -41,11 +42,28 @@ export class AppComponent implements OnInit {
         ]
       },
       {
-        label: 'Mi CVs',
+        label: 'Personal',
         items:[
           {
-            label:'Agregar nuevo CV',
-            routerLink:'/mis-cvs'
+            label:'Proveedores',
+            routerLink:'/proveedores'
+          },
+          {
+            label:'Clientes',
+            routerLink:'/clientes'
+          }
+        ]
+      },
+      {
+        label:'Inventario',
+        items:[
+          {
+            label:'Categorias',
+            routerLink:'categorias'
+          },
+          {
+            label:'Productos',
+            routerLink:'/productos'
           }
         ]
       }

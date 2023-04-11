@@ -24,13 +24,15 @@ import { LocalidadesComponent } from './localidades/localidades.component';
 import { LocalidadService } from 'src/services/localidad/localidad.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CategoriasComponent } from './categorias/categorias/categorias.component';
 @NgModule({
   declarations: [
     AppComponent,
     UsuariosComponent,
     LoginComponent,
     ProvinciasComponent,
-    LocalidadesComponent
+    LocalidadesComponent,
+    CategoriasComponent
   ],
   imports: [
     BrowserModule,

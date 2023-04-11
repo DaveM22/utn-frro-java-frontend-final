@@ -19,3 +19,8 @@ export interface Provincia {
     codigo:number,
     nombre:string
 }
+
+export interface Categoria {
+    id:number,
+    nombre:string
+}
