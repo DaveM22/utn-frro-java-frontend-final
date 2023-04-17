@@ -33,11 +33,11 @@ export class AppComponent implements OnInit {
         items:[
           {
             label:"Provincias",
-            routerLink:'/provincias'
+            routerLink:'provincias'
           },
           {
             label:"Localidades",
-            routerLink:'/localidades'
+            routerLink:'localidades'
           }
         ]
       },
@@ -46,11 +46,11 @@ export class AppComponent implements OnInit {
         items:[
           {
             label:'Proveedores',
-            routerLink:'/proveedores'
+            routerLink:'proveedores'
           },
           {
             label:'Clientes',
-            routerLink:'/clientes'
+            routerLink:'clientes'
           }
         ]
       },
@@ -63,9 +63,13 @@ export class AppComponent implements OnInit {
           },
           {
             label:'Productos',
-            routerLink:'/productos'
+            routerLink:'productos'
           }
         ]
+      },
+      {
+        label:'Ingresar',
+        icon:'pi pi-fw pi-user'
       }
     ]
   }
