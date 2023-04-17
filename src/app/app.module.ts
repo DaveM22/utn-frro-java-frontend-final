@@ -25,6 +25,8 @@ import { LocalidadService } from 'src/services/localidad/localidad.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoriasComponent } from './categorias/categorias/categorias.component';
+import { ProductosComponent } from './productos/productos/productos.component';
+import { ProductoProveedoresComponent } from './producto-proveedores/producto-proveedores.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +34,9 @@ import { CategoriasComponent } from './categorias/categorias/categorias.componen
     LoginComponent,
     ProvinciasComponent,
     LocalidadesComponent,
-    CategoriasComponent
+    CategoriasComponent,
+    ProductosComponent,
+    ProductoProveedoresComponent
   ],
   imports: [
     BrowserModule,

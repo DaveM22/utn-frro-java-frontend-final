@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Categoria } from 'src/models/models';
+import { Observable } from 'rxjs';
+import { Categoria, ResponseHttp } from 'src/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,8 @@ export class CategoriasService {
 
   constructor(private http:HttpClient) { }
 
-  listaCategorias(){
-    return this.http.get('http://localhost:8080/api/categorias');
+  listaCategorias():Observable<ResponseHttp>{
+    return this.http.get<ResponseHttp>('http://localhost:8080/api/categorias');
   }
 
   crearCategoria(cat:Categoria){
