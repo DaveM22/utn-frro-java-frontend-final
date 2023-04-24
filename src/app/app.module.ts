@@ -12,7 +12,7 @@ import { UsuariosComponent } from 'src/forms/usuarios/usuarios.component';
 import {Toast, ToastModule} from 'primeng/toast';
 import {FileUploadModule} from 'primeng/fileupload';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoriasComponent } from './categorias/categorias/categorias.component';
 import { ProductosComponent } from './productos/productos/productos.component';
 import { ProductoProveedoresComponent } from './producto-proveedores/producto-proveedores.component';
+import { JwtInterceptorInterceptor } from 'src/util/jwt-interceptor.interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,7 +60,8 @@ import { ProductoProveedoresComponent } from './producto-proveedores/producto-pr
     DialogModule,
     ConfirmDialogModule
   ],
-  providers: [MessageService, LocalidadService, ConfirmationService],
+  providers: [MessageService, LocalidadService, ConfirmationService,
+  {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

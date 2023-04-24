@@ -7,7 +7,7 @@ export interface ResponseHttp{
 
 export interface Credentials {
     email:string,
-    clave:string
+    password:string
 }
 
 export interface ResponseCredential {

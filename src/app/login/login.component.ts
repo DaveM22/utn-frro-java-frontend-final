@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Validators,FormControl, FormGroup } from '@angular/forms';
 import { Credentials } from 'src/models/models';
+import { AuthService } from 'src/services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +12,11 @@ export class LoginComponent {
   loginForm!: FormGroup;
   creds: Credentials = {
     email: '',
-    clave: ''
+    password: ''
   }
   submitted = false;
 
-  constructor(){}
+  constructor(private authService:AuthService){}
 
   ngOnInit() {
     this.loginForm = new FormGroup({
@@ -23,9 +24,9 @@ export class LoginComponent {
         'password': new FormControl('', Validators.required)
     });
   }
+
   onSubmit() { 
     this.submitted = true;
-    this.creds.email = this.loginForm.value.login;
-    this.creds.clave = this.loginForm.value.password;
+    this.authService.login(this.creds);
   }
 }
