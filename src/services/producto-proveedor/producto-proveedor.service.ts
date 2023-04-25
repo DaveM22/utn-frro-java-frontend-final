@@ -13,4 +13,8 @@ export class ProductoProveedorService {
   listaProductoProveedores(productoId:number):Observable<ResponseHttp>{
     return this.http.get<ResponseHttp>("http://localhost:8080/api/productos-proveedores/" + productoId);
   }
+
+  getProductsSupplier() : Observable<ResponseHttp> {
+    return this.http.get<ResponseHttp>("http://localhost:8080/api/productos-proveedores");
+  }
 }

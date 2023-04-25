@@ -7,7 +7,7 @@
             <button pButton pRipple label="Agregar nueva categoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
         </ng-template>
     </p-toolbar>
-    <p-table [value]="categorias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+    <p-table [value]="categorias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h2 class="m-0">Categorias</h2>

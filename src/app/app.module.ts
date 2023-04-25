@@ -28,6 +28,8 @@ import { CategoriasComponent } from './categorias/categorias/categorias.componen
 import { ProductosComponent } from './productos/productos/productos.component';
 import { ProductoProveedoresComponent } from './producto-proveedores/producto-proveedores.component';
 import { JwtInterceptorInterceptor } from 'src/util/jwt-interceptor.interceptor';
+import { PedidosComponent } from './pedidos/pedidos.component';
+import { NewOrderComponent } from './new-order/new-order.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +39,9 @@ import { JwtInterceptorInterceptor } from 'src/util/jwt-interceptor.interceptor'
     LocalidadesComponent,
     CategoriasComponent,
     ProductosComponent,
-    ProductoProveedoresComponent
+    ProductoProveedoresComponent,
+    PedidosComponent,
+    NewOrderComponent
   ],
   imports: [
     BrowserModule,

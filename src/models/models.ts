@@ -41,8 +41,33 @@ export interface Producto {
 }
 
 export interface ProductoProveedor {
-    cuit:number,
+    cuit:string,
     idProducto:number,
+    productName:string,
     cantidad:number,
-    nombreProveedor:string
+    nombreProveedor:string,
+    prices:Prices[],
+    validityPrice:number
+}
+
+export interface Prices {
+    precio:number
+    dateFrom:Date
+}
+
+export interface Order {
+    orderNumber:number;
+    orderDate:number;
+    customer:string;
+    customerCuit:string;
+    details:OrderDetail[];
+}
+
+export interface OrderDetail{
+    orderNumber:number;
+    productId:number;
+    productName:string;
+    cuit:string;
+    supplier:string;
+    amount:number;
 }

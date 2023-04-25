@@ -1,0 +1,33 @@
+<p-card>
+    <p-table [value]="pedidos" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h2 class="m-0">Pedidos realizados</h2>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha del pedido</th>
+                <th>Cliente</th>
+                <th class="text-center">Cant. de productos pedidos</th>
+                <th>Acciones</th>
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-order>
+            <tr>
+                <td><span class="p-column-title">Fecha del pedido</span>{{order.orderDate}}</td>
+                <td><span class="p-column-title">Cliente</span>{{order.customer}}</td>
+                <td class="text-center"><span></span>{{order.totalAmount}}</td>
+                <td class="text-center">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" ></button>
+                </td>
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td class="text-center" colspan="4">No se han realizado pedidos</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-card>

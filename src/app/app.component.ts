@@ -68,6 +68,20 @@ export class AppComponent implements OnInit {
         ]
       },
       {
+        label:'Pedidos',
+        icon:'pi pi-dollar',
+        items:[
+          {
+            label:'Crear pedido',
+            routerLink:'pedidos/nuevo'
+          },
+          {
+            label:'Pedidos',
+            routerLink:'pedidos'
+          },
+        ]
+      },
+      {
         label:'Ingresar',
         icon:'pi pi-fw pi-user'
       }

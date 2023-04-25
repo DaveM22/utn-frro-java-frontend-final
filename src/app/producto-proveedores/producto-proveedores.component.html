@@ -20,6 +20,7 @@
             <tr>
                 <th>Razón Social</th>
                 <th class="text-right">Cantidad</th>
+                <th class="text-right">Precio vigente</th>
                 <th></th>
               </tr>
         </ng-template>
@@ -27,6 +28,7 @@
             <tr>
                 <td><span class="p-column-title">Razón Social</span>{{productoProveedor.nombreProveedor}}</td>
                 <td class="text-right"><span class="p-column-title">Cantidad</span>{{productoProveedor.cantidad}}</td>
+                <td class="text-right"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
                 <td class="text-center">
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarProductoProveedorDialog(productoProveedor)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" ></button>
