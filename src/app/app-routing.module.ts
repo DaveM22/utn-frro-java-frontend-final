@@ -8,6 +8,7 @@ import { ProductoProveedoresComponent } from './producto-proveedores/producto-pr
 import { ProvinciasComponent } from './provincias/provincias.component';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { NewOrderComponent } from './new-order/new-order.component';
+import { CostumerComponent } from './customer/costumer.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path:'productos-proveedores/:idProducto', component:ProductoProveedoresComponent},
   {path:'provincias', component:ProvinciasComponent},
   {path:'pedidos', component:PedidosComponent},
-  {path:'pedidos/nuevo', component:NewOrderComponent}
+  {path:'pedidos/nuevo', component:NewOrderComponent},
+  {path:'clientes', component:CostumerComponent}
 ];
 
 @NgModule({

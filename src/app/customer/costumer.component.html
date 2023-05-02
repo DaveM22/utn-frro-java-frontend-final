@@ -1,0 +1,29 @@
+<p-toast></p-toast>
+
+<p-tabView styleClass="tabview-custom">
+    <p-tabPanel>
+        <ng-template pTemplate="header">
+            <span>Clientes particulares</span>
+        </ng-template>
+        <p-card>
+            <div class="grid flex flex-wrap align-items-center justify-content-center">
+                <div class="col-12 md:col-12 lg:col-12">
+                    <app-customer-particular></app-customer-particular>
+                </div>
+            </div>
+        </p-card>
+    </p-tabPanel>
+    <p-tabPanel>
+        <ng-template pTemplate="header">
+            <span>Clientes empresas</span>
+        </ng-template>
+        <p-card>
+            <div class="grid flex flex-wrap align-items-center justify-content-center">
+                <div class="col-12 md:col-12 lg:col-12">
+                    <app-customer-company></app-customer-company>
+                </div>
+            </div>
+        </p-card>     
+    </p-tabPanel>
+</p-tabView>
+

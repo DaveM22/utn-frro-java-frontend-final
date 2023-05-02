@@ -30,6 +30,10 @@ import { ProductoProveedoresComponent } from './producto-proveedores/producto-pr
 import { JwtInterceptorInterceptor } from 'src/util/jwt-interceptor.interceptor';
 import { PedidosComponent } from './pedidos/pedidos.component';
 import { NewOrderComponent } from './new-order/new-order.component';
+import { ParticularComponent } from './customer-particular/particular.component';
+import { TabViewModule } from 'primeng/tabview';
+import { CostumerComponent } from './customer/costumer.component';
+import { CustomerCompanyComponent } from './customer-company/customer-company.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,7 +45,10 @@ import { NewOrderComponent } from './new-order/new-order.component';
     ProductosComponent,
     ProductoProveedoresComponent,
     PedidosComponent,
-    NewOrderComponent
+    NewOrderComponent,
+    ParticularComponent,
+    CostumerComponent,
+    CustomerCompanyComponent
   ],
   imports: [
     BrowserModule,
@@ -62,7 +69,11 @@ import { NewOrderComponent } from './new-order/new-order.component';
     PasswordModule,
     DropdownModule,
     DialogModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    PanelModule,
+    CardModule,
+    ButtonModule,
+    TabViewModule
   ],
   providers: [MessageService, LocalidadService, ConfirmationService,
   {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],

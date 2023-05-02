@@ -71,3 +71,22 @@ export interface OrderDetail{
     supplier:string;
     amount:number;
 }
+
+export interface Persona {
+    id:number;
+    direction:string;
+    phoneNumber:string;
+    email:string;
+    postalCod:number;
+}
+
+export interface CustomerParticular extends Persona {
+    firstName:string;
+    lastName:string;
+    dni:string;
+}
+
+export interface CustomerCompany extends Persona {
+    cuit:string;
+    businessName:string;
+}

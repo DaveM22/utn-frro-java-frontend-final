@@ -1,15 +1,23 @@
-<p-card>
+<!-- <p-card header="Crear nuevo pedido">
     <div class="grid flex flex-wrap align-items-center justify-content-center">
+
         <div class="col-12 md:col-12 lg:col-12">
-            <div class="flex justify-content-center">
-                <button type="button" (click)="showDialog()" pButton icon="pi pi-external-link" label="Agregar productos"></button>
+
+            <div class="grid flex align-items-center">
+  
+                    <h2>Cliente:</h2>
+                    <input pInputText type="text" class="p-inputtext col-6" placeholder="Seleccione un cliente" />
+                    <p-button label="Small" icon="pi pi-check" styleClass="p-button-sm"></p-button>
+                
             </div>
+     
         </div>
         <div class="col-12 md:col-12 lg:col-12">
             <p-table [value]="orderDetails" responsiveLayout="stack" editMode="row" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
                 <ng-template pTemplate="caption">
                     <div class="flex align-items-center justify-content-between">
                         <h2 class="m-0">Crear pedido</h2>
+                                        <button type="button" (click)="showDialog()" pButton icon="pi pi-external-link" label="Agregar productos"></button>
                     </div>
                 </ng-template>
                 <ng-template pTemplate="header">
@@ -54,7 +62,7 @@
 </p-card>
 
 
-<p-dialog header="Header" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="dialogVisible" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
+<p-dialog header="Seleccionar productos" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="dialogVisible" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
     <p-table [value]="products" [scrollable]="true" [(selection)]="selectedProducts" (selectionChange)="onSelectionChange($event)" scrollHeight="flex" [tableStyle]="{'min-width': '50rem'}">
         <ng-template pTemplate="header">
             <tr>
@@ -78,6 +86,6 @@
         </ng-template>
     </p-table>
     <ng-template pTemplate="footer">
-        <button type="button" pButton pRipple icon="pi pi-times" (click)="dialogVisible=false" label="Cancelar" class="p-button-text"></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="dialogVisible=false" label="Confirmar" class="p-button-text"></button>
     </ng-template>
-</p-dialog>
+</p-dialog> -->

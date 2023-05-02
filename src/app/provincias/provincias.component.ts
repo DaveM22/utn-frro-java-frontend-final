@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Provincia } from 'src/models/models';
 import { ProvinciaService } from 'src/services/provincia/provincia.service';
@@ -14,10 +15,14 @@ export class ProvinciasComponent implements OnInit {
   isMobile = false;
   submitted!:boolean;
   provinciaDialog!:boolean;
+  provinciaForm = this.fb.group({
+    nombre:['', Validators.required]
+  });
 
   constructor(private service:ProvinciaService,
     private confirmacionService:ConfirmationService,
-    private messageService:MessageService){}
+    private messageService:MessageService,
+    private fb:FormBuilder){}
   
   
   ngOnInit(): void {
@@ -47,8 +52,8 @@ export class ProvinciasComponent implements OnInit {
       this.submitted = false;
     }
   
-    Guardar(){
-
+    save(){
+      console.log(this.provinciaForm.value);
     }
   
     editarProvincia(provincia: Provincia) {
