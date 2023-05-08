@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'enviroment';
 import { Observable } from 'rxjs';
 import { Prices, ResponseHttp } from 'src/models/models';
 
@@ -8,11 +9,13 @@ import { Prices, ResponseHttp } from 'src/models/models';
 })
 export class PriceService {
 
+  private baseUrl = environment.baseUrl;
+
+
   constructor(private http:HttpClient) { }
 
 
   postPrice(price:Prices) : Observable<ResponseHttp> {
-    console.log(price);
-    return this.http.post<ResponseHttp>("http://localhost:8080/api/prices", price);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/prices", price);
   }
 }

@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { AuthService } from 'src/services/auth/auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,8 +11,9 @@ import { PrimeNGConfig } from 'primeng/api';
 })
 export class AppComponent implements OnInit {
 
+  isLogged!:boolean;
 
-  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService){
+  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService){
 
   }
 
@@ -29,6 +31,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.isLogged = this.authService.isLoggedIn();
     this.translateService.setDefaultLang('es');
     this.items = [
       {

@@ -51,6 +51,7 @@ import { ResumeOrderComponent } from './components/resume-order/resume-order.com
 import { PriceFormComponent } from './components/price-form/price-form.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CalendarModule } from 'primeng/calendar';
+import { JWT_OPTIONS, JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,9 +108,12 @@ import { CalendarModule } from 'primeng/calendar';
     StepsModule,
     InputNumberModule,
     CalendarModule,
-    TranslateModule.forRoot()
+    TranslateModule.forRoot(),
+    JwtModule
   ],
   providers: [MessageService, LocalidadService, ConfirmationService,TranslateService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService,
   {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],
   bootstrap: [AppComponent]
 })

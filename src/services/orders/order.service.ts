@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'enviroment';
 import { Observable } from 'rxjs';
 import { Order, ResponseHttp } from 'src/models/models';
 
@@ -8,15 +9,16 @@ import { Order, ResponseHttp } from 'src/models/models';
 })
 export class OrderService {
 
+  private baseUrl = environment.baseUrl;
   constructor(private http:HttpClient) { }
 
 
   getOrders() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>("http://localhost:8080/api/orders");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/orders");
   }
 
   postOrder(order:Order){
-    return this.http.post<ResponseHttp>("http://localhost:8080/api/orders", order);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/orders", order);
   }
 
 }

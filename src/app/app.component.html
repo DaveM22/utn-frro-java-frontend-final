@@ -1,4 +1,4 @@
-<p-menubar [model]="items">
+<p-menubar *ngIf="isLogged" [model]="items">
 </p-menubar>
 <router-outlet></router-outlet>
 

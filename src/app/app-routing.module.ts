@@ -13,21 +13,22 @@ import { SupplierComponent } from './supplier/supplier.component';
 import { ProductSupplierFormComponent } from './components/product-supplier-form/product-supplier-form.component';
 import { PricesComponent } from './prices/prices.component';
 import { ProductsPricesComponent } from './products-prices/products-prices.component';
+import { permissionGuard } from 'src/util/user-guard.guard';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path:'localidades', component:LocalidadesComponent},
-  {path:'categorias', component:CategoriasComponent},
-  {path:'productos', component:ProductosComponent},
-  {path:'productos-proveedores/:idProducto', component:ProductoProveedoresComponent},
-  {path:'productos-proveedores/:idProducto/nuevo', component:ProductSupplierFormComponent},
-  {path:'provincias', component:ProvinciasComponent},
-  {path:'pedidos', component:PedidosComponent},
-  {path:'pedidos/nuevo', component:NewOrderComponent},
-  {path:'clientes', component:CostumerComponent},
-  {path:'proveedores', component:SupplierComponent},
-  {path:'precios-productos', component:ProductsPricesComponent},
-  {path:'precios-productos/:idProducto/:idPersona', component:PricesComponent}
+  {path:'localidades', component:LocalidadesComponent, canActivate: [permissionGuard]},
+  {path:'categorias', component:CategoriasComponent, canActivate: [permissionGuard]},
+  {path:'productos', component:ProductosComponent, canActivate: [permissionGuard]},
+  {path:'productos-proveedores/:idProducto', component:ProductoProveedoresComponent, canActivate: [permissionGuard]},
+  {path:'productos-proveedores/:idProducto/nuevo', component:ProductSupplierFormComponent, canActivate: [permissionGuard]},
+  {path:'provincias', component:ProvinciasComponent, canActivate: [permissionGuard]},
+  {path:'pedidos', component:PedidosComponent, canActivate: [permissionGuard]},
+  {path:'pedidos/nuevo', component:NewOrderComponent, canActivate: [permissionGuard]},
+  {path:'clientes', component:CostumerComponent, canActivate: [permissionGuard]},
+  {path:'proveedores', component:SupplierComponent, canActivate: [permissionGuard]},
+  {path:'precios-productos', component:ProductsPricesComponent, canActivate: [permissionGuard]},
+  {path:'precios-productos/:idProducto/:idPersona', component:PricesComponent, canActivate: [permissionGuard]}
 ];
 
 @NgModule({
