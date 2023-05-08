@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, FilterService, MessageService } from 'primeng/api';
 import { Provincia } from 'src/models/models';
 import { ProvinciaService } from 'src/services/provincia/provincia.service';
 
@@ -75,4 +75,5 @@ export class ProvinciasComponent implements OnInit {
       this.service.borrarProvincia(this.provincia.codigo).subscribe();
       this.confirmacionService.close();
     }
+
 }

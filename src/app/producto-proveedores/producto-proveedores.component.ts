@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProductoProveedor } from 'src/models/models';
+import { Prices, ProductSupplier, Supplier } from 'src/models/models';
+import { PersonaService } from 'src/services/persona/persona.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 
 @Component({
@@ -10,28 +11,41 @@ import { ProductoProveedorService } from 'src/services/producto-proveedor/produc
 })
 export class ProductoProveedoresComponent implements OnInit {
 
-  productoProveedores:ProductoProveedor[] = []
+  productoProveedores:ProductSupplier[] = []
+  suppliers!:Supplier[];
   idProducto!:number
   titulo!:String
   productoProveedorDialog!:boolean
-  productoProveedor!:ProductoProveedor
+  productoProveedor!:ProductSupplier
   submitted!:boolean;
-  constructor(private productoProveedorService:ProductoProveedorService, private route:ActivatedRoute){
+  prices!:Prices[]
+  constructor(
+    private productoProveedorService:ProductoProveedorService, 
+    private route:ActivatedRoute,
+    private personaService:PersonaService){
 
   }
 
   ngOnInit(): void {
     this.idProducto = this.route.snapshot.params['idProducto'];
     this.productoProveedorService.listaProductoProveedores(this.idProducto).subscribe(res => {
-      this.productoProveedores = res.payload as ProductoProveedor[];
+      this.productoProveedores = res.payload as ProductSupplier[];
       this.titulo = res.message;
+    })
+    this.personaService.getSuppliers().subscribe(x => {
+      this.suppliers = x.payload as Supplier[];
     })
   }
 
-  editarProductoProveedorDialog(productoProveedor:ProductoProveedor){
-    this.productoProveedor = productoProveedor;
+  agregarProveedor(){
+
+  }
+
+  editarProductoProveedorDialog(){
     this.productoProveedorDialog = true;   
   }
+
+
 
 
 }

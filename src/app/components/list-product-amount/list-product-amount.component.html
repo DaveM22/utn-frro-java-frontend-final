@@ -1,0 +1,49 @@
+<p-table [value]="selectedProducts" [(selection)]="selectedProducts" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+    <ng-template pTemplate="caption">
+        <div class="flex flex-column md:flex-row card-container justify-content-between">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <div class="col-12 md:col-6 lg:col-12 text-center">
+                    <h2 class="m-0">Estableza las cantidades para cada producto seleccionado</h2>
+                </div>
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <h4>Productos completados: {{getProductosCompletos()}} de {{selectedProducts.length}} </h4>
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <p-button label="Confirmar" (onClick)="confirmAmounts()"  styleClass="p-button-sm p-button-success" [disabled]="selectedProducts.length === 0"></p-button>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Razón Social</th>
+            <th>Cantidad Disponible</th>
+            <th>Precio vigente</th>
+            <th>Cantidad</th>
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+        <tr>
+            <td><span class="p-column-title">Razón Social</span>{{entity.supplierName}}</td>
+            <td><span class="p-column-title">Cantidad Disponible</span>{{entity.amount}}</td>
+            <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice || "Sin precio"}}</td>
+      
+                <td [pEditableColumn]="entity.amountOrder" pEditableColumnField="price">
+                    <span class="p-column-title">Cantidad</span>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="entity.amountOrder" />
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{ entity.amountOrder }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td class="text-center" colspan="4">No se han registrado productos</td>
+        </tr>
+    </ng-template>
+</p-table>

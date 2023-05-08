@@ -1,0 +1,29 @@
+<p-table  responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+    <ng-template pTemplate="caption">
+        <div class="flex flex-column md:flex-row card-container justify-content-between">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <div class="col-12 md:col-6 lg:col-12 text-center">
+                    <h2 class="m-0">Estableza las cantidades para cada producto seleccionado</h2>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Razón Social</th>
+            <th>Cantidad Disponible</th>
+            <th>Precio vigente</th>
+            <th>Cantidad</th>
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+        <tr>
+
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td class="text-center" colspan="4">No se han registrado productos</td>
+        </tr>
+    </ng-template>
+</p-table>

@@ -1,0 +1,38 @@
+
+<p-table [value]="suppliers" [(selection)]="supplier" responsiveLayout="stack" [breakpoint]="'960px'"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+  <!--   <ng-template pTemplate="caption">
+        <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <div class="col-12 md:col-6 lg:col-12 text-center">
+                    <h2 class="m-0">Seleccione un proveedor</h2>
+                </div>
+            </div>
+        </div>
+    </ng-template> -->
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 4rem"></th>
+            <th>Producto</th>
+            <th>Proveedor</th>
+            <th>Cuit</th>
+            <th>Cantidad disponible</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+        <tr>
+            <td>
+                <button type="button" pButton pRipple icon="pi pi-plus" (click)="selected(entity)"></button>
+            </td>
+            <td><span class="p-column-title">Producto</span>{{entity.productName}}</td>
+            <td><span class="p-column-title">Proveedor</span>{{entity.businessName}}</td>
+            <td><span class="p-column-title">CUIT</span>{{entity.cuit}}</td>
+            <td><span class="p-column-title">Cantidad disponible</span>{{entity.amount}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+
+
+

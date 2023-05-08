@@ -40,36 +40,37 @@ export interface Producto {
     cantidad:number
 }
 
-export interface ProductoProveedor {
+export interface ProductSupplier {
+    personaId:number;
     cuit:string,
-    idProducto:number,
+    productId:number,
     productName:string,
-    cantidad:number,
-    nombreProveedor:string,
+    amount:number,
+    supplierName:string,
     prices:Prices[],
     validityPrice:number
 }
 
 export interface Prices {
-    precio:number
+    price:number
     dateFrom:Date
+    personaId:number
+    productId:number
 }
 
 export interface Order {
     orderNumber:number;
-    orderDate:number;
-    customer:string;
-    customerCuit:string;
+    date:number;
+    personaId:number;
     details:OrderDetail[];
 }
 
 export interface OrderDetail{
     orderNumber:number;
     productId:number;
-    productName:string;
-    cuit:string;
-    supplier:string;
+    personaId:number;
     amount:number;
+    total:number;
 }
 
 export interface Persona {
@@ -89,4 +90,14 @@ export interface CustomerParticular extends Persona {
 export interface CustomerCompany extends Persona {
     cuit:string;
     businessName:string;
+}
+
+export interface Supplier extends Persona{
+    cuit:string;
+    businessName:string;
+}
+
+export interface ProductSupplierOrder extends ProductSupplier {
+    amountOrder:number;
+    total:number;
 }

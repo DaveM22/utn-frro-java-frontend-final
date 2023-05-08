@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductoProveedor } from 'src/models/models';
+import { MenuItem } from 'primeng/api';
+import { Order, ProductSupplier, ProductSupplierOrder } from 'src/models/models';
 import { Producto, OrderDetail } from 'src/models/models';
+import { OrderService } from 'src/services/orders/order.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 import { ProductoService } from 'src/services/productos/producto.service';
 
@@ -11,17 +13,38 @@ import { ProductoService } from 'src/services/productos/producto.service';
 })
 export class NewOrderComponent implements OnInit {
   dialogVisible!: boolean;
-  products!:ProductoProveedor[];
-  selectedProducts!:ProductoProveedor[];
+  products!:ProductSupplierOrder[];
+  selectedProducts!:ProductSupplierOrder[];
   orderDetails:OrderDetail[] = [];
+  items!:MenuItem[];
+  activeIndex: number = 0;
+  customer:any;
+  order!:Order;
 
-  constructor(private productoService:ProductoProveedorService){
+  constructor(private productoService:ProductoProveedorService, private orderService:OrderService){
+    this.items = [
+      {
+          label: 'Cliente'
+      },
+      {
+          label: 'Productos'
+      },
+      {
+          label: 'Cantidades'
+      },
+      {
+        label:'Finalizar'
+      }
+    ];
+  }
 
+  onActiveIndexChange(event:any) {
+    this.activeIndex = event;
   }
 
 
   ngOnInit(): void {
-    this.productoService.getProductsSupplier().subscribe(x => this.products = x.payload as ProductoProveedor[]);
+    this.productoService.getProductsSupplier().subscribe(x => this.products = x.payload as ProductSupplierOrder[]);
   }
 
 
@@ -29,20 +52,32 @@ export class NewOrderComponent implements OnInit {
     this.dialogVisible = true;
   }
 
-
-  onSelectionChange(value: ProductoProveedor[]) {
-    this.selectedProducts = value;
-    this.selectedProducts.forEach((p)=>{
-      let productoExist = this.orderDetails.some(x => x.productId === p.idProducto && x.cuit === p.cuit);
-      if(!productoExist){
-        this.orderDetails.push({orderNumber:0, productId: p.idProducto, cuit:p.cuit, productName:p.productName, supplier:p.nombreProveedor, amount:0});
-      }
-    })
-    this.orderDetails = this.orderDetails.filter(x => this.selectedProducts.some(y => y.idProducto === x.productId && y.cuit === x.cuit))
-    
+  setIndex($event:any){
+    this.activeIndex = $event.nextIndex;
+    this.customer = $event.customer;
   }
-  
 
+  confirmProductSelected(event:ProductSupplierOrder[]){
+    this.selectedProducts = event;
+    this.activeIndex = 2;
+  }
+
+
+  confirmProductAmount($event:any){
+    this.selectedProducts = $event as ProductSupplierOrder[];
+    this.activeIndex = 3;
+  }
+
+  finishOrder($event:any){
+    this.selectedProducts = $event as ProductSupplierOrder[];
+    this.orderDetails = [];
+    this.selectedProducts.forEach(x => {
+      let obj = {orderNumber:0, productId:x.productId, personaId:x.personaId, total: x.total, amount: x.amountOrder  };
+      this.orderDetails.push(obj);
+    })
+    this.order = {date:Date.now(), orderNumber:0, personaId:this.customer.id, details: this.orderDetails };
+    this.orderService.postOrder(this.order).subscribe();
+  }
 
 
 }

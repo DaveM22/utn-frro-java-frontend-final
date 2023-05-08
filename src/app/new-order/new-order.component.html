@@ -1,91 +1,23 @@
-<!-- <p-card header="Crear nuevo pedido">
-    <div class="grid flex flex-wrap align-items-center justify-content-center">
 
-        <div class="col-12 md:col-12 lg:col-12">
-
-            <div class="grid flex align-items-center">
-  
-                    <h2>Cliente:</h2>
-                    <input pInputText type="text" class="p-inputtext col-6" placeholder="Seleccione un cliente" />
-                    <p-button label="Small" icon="pi pi-check" styleClass="p-button-sm"></p-button>
-                
-            </div>
-     
-        </div>
-        <div class="col-12 md:col-12 lg:col-12">
-            <p-table [value]="orderDetails" responsiveLayout="stack" editMode="row" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
-                <ng-template pTemplate="caption">
-                    <div class="flex align-items-center justify-content-between">
-                        <h2 class="m-0">Crear pedido</h2>
-                                        <button type="button" (click)="showDialog()" pButton icon="pi pi-external-link" label="Agregar productos"></button>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                      <tr>
-                        <th style="width:25%">Producto</th>
-                        <th style="width:25%">Proveedor</th>
-                        <th style="width:25%" class="text-center">Cantidad</th>
-                        <th style="width:25%"></th>
-                      </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-order let-editing="editing">
-                    <tr [pEditableRow]="order">
-                        <td>{{order.productName}}</td>
-                        <td>{{order.supplier}}</td>
-                        <td class="text-center">
-                            <p-cellEditor>
-                                <ng-template pTemplate="input">
-                                    <input pInputText [(ngModel)]="order.amount" type="number" min="0">
-                                </ng-template>
-                                <ng-template pTemplate="output">
-                                    {{order.amount}}
-                                </ng-template>
-                            </p-cellEditor>
-                        </td>
-                        <td>
-                            <div class="flex align-items-center justify-content-center gap-2">
-                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" class="p-button-rounded p-button-text">Establecer cantidad</button>
-                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"  class="p-button-rounded p-button-text p-button-danger"></button>
-                        </div>
-                        </td>
-                      </tr>
-                </ng-template>
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td class="text-center" colspan="4">No se han agregado productos</td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
-    </div>
+<p-card>
+    <p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex" (activeIndexChange)="onActiveIndexChange($event)" ></p-steps>
 </p-card>
 
+<div *ngIf="activeIndex === 0">
+    <app-list-customer [customer]="customer" (confirmCustomer$)="setIndex($event)"></app-list-customer>
+</div>
 
-<p-dialog header="Seleccionar productos" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="dialogVisible" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
-    <p-table [value]="products" [scrollable]="true" [(selection)]="selectedProducts" (selectionChange)="onSelectionChange($event)" scrollHeight="flex" [tableStyle]="{'min-width': '50rem'}">
-        <ng-template pTemplate="header">
-            <tr>
-                <th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-                <th>Descripción</th>
-                <th>Proveedor</th>
-                <th>Cantidad</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-            <tr>
-                <td>
-                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                </td>
-                <td>{{product.productName}}</td>
-                <td>{{product.nombreProveedor}}</td>
-                <td>{{product.cantidad}}</td>
-            </tr>
-        </ng-template>
-    </p-table>
-    <ng-template pTemplate="footer">
-        <button type="button" pButton pRipple icon="pi pi-times" (click)="dialogVisible=false" label="Confirmar" class="p-button-text"></button>
-    </ng-template>
-</p-dialog> -->
+<div *ngIf="activeIndex === 1">
+    <app-list-products (productsSelected$)="confirmProductSelected($event)"></app-list-products>
+</div>
+
+<div *ngIf="activeIndex === 2">
+    <app-list-product-amount [selectedProducts]="selectedProducts" (productsAmount$)="confirmProductAmount($event)"></app-list-product-amount>
+</div>
+
+<div *ngIf="activeIndex === 3">
+    <div class="flex flex-column md:flex-row justify-content-center col-12 md:col-8 lg:col-8">
+        <app-resume-order [productsOrder]="selectedProducts" (finishOrder$)="finishOrder($event)"  ></app-resume-order>
+    </div>
+
+</div>

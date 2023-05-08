@@ -33,7 +33,24 @@ import { NewOrderComponent } from './new-order/new-order.component';
 import { ParticularComponent } from './customer-particular/particular.component';
 import { TabViewModule } from 'primeng/tabview';
 import { CostumerComponent } from './customer/costumer.component';
+import { StepsModule } from 'primeng/steps';
 import { CustomerCompanyComponent } from './customer-company/customer-company.component';
+import { ListParticularComponent } from './components/list-particular/list-particular.component';
+import { ListCompanyComponent } from './components/list-company/list-company.component';
+import { ListCustomerComponent } from './components/list-customer/list-customer.component';
+import { ListProductsComponent } from './components/list-products/list-products.component';
+import { SupplierComponent } from './supplier/supplier.component';
+import { ProductSupplierFormComponent } from './components/product-supplier-form/product-supplier-form.component';
+import { ListSuppliersComponent } from './components/list-suppliers/list-suppliers.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ListProductAmountComponent } from './components/list-product-amount/list-product-amount.component';
+import { PricesComponent } from './prices/prices.component';
+import { ListPricesComponent } from './components/list-prices/list-prices.component';
+import { ProductsPricesComponent } from './products-prices/products-prices.component';
+import { ResumeOrderComponent } from './components/resume-order/resume-order.component';
+import { PriceFormComponent } from './components/price-form/price-form.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,7 +65,20 @@ import { CustomerCompanyComponent } from './customer-company/customer-company.co
     NewOrderComponent,
     ParticularComponent,
     CostumerComponent,
-    CustomerCompanyComponent
+    CustomerCompanyComponent,
+    ListParticularComponent,
+    ListCompanyComponent,
+    ListCustomerComponent,
+    ListProductsComponent,
+    SupplierComponent,
+    ProductSupplierFormComponent,
+    ListSuppliersComponent,
+    ListProductAmountComponent,
+    PricesComponent,
+    ListPricesComponent,
+    ProductsPricesComponent,
+    ResumeOrderComponent,
+    PriceFormComponent
   ],
   imports: [
     BrowserModule,
@@ -73,9 +103,13 @@ import { CustomerCompanyComponent } from './customer-company/customer-company.co
     PanelModule,
     CardModule,
     ButtonModule,
-    TabViewModule
+    TabViewModule,
+    StepsModule,
+    InputNumberModule,
+    CalendarModule,
+    TranslateModule.forRoot()
   ],
-  providers: [MessageService, LocalidadService, ConfirmationService,
+  providers: [MessageService, LocalidadService, ConfirmationService,TranslateService,
   {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],
   bootstrap: [AppComponent]
 })

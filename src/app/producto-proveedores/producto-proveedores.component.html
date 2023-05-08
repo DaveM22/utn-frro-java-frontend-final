@@ -1,19 +1,10 @@
 <p-toast></p-toast>
 <p-card>
-    <p-toolbar class="p-toolbar-responsive">
-        <div class="p-toolbar-group-start">
-        </div>
-        <div class="p-toolbar-group-center">
-            <button pButton pRipple label="Agregar nuevo proveedor" icon="pi pi-plus" class="p-button-success mr-2" ></button>
-        </div>
-        <div class="p-toolbar-group-end">
-            
-        </div>
-    </p-toolbar>
     <p-table [value]="productoProveedores" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
                 <h2 class="m-0">{{titulo}}</h2>
+                <button (click)="editarProductoProveedorDialog()">asdasd</button>
             </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -26,12 +17,11 @@
         </ng-template>
         <ng-template pTemplate="body" let-productoProveedor>
             <tr>
-                <td><span class="p-column-title">Razón Social</span>{{productoProveedor.nombreProveedor}}</td>
-                <td class="text-right"><span class="p-column-title">Cantidad</span>{{productoProveedor.cantidad}}</td>
+                <td><span class="p-column-title">Razón Social</span>{{productoProveedor.supplierName}}</td>
+                <td class="text-right"><span class="p-column-title">Cantidad</span>{{productoProveedor.amount}}</td>
                 <td class="text-right"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
                 <td class="text-center">
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarProductoProveedorDialog(productoProveedor)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" ></button>
+                    <a class="p-button-success mr-2">Ver precios</a>
                 </td>
               </tr>
         </ng-template>
@@ -41,22 +31,29 @@
             </tr>
         </ng-template>
     </p-table>
+
+    
 </p-card>
-
-<p-dialog [(visible)]="productoProveedorDialog" [style]="{width: '450px'}" header="Agregar categoria" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="field">
-            <label for="categoria">Editar Stock</label>
-            <input type="number" pInputText id="productoProveedor" [(ngModel)]="productoProveedor.cantidad" required autofocus />
-            <small class="p-error" *ngIf="submitted && !productoProveedor.cantidad">La ciudad es un campo obligatorio</small>
-            <small class="p-error" *ngIf="submitted && productoProveedor.cantidad < 0">La ciudad es un campo obligatorio</small>
-        </div>
-
-    </ng-template>
-
+<p-dialog header="Header" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="productoProveedorDialog" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
+    <p-table [value]="productoProveedores" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+                <th>Company</th>
+                <th>Representative</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-customer>
+            <tr>
+                <td><span class="p-column-title">Name</span>asd</td>
+                <td><span class="p-column-title">Country</span>asd</td>
+                <td><span class="p-column-title">Company</span>asd</td>
+                <td><span class="p-column-title">Representative</span>asd</td>
+            </tr>
+        </ng-template>
+    </p-table>
     <ng-template pTemplate="footer">
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" ></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" ></button>
+        <button type="button" pButton pRipple icon="pi pi-times" (click)="productoProveedorDialog=false" label="Dismiss" class="p-button-text"></button>
     </ng-template>
-
 </p-dialog>

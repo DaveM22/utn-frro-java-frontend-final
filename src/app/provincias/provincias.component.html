@@ -1,25 +1,36 @@
-<p-toast></p-toast>
+ <p-toast></p-toast>
 <p-card>
     <div class="grid flex flex-wrap align-items-center justify-content-center">
-        <div class="col-12 md:col-6 lg:col-6">
-            <p-toolbar styleClass="mb-2 gap-0">
-                <ng-template pTemplate="left">
-                </ng-template>
-                <ng-template pTemplate="center">
-                    <button pButton pRipple label="Agregar nueva provincia" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
-                </ng-template>
-                <ng-template pTemplate="right">
-                </ng-template>
-            </p-toolbar>
-            <p-table [value]="provincias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+        <div class="col-12 md:col-12 lg:col-8">
+            <p-table #dt [value]="provincias" 
+            [globalFilterFields]="['nombre']"
+            responsiveLayout="stack" 
+            [breakpoint]="'960px'" 
+            [tableStyle]="{'min-width': '10rem'}"
+            styleClass="p-datatable-sm"
+            dataKey="codigo">
                 <ng-template pTemplate="caption">
-                    <div class="flex align-items-center justify-content-between">
-                        <h2 class="m-0">Provincias</h2>
+                    <div class="flex flex-column md:flex-row card-container justify-content-between">
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <div class="col-12 md:col-6 lg:col-12 text-center">
+                                <h2 class="m-0">Provincias</h2>
+                            </div>
+                        </div>
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                            </span>
+                        </div>
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <p-button label="Agregar provincia" icon="pi pi-plus" styleClass="p-button-sm p-button-success"></p-button>
+                        </div>
                     </div>
+
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Provincia</th>
+                        <th>Nombre</th>
                         <th></th>
                       </tr>
                 </ng-template>
@@ -27,8 +38,8 @@
                     <tr>
                         <td><span class="p-column-title">Provincia</span>{{entity.nombre}}</td>
                         <td class="text-right">
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarProvincia(entity)"></button>
-                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarProvincia(entity)"></button>
+                            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-success mr-2 p-button-rounded" (click)="editarProvincia(entity)"></p-button>
+                            <p-button icon="pi pi-trash" styleClass="p-button-sm p-button-success mr-2 p-button-rounded p-button-warning" (click)="borrarProvincia(entity)"></p-button>
                         </td>
                       </tr>
                 </ng-template>
@@ -69,3 +80,4 @@
         <button type="button" pButton icon="pi pi-times" label="Cancelar" ></button>
     </ng-template>
 </p-confirmDialog>
+

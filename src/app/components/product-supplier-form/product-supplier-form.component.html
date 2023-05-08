@@ -1,0 +1,30 @@
+<p-card header="Nuevo proveedor para el producto" >
+
+
+    <div class="card flex flex-wrap gap-3 p-fluid">
+        <div class="flex flex-column gap-2">
+            <label for="supplier">Proveedor</label>
+            <div class="p-inputgroup">
+                <input id="supplier" readonly [(ngModel)]="supplierName" type="text" pInputText placeholder="Seleccione un proveedor" />
+                <button type="button" pButton label="Search" (click)="showDialog()"></button>
+            </div>
+        </div>
+        <div class="flex flex-column gap-2">
+            <label htmlFor="username">Cantidad</label>
+            <p-inputNumber inputId="integeronly" [(ngModel)]="amount"> </p-inputNumber>
+        </div>
+    </div>
+    <div class="card flex flex-wrap gap-3 p-fluidr">
+
+        <div class="flex flex-row gap-2 col-12 md:col-6">
+            <p-button label="Submit" (click)="addSupplier()"></p-button>
+            <p-button label="Cancelar"></p-button>
+        </div>
+    </div>
+
+    <p-dialog header="Seleccione un proveedor" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="dialogVisible" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}"
+        [(visible)]="dialogVisible" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
+        <app-list-suppliers (supplierChange$)="supplierChange($event)"></app-list-suppliers>
+    </p-dialog>
+
+</p-card>

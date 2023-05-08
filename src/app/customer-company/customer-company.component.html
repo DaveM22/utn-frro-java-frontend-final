@@ -1,53 +1,56 @@
-
-
-<p-table [value]="customersCompany" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+<p-table [value]="customersCompany" responsiveLayout="stack" [breakpoint]="'960px'"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <div class="col-12 md:col-6 lg:col-12 text-center">
                     <h2 class="m-0">Clientes empresariales</h2>
                 </div>
-                </div>
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nuevo cliente" icon="pi pi-plus" class="p-button-success" (click)="addDialog()" ></button>
-                </div>            
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <button pButton pRipple label="Agregar nuevo cliente" icon="pi pi-plus" class="p-button-success"
+                    (click)="addDialog()"></button>
+            </div>
         </div>
-                          </ng-template>
-                    
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>Cuit</th>
-                                <th>Razón social</th>
-                                <th>Dirección</th>
-                                <th>Teléfono</th>
-                                <th>Código postal</th>
-                                <th>Email</th>
-                                <th></th>
-                              </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-entity>
-                            <tr>
-                                <td><span class="p-column-title">Dni</span>{{entity.cuit}}</td>
-                                <td><span class="p-column-title">Nombre</span>{{entity.businessName}}</td>
-                                <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
-                                <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-                                <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
-                                <td><span class="p-column-title">Email</span>{{entity.email}}</td>
-                                <td class="text-right">
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm" (click)="editDialog(entity)"></button>
-                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning p-button-sm" (click)="deleteModal(entity)"></button>
-                                </td>
-                              </tr>
-                        </ng-template>
-                        <ng-template pTemplate="emptymessage">
-                            <tr>
-                                <td colspan="8">{{emptyMessage}}</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Cuit</th>
+            <th>Razón social</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Código postal</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+        <tr>
+            <td><span class="p-column-title">Dni</span>{{entity.cuit}}</td>
+            <td><span class="p-column-title">Nombre</span>{{entity.businessName}}</td>
+            <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
+            <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Email</span>{{entity.email}}</td>
+            <td class="text-right">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm"
+                    (click)="editDialog(entity)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning p-button-sm"
+                    (click)="deleteModal(entity)"></button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">{{emptyMessage}}</td>
+        </tr>
+    </ng-template>
+</p-table>
 
 
-<p-dialog [(visible)]="companyDialog" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="companyDialog" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true"
+    styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="customerCompanyForm">
 
@@ -58,7 +61,8 @@
 
             <div class="field">
                 <label for="businessName">Razón social</label>
-                <input type="text" pInputText id="businessName" formControlName="businessName" placeholder="Razón social" />
+                <input type="text" pInputText id="businessName" formControlName="businessName"
+                    placeholder="Razón social" />
             </div>
 
             <div class="field">
@@ -83,15 +87,17 @@
         </form>
     </ng-template>
     <ng-template pTemplate="footer">
-        <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click)="saveForm()"></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="closeDialog()"></button>
+        <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
+            (click)="saveForm()"></button>
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
+            (click)="closeDialog()"></button>
     </ng-template>
 </p-dialog>
 
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteConfirm()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDeleteConfirm()" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteConfirm()"></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDeleteConfirm()"></button>
     </ng-template>
 </p-confirmDialog>

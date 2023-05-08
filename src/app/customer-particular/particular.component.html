@@ -1,55 +1,58 @@
-
-
-<p-table [value]="customersParticular" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+<p-table [value]="customersParticular" responsiveLayout="stack" [breakpoint]="'960px'"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <div class="col-12 md:col-6 lg:col-12 text-center">
                     <h2 class="m-0">Clientes particulares</h2>
                 </div>
-                </div>
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nuevo cliente" icon="pi pi-plus" class="p-button-success" (click)="addDialog()" ></button>
-                </div>            
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <button pButton pRipple label="Agregar nuevo cliente" icon="pi pi-plus" class="p-button-success"
+                    (click)="addDialog()"></button>
+            </div>
         </div>
-                          </ng-template>
-                    
-                        <ng-template pTemplate="header">
-                            <tr>
-                                <th>Dni</th>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Dirección</th>
-                                <th>Teléfono</th>
-                                <th>Código postal</th>
-                                <th>Email</th>
-                                <th></th>
-                              </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-entity>
-                            <tr>
-                                <td><span class="p-column-title">Dni</span>{{entity.dni}}</td>
-                                <td><span class="p-column-title">Nombre</span>{{entity.firstName}}</td>
-                                <td><span class="p-column-title">Apellido</span>{{entity.lastName}}</td>
-                                <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
-                                <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-                                <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
-                                <td><span class="p-column-title">Email</span>{{entity.email}}</td>
-                                <td class="text-right">
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm" (click)="editDialog(entity)"></button>
-                                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning p-button-sm" (click)="deleteModalParticular(entity)"></button>
-                                </td>
-                              </tr>
-                        </ng-template>
-                        <ng-template pTemplate="emptymessage">
-                            <tr>
-                                <td colspan="8">{{emptyMessage}}</td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Dni</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Código postal</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-entity>
+        <tr>
+            <td><span class="p-column-title">Dni</span>{{entity.dni}}</td>
+            <td><span class="p-column-title">Nombre</span>{{entity.firstName}}</td>
+            <td><span class="p-column-title">Apellido</span>{{entity.lastName}}</td>
+            <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
+            <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Email</span>{{entity.email}}</td>
+            <td class="text-right">
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm"
+                    (click)="editDialog(entity)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning p-button-sm"
+                    (click)="deleteModalParticular(entity)"></button>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">{{emptyMessage}}</td>
+        </tr>
+    </ng-template>
+</p-table>
 
 
-<p-dialog [(visible)]="particularDialog" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="particularDialog" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true"
+    styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="customerParticularForm">
 
@@ -61,19 +64,25 @@
             <div class="field">
                 <label for="firstName">Nombre</label>
                 <input type="text" pInputText id="firstName" formControlName="firstName" placeholder="Nombre" />
-                <small class="p-error block" *ngIf="customerParticularForm.controls['firstName'].invalid && customerParticularForm.controls['firstName'].dirty">El campo nombre es requerido</small>
+                <small class="p-error block"
+                    *ngIf="customerParticularForm.controls['firstName'].invalid && customerParticularForm.controls['firstName'].dirty">El
+                    campo nombre es requerido</small>
             </div>
 
             <div class="field">
                 <label for="lastName">Apellido</label>
                 <input type="text" pInputText id="lastName" formControlName="lastName" placeholder="Apellido" />
-                <small class="p-error block" *ngIf="customerParticularForm.controls['lastName'].invalid && customerParticularForm.controls['lastName'].dirty">El campo Apellido es requerido</small>
+                <small class="p-error block"
+                    *ngIf="customerParticularForm.controls['lastName'].invalid && customerParticularForm.controls['lastName'].dirty">El
+                    campo Apellido es requerido</small>
             </div>
 
             <div class="field">
                 <label for="direction">Dirección</label>
                 <input type="text" pInputText id="direction" formControlName="direction" placeholder="Direccíon" />
-                <small class="p-error block" *ngIf="customerParticularForm.controls['direction'].invalid && customerParticularForm.controls['direction'].dirty">El campo Dirección es requerido</small>
+                <small class="p-error block"
+                    *ngIf="customerParticularForm.controls['direction'].invalid && customerParticularForm.controls['direction'].dirty">El
+                    campo Dirección es requerido</small>
             </div>
 
             <div class="field">
@@ -89,20 +98,23 @@
             <div class="field">
                 <label for="postal">Código postal</label>
                 <input type="number" pInputText id="postal" formControlName="postalCod" placeholder="Código postal" />
-                <small class="p-error block" *ngIf="customerParticularForm.controls['postalCod'].invalid && customerParticularForm.controls['postalCod'].dirty">El campo Código postal es requerido</small>
+                <small class="p-error block"
+                    *ngIf="customerParticularForm.controls['postalCod'].invalid && customerParticularForm.controls['postalCod'].dirty">El
+                    campo Código postal es requerido</small>
             </div>
         </form>
     </ng-template>
     <ng-template pTemplate="footer">
-        <button type="submit" pButton label="Guardar" [disabled]="customerParticularForm.invalid" icon="pi pi-check" class="p-button" (click)="saveForm()"></button>
-        <button pButton  label="Cancelar" icon="pi pi-times" class="p-button" (click)="closeDialog()"></button>
+        <button type="submit" pButton label="Guardar" [disabled]="customerParticularForm.invalid" icon="pi pi-check"
+            class="p-button" (click)="saveForm()"></button>
+        <button pButton label="Cancelar" icon="pi pi-times" class="p-button" (click)="closeDialog()"></button>
     </ng-template>
 </p-dialog>
 
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteConfirm()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDeleteConfirm()" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteConfirm()"></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDeleteConfirm()"></button>
     </ng-template>
 </p-confirmDialog>

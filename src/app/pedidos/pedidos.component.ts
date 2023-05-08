@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Order } from 'src/models/models';
-import { PedidosService } from 'src/services/orders/pedidos.service';
+import { OrderService } from 'src/services/orders/order.service';
 
 @Component({
   selector: 'app-pedidos',
@@ -11,7 +11,7 @@ export class PedidosComponent implements OnInit {
 
   pedidos!:Order[]
 
-  constructor(private pedidoService:PedidosService){
+  constructor(private pedidoService:OrderService){
 
   }
 

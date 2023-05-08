@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ResponseHttp } from 'src/models/models';
+import { ProductSupplier, ResponseHttp } from 'src/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +16,9 @@ export class ProductoProveedorService {
 
   getProductsSupplier() : Observable<ResponseHttp> {
     return this.http.get<ResponseHttp>("http://localhost:8080/api/productos-proveedores");
+  }
+
+  postProductSupplier(productSupplier:ProductSupplier){
+    return this.http.post<ResponseHttp>("http://localhost:8080/api/product-supplier/"+productSupplier.personaId+"/new", productSupplier);
   }
 }

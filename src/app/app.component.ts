@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-
+import { PrimeNGConfig } from 'primeng/api';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,14 +11,15 @@ import { MenuItem } from 'primeng/api';
 export class AppComponent implements OnInit {
 
 
+  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService){
+
+  }
 
 
   items!: MenuItem[];
   title = 'utn-frro-java-frontend-final';
  
-  constructor(){
 
-  }
 
 
 
@@ -27,6 +29,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.translateService.setDefaultLang('es');
     this.items = [
       {
         label:"Configuración",
@@ -64,6 +67,10 @@ export class AppComponent implements OnInit {
           {
             label:'Productos',
             routerLink:'productos'
+          },
+          {
+            label:'Precios',
+            routerLink:'precios-productos'
           }
         ]
       },
