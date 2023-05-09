@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from 'src/enviroments/enviroment';
+import { environment } from 'src/environments/environment.development';
+
 import { Localidad, Provincia } from 'src/models/models';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { Localidad, Provincia } from 'src/models/models';
 })
 export class LocalidadService {
 
-  private baseUrl = environment.baseUrl;
+  private baseUrl = environment.apiUrl;
   constructor(private http:HttpClient) { }
 
   getLocalidades(){
