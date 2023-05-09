@@ -15,13 +15,13 @@
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th>Nombre de categoria</th>
+                <th>Nombre de categoría</th>
                 <th></th>
               </tr>
         </ng-template>
         <ng-template pTemplate="body" let-categoria>
             <tr>
-                <td><span class="p-column-title">Categoria</span>{{categoria.nombre}}</td>
+                <td><span class="p-column-title">Categoría</span>{{categoria.nombre}}</td>
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarCategoria(categoria)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarCategoria(categoria)"></button>
@@ -34,9 +34,9 @@
 <p-dialog [(visible)]="categoriaDialog" [style]="{width: '450px'}" header="Agregar categoria" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="field">
-            <label for="categoria">Nombre de categoria</label>
+            <label for="categoria">Nombre de categoría</label>
             <input type="text" pInputText id="categoria" [(ngModel)]="categoria.nombre" required autofocus />
-            <small class="p-error" *ngIf="submitted && !categoria.nombre">La ciudad es un campo obligatorio</small>
+            <small class="p-error" *ngIf="submitted && !categoria.nombre">La categoría es un campo obligatorio</small>
         </div>
     </ng-template>
 

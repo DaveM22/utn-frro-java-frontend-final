@@ -103,11 +103,6 @@ export class AppComponent implements OnInit {
         ]
       },
       {
-        label:'Ingresar',
-        icon:'pi pi-fw pi-user',
-        visible:!this.authService.isLoggedIn()
-      },
-      {
         label:'Salir',
         command: () => this.logout()
       
