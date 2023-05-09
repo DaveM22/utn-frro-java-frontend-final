@@ -5,13 +5,14 @@ import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 import * as moment from 'moment';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService  {
 
-  private baseUrl = "http://localhost:8080/api";
+  private baseUrl = environment.apiUrl;
     redirectUrl: any;
   constructor(private http:HttpClient, private jwtHelper: JwtHelperService, private router: Router) { }
 
