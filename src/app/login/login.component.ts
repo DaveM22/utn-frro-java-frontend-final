@@ -32,12 +32,12 @@ export class LoginComponent {
 
   onSubmit() { 
     this.submitted = true;
-    this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
+
     this.authService.login(this.creds).subscribe((res:any) => {
       localStorage.removeItem("token");
       localStorage.setItem("token", res.token);
       this.router.navigate([this.returnUrl]);
-      
+      this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
     });
     
   }
