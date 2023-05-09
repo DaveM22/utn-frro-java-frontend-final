@@ -28,8 +28,8 @@ export class AppComponent implements OnInit {
 
 
   items!: MenuItem[];
-  title = 'utn-frro-java-frontend-final';
- 
+  title = 'Ferreteria';
+  
 
 
 
@@ -104,7 +104,8 @@ export class AppComponent implements OnInit {
       },
       {
         label:'Ingresar',
-        icon:'pi pi-fw pi-user'
+        icon:'pi pi-fw pi-user',
+        visible:!this.authService.isLoggedIn()
       },
       {
         label:'Salir',

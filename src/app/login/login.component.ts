@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Validators,FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { Credentials } from 'src/models/models';
 import { AuthService } from 'src/services/auth/auth.service';
 
@@ -18,7 +19,7 @@ export class LoginComponent {
   }
   submitted = false;
 
-  constructor(private authService:AuthService, private router:Router ){}
+  constructor(private authService:AuthService, private router:Router, private messageService:MessageService ){}
 
   ngOnInit() {
     this.returnUrl = history.state.returnUrl || '/';
@@ -31,11 +32,12 @@ export class LoginComponent {
 
   onSubmit() { 
     this.submitted = true;
-    console.log(this.returnUrl);
+    this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
     this.authService.login(this.creds).subscribe((res:any) => {
       localStorage.removeItem("token");
       localStorage.setItem("token", res.token);
       this.router.navigate([this.returnUrl]);
+      
     });
     
   }

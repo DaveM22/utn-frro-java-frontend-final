@@ -22,8 +22,6 @@ export const permissionGuard = () => {
 
     const router = inject(Router);
     const service = inject(AuthService);
-  
-   
       if (!service.isLoggedIn()) {
 
 
@@ -40,6 +38,7 @@ export const permissionGuard = () => {
           return true;
         }
         else{
+          router.navigate(['/login'], { state: { returnUrl: router.url } });
           return false;
         }
 

@@ -19,6 +19,7 @@ import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent, data: { mostrarMenu: false } },
+  {path:'', component:MainComponent, canActivate:[permissionGuard]},
   {path:'localidades', component:LocalidadesComponent, canActivate: [adminGuard]},
   {path:'categorias', component:CategoriasComponent, canActivate: [permissionGuard]},
   {path:'productos', component:ProductosComponent, canActivate: [permissionGuard]},
