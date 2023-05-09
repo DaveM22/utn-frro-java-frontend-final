@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/enviroments/enviroment';
+import { environment } from 'src/environments/environment.development';
 import { Provincia, ResponseHttp } from 'src/models/models';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Provincia, ResponseHttp } from 'src/models/models';
 })
 export class ProvinciaService {
 
-  private baseUrl = environment.baseUrl;
+  private baseUrl = environment.apiUrl;
 
   constructor(private http:HttpClient) { }
 
