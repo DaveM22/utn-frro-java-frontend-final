@@ -5,6 +5,14 @@ import { AuthService } from "src/services/auth/auth.service";
 
 export const permissionGuard = () => {
     const router = inject(Router);
-    const service = inject(AuthService)
-    return !service.isLoggedIn() ? router.navigate(['/login']) : true
-}
+    const service = inject(AuthService);
+  
+   
+      if (!service.isLoggedIn()) {
+        router.navigate(['/login'], { state: { returnUrl: router.url } });
+        return false;
+      } else {
+        return true;
+      }
+    
+  };

@@ -14,9 +14,11 @@ import { ProductSupplierFormComponent } from './components/product-supplier-form
 import { PricesComponent } from './prices/prices.component';
 import { ProductsPricesComponent } from './products-prices/products-prices.component';
 import { permissionGuard } from 'src/util/user-guard.guard';
+import { AppComponent } from './app.component';
+import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
+  {path: 'login', component: LoginComponent, data: { mostrarMenu: false } },
   {path:'localidades', component:LocalidadesComponent, canActivate: [permissionGuard]},
   {path:'categorias', component:CategoriasComponent, canActivate: [permissionGuard]},
   {path:'productos', component:ProductosComponent, canActivate: [permissionGuard]},

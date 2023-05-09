@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
@@ -10,11 +10,20 @@ import { AuthService } from 'src/services/auth/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-
+  mostrarMenu = true;
   isLogged!:boolean;
 
-  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService){
-
+  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router){
+    router.events.subscribe((val) => {
+      if(val instanceof NavigationEnd){
+        if(val.url === '/login'){
+          this.mostrarMenu = false;
+        }
+        else{
+          this.mostrarMenu = true;
+        }
+      }
+    });
   }
 
 
@@ -26,12 +35,14 @@ export class AppComponent implements OnInit {
 
 
   logout(){
-
+    localStorage.removeItem("token");
+    this.router.navigateByUrl("/login")
   }
 
 
   ngOnInit(): void {
-    this.isLogged = this.authService.isLoggedIn();
+
+    console.log(this.isLogged);
     this.translateService.setDefaultLang('es');
     this.items = [
       {
@@ -94,6 +105,11 @@ export class AppComponent implements OnInit {
       {
         label:'Ingresar',
         icon:'pi pi-fw pi-user'
+      },
+      {
+        label:'Salir',
+        command: () => this.logout()
+      
       }
     ]
   }
