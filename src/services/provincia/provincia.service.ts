@@ -19,6 +19,10 @@ export class ProvinciaService {
   }
 
   borrarProvincia(codProvincia:number): Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/provincias/"+codProvincia);
+    return this.http.get<ResponseHttp>(this.baseUrl + "/provincies/"+codProvincia);
+  }
+
+  postProvince(province:Provincia):Observable<ResponseHttp> {
+    return this.http.post<ResponseHttp>(this.baseUrl + "/provincies", province);
   }
 }

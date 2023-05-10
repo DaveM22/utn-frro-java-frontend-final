@@ -16,7 +16,8 @@ export class ProvinciasComponent implements OnInit {
   submitted!:boolean;
   provinciaDialog!:boolean;
   provinciaForm = this.fb.group({
-    nombre:['', Validators.required]
+    code:[0, Validators.required],
+    nombre:['', Validators.required],
   });
 
   constructor(private service:ProvinciaService,
@@ -42,7 +43,6 @@ export class ProvinciasComponent implements OnInit {
     }
   
     abrirNuevo() {
-      this.provincia = {codigo:0, nombre:''};
       this.submitted = false;
       this.provinciaDialog = true;
     }
@@ -53,7 +53,16 @@ export class ProvinciasComponent implements OnInit {
     }
   
     save(){
-      console.log(this.provinciaForm.value);
+      let obj = this.provinciaForm.value as Provincia;
+      this.service.postProvince(obj).subscribe({
+        next:(res) => {
+          this.messageService.add({ severity: 'success', summary: 'Crear provincia', detail: res.message, life: 3000 });
+          this.provinciaDialog = false;
+        },
+        error:(err) => {
+          this.messageService.add({ severity: 'error', summary: 'Crear producto', detail: err.error.errorMessage, life: 3000 });
+        }
+      });
     }
   
     editarProvincia(provincia: Provincia) {
