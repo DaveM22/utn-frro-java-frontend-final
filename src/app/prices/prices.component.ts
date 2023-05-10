@@ -31,7 +31,6 @@ export class PricesComponent implements OnInit {
 
   ngOnInit(): void {
     const state = history.state;
-    console.log(state);
     this.productSupplier = state.supplier;
     this.prices = this.productSupplier.prices;
   }

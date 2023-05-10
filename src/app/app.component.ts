@@ -41,8 +41,6 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
-
-    console.log(this.isLogged);
     this.translateService.setDefaultLang('es');
     this.items = [
       {

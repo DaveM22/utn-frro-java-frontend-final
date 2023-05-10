@@ -23,7 +23,6 @@ export class LoginComponent {
 
   ngOnInit() {
     this.returnUrl = history.state.returnUrl || '/';
-    console.log(history);
     this.loginForm = new FormGroup({
         'login': new FormControl('', Validators.required),
         'password': new FormControl('', Validators.required)
@@ -42,7 +41,6 @@ export class LoginComponent {
         this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
       },
       error: (err) => {
-        console.log(err);
         this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: "Los datos de nombre de usuario y/o contraseña son incorrectos", life: 3000 });
       }
     });

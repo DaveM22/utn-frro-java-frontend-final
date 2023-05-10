@@ -87,7 +87,6 @@ constructor(
         this.producto = {id:0, idCategoria:0, categoria:'', descripcion:'', cantidad:0};
       },
       error: (err) => {
-        console.log(err);
         this.messageService.add({ severity: 'error', summary: 'Eliminar producto', detail: err.error.errorMessage, life: 3000 });
       }
     });

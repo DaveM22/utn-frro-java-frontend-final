@@ -44,7 +44,6 @@ export class ProductSupplierFormComponent implements OnInit {
 
   addSupplier(){
     let obj = {productId: this.productId,cuit:'',productName:'',supplierName:'', personaId:this.supplierId, amount:this.amount, prices:[], validityPrice:0};
-    console.log(obj);
     this.service.postProductSupplier(obj).subscribe((res) => {
       this.router.navigate(['/productos-proveedores/'+ this.productId]);
       this.messageService.add({ severity: 'success', summary: 'Agregar proveedor', detail: res.message, life: 3000 });

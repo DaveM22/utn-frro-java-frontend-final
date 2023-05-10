@@ -36,7 +36,6 @@ export class ResumeOrderComponent implements OnInit {
   }
 
   getValidResume(){
-    console.log(this.productOrders)
     if(this.productOrders === undefined){
       return false;
     }
