@@ -1,16 +1,23 @@
 <p-card>
-    <p-table [value]="suppliers" responsiveLayout="stack" [breakpoint]="'960px'"
-    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+    <p-table #dt [value]="suppliers" responsiveLayout="stack" [breakpoint]="'960px'"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped"
+    [globalFilterFields]="['cuit','businessName', 'direction', 'phoneNumber', 'postalCod', 'email']">
     <ng-template pTemplate="caption">
-        <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
+        <div class="flex flex-column md:flex-row card-container justify-content-between">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <div class="col-12 md:col-6 lg:col-12 text-center">
                     <h2 class="m-0">Proveedores</h2>
                 </div>
             </div>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                </span>
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <button pButton pRipple label="Agregar nuevo proveedor" icon="pi pi-plus" class="p-button-success"
-                    (click)="addDialog()"></button>
+                (click)="addDialog()"></button>
             </div>
         </div>
     </ng-template>

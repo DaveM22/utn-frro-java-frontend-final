@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
     this.items = [
       {
         label:"Configuración",
+        icon:'pi pi-cog',
         items:[
           {
             label:"Provincias",
@@ -60,6 +61,7 @@ export class AppComponent implements OnInit {
       },
       {
         label: 'Personal',
+        icon:'pi pi-user',
         items:[
           {
             label:'Proveedores',
@@ -73,6 +75,7 @@ export class AppComponent implements OnInit {
       },
       {
         label:'Inventario',
+        icon:'pi pi-calculator',
         items:[
           {
             label:'Categorias',

@@ -8,19 +8,42 @@ import { ProductSupplier, ProductSupplierOrder } from 'src/models/models';
 })
 export class ListProductAmountComponent implements OnInit {
   @Output() productsAmount$: EventEmitter<any> = new EventEmitter<any>();
-  @Input() selectedProducts!:ProductSupplierOrder[];
+  @Input() selectedProducts: ProductSupplierOrder[] = [];
 
-  products!: ProductSupplierOrder[];
-  
+  clonedProducts: { [s: string]: ProductSupplierOrder } = {};
+  products: ProductSupplierOrder[] = [];
+
   ngOnInit(): void {
-    this.products = this.selectedProducts as ProductSupplierOrder[];
-  } 
+    if (this.selectedProducts !== undefined) {
+      this.products = this.selectedProducts as ProductSupplierOrder[];
+    }
+  }
 
-  confirmAmounts(){
+  confirmAmounts() {
     this.productsAmount$.emit(this.products);
   }
 
-  getProductosCompletos() : number {
+  getselectedProductsLenght() {
+    if (this.selectedProducts === undefined) {
+      return 0;
+    }
+    return this.selectedProducts.length;
+  }
+
+  getProductosCompletos(): number {
     return this.products.filter(x => x.amountOrder !== null && x.amountOrder !== undefined && x.amountOrder !== 0).length;
+  }
+
+  onRowEditInit(product: ProductSupplierOrder, index:number) {
+    this.clonedProducts[index] = { ...product };
+  }
+
+  onRowEditSave(product: ProductSupplierOrder, index:number) {
+      delete this.clonedProducts[index];
+  }
+
+  onRowEditCancel(product: ProductSupplierOrder, index: number) {
+    this.products[index] = this.clonedProducts[index];
+    delete this.clonedProducts[index];
   }
 }

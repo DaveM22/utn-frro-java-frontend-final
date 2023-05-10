@@ -1,6 +1,13 @@
 <p-toast></p-toast>
 <p-card>
-    <p-table [value]="localidades" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+    <div class="grid flex flex-wrap align-items-center justify-content-center">
+        <div class="col-12 md:col-12 lg:col-8">
+    <p-table #dt [value]="localidades" 
+    styleClass="p-datatable-sm p-datatable-striped" 
+    responsiveLayout="stack" [breakpoint]="'960px'" 
+    [tableStyle]="{'min-width': '10rem'}"
+    [loading]="loading"
+    [globalFilterFields]="['ciudad','provincia.nombre']">
         <ng-template pTemplate="caption">
             <div class="flex flex-column md:flex-row card-container justify-content-between">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -9,9 +16,20 @@
                     </div>
                 </div>
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                    </span>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                     <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
                 </div>
             </div>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr >
+                <td class="text-center" colspan="3">Cargando...</td>
+            </tr>
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
@@ -24,13 +42,16 @@
             <tr>
                 <td><span class="p-column-title">Localidad</span>{{localidad.ciudad}}</td>
                 <td><span class="p-column-title">Provincia</span>{{localidad.provincia.nombre}}</td>
-                <td>
+                <td class="text-center">
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarLocalidad(localidad)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarLocalidad(localidad)"></button>
                 </td>
               </tr>
         </ng-template>
+
     </p-table>
+</div>
+</div>
 </p-card>
 
 

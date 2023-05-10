@@ -22,7 +22,7 @@ export class NewOrderComponent implements OnInit {
   customer:any;
   order!:Order;
 
-  constructor(private productoService:ProductoProveedorService, private orderService:OrderService, private messageService:MessageService, private router:Router){
+  constructor(private productoService:ProductoProveedorService, private orderService:OrderService, private messageService:MessageService, private router:Router, private service:ProductoProveedorService){
     this.items = [
       {
           label: 'Cliente'
@@ -46,6 +46,9 @@ export class NewOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.productoService.getProductsSupplier().subscribe(x => this.products = x.payload as ProductSupplierOrder[]);
+    this.service.getProductsSupplier().subscribe(x => {
+      this.products = x.payload as ProductSupplierOrder[]
+    })
   }
 
 
@@ -60,21 +63,21 @@ export class NewOrderComponent implements OnInit {
   }
 
   confirmProductSelected(event:ProductSupplierOrder[]){
-    this.selectedProducts = event;
     this.activeIndex = 2;
     this.messageService.add({ severity: 'success', summary: 'Selección de productos', detail: "Productos seleccionados", life: 3000 });
+    this.selectedProducts = event;
   }
 
 
   confirmProductAmount($event:any){
-    this.selectedProducts = $event as ProductSupplierOrder[];
     this.activeIndex = 3;
+    this.selectedProducts = $event;
     this.messageService.add({ severity: 'success', summary: 'Cantidades de productos', detail: "Se han registrado las cantidades para cada producto", life: 3000 });
   }
 
   finishOrder($event:any){
-    this.selectedProducts = $event as ProductSupplierOrder[];
     this.orderDetails = [];
+    this.selectedProducts = $event;
     this.selectedProducts.forEach(x => {
       let obj = {orderNumber:0, productId:x.productId, personaId:x.personaId, total: x.total, amount: x.amountOrder  };
       this.orderDetails.push(obj);

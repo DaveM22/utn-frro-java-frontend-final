@@ -33,12 +33,20 @@ export class LoginComponent {
   onSubmit() { 
     this.submitted = true;
 
-    this.authService.login(this.creds).subscribe((res:any) => {
-      localStorage.removeItem("token");
-      localStorage.setItem("token", res.token);
-      this.router.navigate([this.returnUrl]);
-      this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
+    this.authService.login(this.creds).subscribe(
+    {
+      next:(res:any) => {
+        localStorage.removeItem("token");
+        localStorage.setItem("token", res.token);
+        this.router.navigate([this.returnUrl]);
+        this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
+      },
+      error: (err) => {
+        console.log(err);
+        this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: "Los datos de nombre de usuario y/o contraseña son incorrectos", life: 3000 });
+      }
     });
-    
-  }
+
+    }
+  
 }

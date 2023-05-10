@@ -1,28 +1,40 @@
 <p-toast></p-toast>
 <p-card>
-    <p-table [value]="productoProveedores" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
-        <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-                <h2 class="m-0">{{titulo}}</h2>
-                <button (click)="editarProductoProveedorDialog()">asdasd</button>
+    <p-table #dt [value]="productoProveedores" 
+    responsiveLayout="stack" [breakpoint]="'960px'" 
+    [tableStyle]="{'min-width': '10rem'}"
+    styleClass="p-datatable-sm p-datatable-striped">
+    <ng-template pTemplate="caption">
+        <div class="flex flex-column md:flex-row card-container justify-content-between">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <div class="col-12 md:col-6 lg:col-12 text-center">
+                    <h3 class="m-0">{{titulo}}</h3>
+                </div>
             </div>
-        </ng-template>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                </span>
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <button pButton pRipple label="Agregar proveedor" icon="pi pi-plus" class="p-button-success mr-2" (click)="editarProductoProveedorDialog()" ></button>
+            </div>
+        </div>
+
+    </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th>Razón Social</th>
-                <th class="text-right">Cantidad</th>
-                <th class="text-right">Precio vigente</th>
-                <th></th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-center">Precio vigente</th>
               </tr>
         </ng-template>
         <ng-template pTemplate="body" let-productoProveedor>
             <tr>
                 <td><span class="p-column-title">Razón Social</span>{{productoProveedor.supplierName}}</td>
-                <td class="text-right"><span class="p-column-title">Cantidad</span>{{productoProveedor.amount}}</td>
-                <td class="text-right"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
-                <td class="text-center">
-                    <a class="p-button-success mr-2">Ver precios</a>
-                </td>
+                <td class="text-center"><span class="p-column-title">Cantidad</span>{{productoProveedor.amount}}</td>
+                <td class="text-center"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
               </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">

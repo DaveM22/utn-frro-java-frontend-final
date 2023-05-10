@@ -17,12 +17,10 @@ export class ResumeOrderComponent implements OnInit {
   ngOnInit(): void {
     this.totals = 0;
     this.productOrders = this.productsOrder;
-    this.productOrders.forEach(element => {
-      element.total = element.validityPrice * element.amountOrder;
-      console.log(element.total);
-      this.totals += element.total
-      console.log(this.totals);
-    });
+    if(this.productOrders !== undefined){
+     this.calculateTotals(); 
+    };
+    
     
   }
 
@@ -30,5 +28,21 @@ export class ResumeOrderComponent implements OnInit {
     this.finishOrder$.emit(this.productOrders);
   }
 
+  calculateTotals(){
+    this.productOrders.forEach(element => {
+      element.total = element.validityPrice * element.amountOrder;
+      this.totals += element.total
+    });
+  }
+
+  getValidResume(){
+    console.log(this.productOrders)
+    if(this.productOrders === undefined){
+      return false;
+    }
+    else{
+      return !this.productOrders.some(x => x.amountOrder === 0 || x.amountOrder === undefined || x.amountOrder === null);
+    }
+  }
 
 }

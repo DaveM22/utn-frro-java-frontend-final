@@ -8,16 +8,20 @@
 </div>
 
 <div *ngIf="activeIndex === 1">
-    <app-list-products (productsSelected$)="confirmProductSelected($event)"></app-list-products>
+    <p-card>
+        <app-list-products [selectedProducts]="selectedProducts" [productsSupplier]="products" (productsSelected$)="confirmProductSelected($event)"></app-list-products>
+    </p-card>
 </div>
 
 <div *ngIf="activeIndex === 2">
-    <app-list-product-amount [selectedProducts]="selectedProducts" (productsAmount$)="confirmProductAmount($event)"></app-list-product-amount>
+    <p-card>
+        <app-list-product-amount [selectedProducts]="selectedProducts" (productsAmount$)="confirmProductAmount($event)"></app-list-product-amount>
+    </p-card>
+   
 </div>
 
 <div *ngIf="activeIndex === 3">
-    <div class="flex flex-column md:flex-row justify-content-center col-12 md:col-8 lg:col-8">
-        <app-resume-order [productsOrder]="selectedProducts" (finishOrder$)="finishOrder($event)"  ></app-resume-order>
-    </div>
-
+    <p-card>
+        <app-resume-order [productsOrder]="selectedProducts" (finishOrder$)="finishOrder($event)"></app-resume-order>
+    </p-card>
 </div>

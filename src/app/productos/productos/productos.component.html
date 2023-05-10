@@ -1,20 +1,28 @@
 <p-toast></p-toast>
 <p-card>
-    <p-toolbar class="p-toolbar-responsive">
-        <div class="p-toolbar-group-start">
-        </div>
-        <div class="p-toolbar-group-center">
-            <button pButton pRipple label="Agregar nueva categoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
-        </div>
-        <div class="p-toolbar-group-end">
-            
-        </div>
-    </p-toolbar>
-    <p-table [value]="productos" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+    <p-table #dt 
+    [value]="productos" responsiveLayout="stack" 
+    [breakpoint]="'960px'" 
+    [tableStyle]="{'min-width': '10rem'}"
+    styleClass="p-datatable-sm p-datatable-striped">
         <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-                <h2 class="m-0">Productos</h2>
+            <div class="flex flex-column md:flex-row card-container justify-content-between">
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <div class="col-12 md:col-6 lg:col-12 text-center">
+                        <h2 class="m-0">Productos</h2>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                    </span>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <button pButton pRipple label="Agregar nuevo producto" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
+                </div>
             </div>
+
         </ng-template>
         <ng-template pTemplate="header">
             <tr>

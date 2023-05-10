@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ProductSupplier, ProductSupplierOrder, Producto } from 'src/models/models';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 
@@ -7,22 +7,27 @@ import { ProductoProveedorService } from 'src/services/producto-proveedor/produc
   templateUrl: './list-products.component.html',
   styleUrls: ['./list-products.component.scss']
 })
-export class ListProductsComponent implements OnInit {
+export class ListProductsComponent {
   @Output() productsSelected$: EventEmitter<any> = new EventEmitter<any>();
-  productsSupplier!:ProductSupplierOrder[]
+  @Input() productsSupplier!:ProductSupplierOrder[]
+  @Input() selectedProducts!:ProductSupplierOrder[];
 
-  selectedProducts:ProductSupplierOrder[] = [];
+  
 
-  constructor(private service:ProductoProveedorService){}
+  constructor(){}
 
-  ngOnInit(): void {
-      this.service.getProductsSupplier().subscribe(x => {
-        this.productsSupplier = x.payload as ProductSupplierOrder[]
-      })
-  }
 
   confirmProducts(){
     this.productsSelected$.emit(this.selectedProducts);
+  }
+
+  getSelectedProductsLength(){
+    if(!this.selectedProducts){
+      return 0;
+    }
+    else{
+      return this.selectedProducts.length;
+    }
   }
 
 }

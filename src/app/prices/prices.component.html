@@ -1,5 +1,5 @@
 <p-card>
-<p-table responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
+<p-table [value]="prices" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container justify-content-between">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -18,12 +18,11 @@
             <th>Precio</th>
           </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-productoProveedor>
+    <ng-template pTemplate="body" let-price>
         <tr>
-<!--             <td><span class="p-column-title">Producto</span>{{productoProveedor.productName}}</td>
-            <td><span class="p-column-title">Proveedor</span>{{productoProveedor.supplierName}}</td> -->
-        
-          </tr>
+            <td><span class="p-column-title">Producto</span>{{price.dateFrom}}</td>
+            <td><span class="p-column-title">Proveedor</span>{{price.price}}</td>        
+        </tr>
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>

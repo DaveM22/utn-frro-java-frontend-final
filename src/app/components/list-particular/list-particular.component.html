@@ -1,6 +1,6 @@
-<p-table #dt [value]="customersParticular" [(selection)]="customerParticular"  [breakpoint]="'960px'"
+<p-table #dt [value]="customersParticular" [(selection)]="customerParticular"  [breakpoint]="'960px'" responsiveLayout="stack"
  scrollHeight="400px"
-    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
     (onRowUnselect)="unselected()"
     (onRowSelect)="selected()"
     >
@@ -11,7 +11,7 @@
                     <h2 class="m-0">Clientes particular</h2>
                 </div>
             </div>
-            <div *ngIf="customerParticular !== null && customerParticular !== undefined" class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+            <div *ngIf="customerParticular !== null && customerParticular !== undefined" class="flex align-items-center justify-content-center font-bold text-white border-round">
                 <h4>Cliente seleccionado: Dni {{customerParticular.dni}} - {{customerParticular.lastName}} {{customerParticular.firstName}} </h4>
             </div>
             <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -19,11 +19,9 @@
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                     <span class="p-input-icon-left ml-2">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar cliente" />
                     </span>
                 </div>
-                
-
             </div>
         </div>
     </ng-template>
@@ -42,7 +40,8 @@
     </ng-template>
     <ng-template pTemplate="body" let-entity>
         <tr>
-            <td>
+            <td class="text-center">
+                <span class="p-column-title">Seleccionar</span>
                 <p-tableRadioButton [value]="entity"></p-tableRadioButton>
             </td>
             <td><span class="p-column-title">Dni</span>{{entity.dni}}</td>

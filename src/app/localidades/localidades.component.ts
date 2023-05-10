@@ -17,6 +17,7 @@ export class LocalidadesComponent implements OnInit {
   isMobile = false;
   submitted!:boolean;
   localidadDialog!:boolean;
+  loading:boolean = true;
 
   constructor(
     private service:LocalidadService, 
@@ -26,7 +27,10 @@ export class LocalidadesComponent implements OnInit {
 
   ngOnInit() {
     this.service.getLocalidades().subscribe((res:any) => this.localidades = res);
-    this.serviceProvincia.getProvincias().subscribe((res:any) => this.provincias = res)
+    this.serviceProvincia.getProvincias().subscribe((res:any) => {
+      this.provincias = res
+      this.loading = false;
+    })
  
   }
 

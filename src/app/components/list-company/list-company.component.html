@@ -1,7 +1,8 @@
-<p-table #dt [value]="customersCompany" [(selection)]="customerCompany" dataKey="cuit" responsiveLayout="stack" [breakpoint]="'960px'"
+<p-table #dt [value]="customersCompany" [(selection)]="customerCompany" dataKey="cuit"  responsiveLayout="stack"
+    scrollHeight="400px"
+    [breakpoint]="'960px'"
     [globalFilterFields]="['cuit', 'businessName', 'direction', 'phoneNumber', 'postalCod', 'email']"
-    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped"
-    (onRowUnselect)="unselected()"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm" (onRowUnselect)="unselected()"
     (onRowSelect)="selected()">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
@@ -11,14 +12,15 @@
                 </div>
             </div>
 
-            <div *ngIf="customerCompany !== null && customerCompany !== undefined" class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+            <div *ngIf="customerCompany !== null && customerCompany !== undefined"
+                class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <h4>Cliente seleccionado: {{customerCompany.businessName}}</h4>
             </div>
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <p-button label="Confirmar" (onClick)="confirmCustomer()"  styleClass="p-button-sm p-button-success" [disabled]="customerCompany == null"></p-button>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Buscar cliente" />
                 </span>
             </div>
 
@@ -38,6 +40,7 @@
     <ng-template pTemplate="body" let-entity>
         <tr>
             <td>
+                <span class="p-column-title text-left">Seleccionar</span>
                 <p-tableRadioButton [value]="entity"></p-tableRadioButton>
             </td>
             <td><span class="p-column-title">Dni</span>{{entity.cuit}}</td>
@@ -47,6 +50,14 @@
             <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
         </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+        <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <p-button label="Confirmar" (onClick)="confirmCustomer()" styleClass="p-button-sm p-button-success"
+                [disabled]="customerCompany == null"></p-button>
+            </div>
+        </div>
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>

@@ -1,39 +1,50 @@
-<p-table [value]="productOrders" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
-    
-    <ng-template pTemplate="caption">
-        <div class="flex flex-column md:flex-row card-container justify-content-between">
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <div class="col-12 md:col-6 lg:col-12 text-center">
-                    <h2 class="m-0">Resumen</h2>
+<div class="grid flex flex-wrap align-items-center justify-content-center">
+    <div class="col-12 md:col-12 lg:col-8">
+        <p-table [value]="productOrders" responsiveLayout="stack" [breakpoint]="'960px'"
+        styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
+            [tableStyle]="{'min-width': '10rem'}">
+            <ng-template pTemplate="caption">
+                <div class="flex flex-column md:flex-row card-container justify-content-between">
+                    <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                        <div class="col-12 md:col-6 lg:col-12 text-center">
+                            <h2 class="m-0">Resumen</h2>
+                        </div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                        <p-button label="Finalizar compra" (onClick)="finish()"
+                            styleClass="p-button-sm p-button-success" [disabled]="getValidResume() === false"></p-button>
+                    </div>
                 </div>
-            </div>
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <p-button label="Finalizar compra" (onClick)="finish()"  styleClass="p-button-sm p-button-success"></p-button>
-            </div>
-        </div>
-    </ng-template>
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Producto</th>
-            <th>Proveedor</th>
-            <th>Precio unitario vigente</th>
-            <th>Cantidad</th>
-            <th>Total por cantidad</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-entity>
-        <tr>
-            <td><span class="p-column-title">Producto</span>{{entity.productName}}</td>
-            <td><span class="p-column-title">Proveedor</span>{{entity.supplierName}}</td>
-            <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice}}</td>
-            <td><span class="p-column-title">Cantidad</span>{{entity.amountOrder}}</td>
-            <td><span class="p-column-title">Total por cantidad</span>{{entity.total}}</td>
-          </tr>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <tr>
-            <td colspan="4" class="text-right">Totals</td>
-            <td>{{totals}}</td>
-        </tr>
-    </ng-template>
-</p-table>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Producto</th>
+                    <th>Proveedor</th>
+                    <th>Precio unitario vigente</th>
+                    <th>Cantidad</th>
+                    <th>Total por cantidad</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-entity>
+                <tr>
+                    <td><span class="p-column-title">Producto</span>{{entity.productName}}</td>
+                    <td><span class="p-column-title">Proveedor</span>{{entity.supplierName}}</td>
+                    <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice}}</td>
+                    <td><span class="p-column-title">Cantidad</span>{{entity.amountOrder || 'Sin cantidad'}}</td>
+                    <td><span class="p-column-title">Total por cantidad</span>{{entity.total || 'Sin cantidad'}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr>
+                    <td colspan="4" class="text-right">Totales</td>
+                    <td>{{totals || 0}}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td class="text-center" colspan="5">No se han seleccionado productos</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
