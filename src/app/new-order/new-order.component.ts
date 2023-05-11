@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Order, ProductSupplier, ProductSupplierOrder } from 'src/models/models';
-import { Producto, OrderDetail } from 'src/models/models';
+import { Product, OrderDetail } from 'src/models/models';
 import { OrderService } from 'src/services/orders/order.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 import { ProductoService } from 'src/services/productos/producto.service';

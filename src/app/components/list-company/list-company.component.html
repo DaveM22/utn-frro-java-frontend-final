@@ -3,7 +3,8 @@
     [breakpoint]="'960px'"
     [globalFilterFields]="['cuit', 'businessName', 'direction', 'phoneNumber', 'postalCod', 'email']"
     [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm" (onRowUnselect)="unselected()"
-    (onRowSelect)="selected()">
+    (onRowSelect)="selected()"
+    [globalFilterFields]="['cuit', 'businessName', 'direction', 'phoneNumber', 'postalCod', 'email']">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container green-container justify-content-between">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">

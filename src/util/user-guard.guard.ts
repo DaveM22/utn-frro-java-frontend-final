@@ -32,7 +32,6 @@ export const permissionGuard = () => {
       } else {
         const token = localStorage.getItem('token');
         let decodedToken = jwtDecode(token!) as any;
-        console.log(decodedToken);
         const roles = decodedToken.roles;
         if(roles.includes("ADMIN")){
           return true;

@@ -32,12 +32,12 @@ export interface Category {
     name:string
 }
 
-export interface Producto {
+export interface Product {
     id:number,
-    descripcion:string,
-    idCategoria:number,
-    categoria:string,
-    cantidad:number
+    description:string,
+    categoryId:number,
+    categoriaName:string,
+    amount:number
 }
 
 export interface ProductSupplier {

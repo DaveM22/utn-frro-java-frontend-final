@@ -3,6 +3,7 @@
     [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
     (onRowUnselect)="unselected()"
     (onRowSelect)="selected()"
+    [globalFilterFields]="['dni', 'firstName', 'lastName', 'phoneNumber', 'postalCod', 'email']"
     >
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container justify-content-between">

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductSupplier, ProductSupplierOrder, Producto } from 'src/models/models';
+import { ProductSupplier, ProductSupplierOrder, Product } from 'src/models/models';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 
 @Component({

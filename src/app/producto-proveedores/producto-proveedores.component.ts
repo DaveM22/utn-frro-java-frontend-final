@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Prices, ProductSupplier, Supplier } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
@@ -19,14 +20,20 @@ export class ProductoProveedoresComponent implements OnInit {
   productoProveedor!:ProductSupplier
   submitted!:boolean;
   prices!:Prices[]
+  productSupplierForm!: FormGroup;
   constructor(
     private productoProveedorService:ProductoProveedorService, 
     private route:ActivatedRoute,
-    private personaService:PersonaService){
+    private personaService:PersonaService,
+    private fb:FormBuilder){
 
   }
 
   ngOnInit(): void {
+    this.productSupplierForm = this.fb.group({
+      amount: this.fb.control(0),
+      productSupplier: this.fb.control({})
+    });
     this.idProducto = this.route.snapshot.params['idProducto'];
     this.productoProveedorService.listaProductoProveedores(this.idProducto).subscribe(res => {
       this.productoProveedores = res.payload as ProductSupplier[];
@@ -39,6 +46,10 @@ export class ProductoProveedoresComponent implements OnInit {
 
   agregarProveedor(){
 
+  }
+
+  addSupplier(){
+    console.log(this.productSupplierForm.value);
   }
 
   editarProductoProveedorDialog(){

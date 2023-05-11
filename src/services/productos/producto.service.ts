@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
-import { Producto, ResponseHttp } from 'src/models/models';
+import { Product, ResponseHttp } from 'src/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +12,19 @@ export class ProductoService {
   constructor(private http:HttpClient) { }
 
 
-  listaProductos() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/productos");
+  getProducts() : Observable<ResponseHttp>{
+    return this.http.get<ResponseHttp>(this.baseUrl + "/products");
   }
 
-  agregarProducto(producto:Producto) : Observable<ResponseHttp>{
-    return this.http.post<ResponseHttp>(this.baseUrl + "/productos", producto);
+  postProducts(producto:Product) : Observable<ResponseHttp>{
+    return this.http.post<ResponseHttp>(this.baseUrl + "/products", producto);
   }
 
-  eliminarProducto(idProducto:number): Observable<ResponseHttp>{
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/productos/" + idProducto);
+  putProducts(producto:Product) : Observable<ResponseHttp> {
+    return this.http.put<ResponseHttp>(this.baseUrl + "/products", producto);
+  }
+
+  deleteProduct(idProducto:number): Observable<ResponseHttp>{
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/products/" + idProducto);
   }
 }

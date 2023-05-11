@@ -29,21 +29,18 @@
                 <th>Nombre de categoria</th>
                 <th>Categoria</th>
                 <th class="text-center">Cantidad total de inventario</th>
-                <th></th>
-                <th></th>
+                <th class="text-center">Acciones</th>
               </tr>
         </ng-template>
         <ng-template pTemplate="body" let-producto>
             <tr>
-                <td><span class="p-column-title">Descripción</span>{{producto.descripcion}}</td>
-                <td><span class="p-column-title">Categoria</span>{{producto.categoria}}</td>
-                <td class="text-center"><span class="p-column-title">Cant. total de inventario</span>{{producto.cantidad}}</td>
-                <td>
-                    <a class="p-button-success mr-2" [routerLink]="['/productos-proveedores', producto.id]">Ver proveedores</a>
-                </td>
-                <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarProducto(producto)" ></button>
+                <td><span class="p-column-title">Descripción</span>{{producto.description}}</td>
+                <td><span class="p-column-title">Categoria</span>{{producto.category}}</td>
+                <td class="text-center"><span class="p-column-title">Cant. total de inventario</span>{{producto.amount}}</td>
+                <td class="text-center">
+                    <button pButton pRipple label="Ver proveedores" class="p-button-rounded p-button-sm mr-2" (click)="routeProductSupplier(producto)" ></button>
+                    <button pButton pRipple icon="pi pi-pencil" label="Editar" class="p-button-rounded p-button-sm p-button-success mr-2" (click)="editProductForm(producto)"></button>
+                    <button pButton pRipple icon="pi pi-trash" label="Eliminar" class="p-button-rounded p-button-sm p-button-danger" (click)="borrarProducto(producto)" ></button>
                 </td>
               </tr>
         </ng-template>
@@ -55,12 +52,12 @@
     </p-table>
 </p-card>
 
-<p-dialog [(visible)]="productoDialog" [style]="{width: '450px'}" header="Agregar producto" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Agregar producto" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="field">
             <label for="descripcion">Descripción</label>
-            <input type="text" pInputText id="descripcion" [(ngModel)]="producto.descripcion" required autofocus />
-            <small class="p-error" *ngIf="submitted && !producto.descripcion">La descripción del producto es un campo obligatorio</small>
+            <input type="text" pInputText id="descripcion" [(ngModel)]="producto.description" required autofocus />
+            <small class="p-error" *ngIf="submitted && !producto.description">La descripción del producto es un campo obligatorio</small>
         </div>
         <div class="field">
             <label for="categoria">Categoría</label>
@@ -71,7 +68,7 @@
                     </div>
                   </ng-template>
                 <ng-template let-option pTemplate="item">
-                    <span [class]="'product-badge status-' + option.codigo">{{option.nombre}}</span>
+                    <span [class]="'product-badge status-' + option.codigo">{{option.name}}</span>
                 </ng-template>
             </p-dropdown>
         </div>

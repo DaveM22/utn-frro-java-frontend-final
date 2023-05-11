@@ -1,7 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
-import { Category, Producto, ResponseHttp } from 'src/models/models';
+import { Category, Product, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
 import { LocationService } from 'src/services/localidad/localidad.service';
 import { ProductoService } from 'src/services/productos/producto.service';
@@ -12,25 +14,32 @@ import { ProductoService } from 'src/services/productos/producto.service';
   styleUrls: ['./productos.component.scss']
 })
 export class ProductosComponent implements OnInit {
-productos:Producto[] = [];
+productos:Product[] = [];
 categorias:Category[] = []
 isMobile = false;
-producto:Producto = {id:0, idCategoria:0, categoria:'', descripcion:'', cantidad:0};
+producto:Product = {id:0, categoryId:0, categoriaName:'', description:'', amount:0};
 categoria!:Category;
 submitted!:boolean;
-productoDialog!:boolean;
+productDialog!:boolean;
+  editarForm!: boolean;
+  provinciaForm = this.fb.group({
+    provinceCode:[0, Validators.required],
+    name:['', Validators.required],
+  });
 constructor(
   private service:ProductoService, 
   private serviceLocalidad:LocationService, 
   private confirmacionService:ConfirmationService,
   private categoriasService:CategoriasService,
-  private messageService:MessageService
+  private messageService:MessageService,
+  private router:Router,
+  private fb:FormBuilder
 ){}
 
 
   
   ngOnInit(): void {
-    this.service.listaProductos().subscribe((res) => this.productos = res.payload as Producto[]);
+    this.service.getProducts().subscribe((res) => this.productos = res.payload as Product[]);
     this.categoriasService.listaCategorias().subscribe(res => this.categorias = res.payload as Category[])
   }
 
@@ -44,32 +53,38 @@ constructor(
   }
 
   abrirNuevo() {
-    this.productoDialog = true;
+    this.productDialog = true;
   }
 
   GuardarForm(){
     this.submitted = true;
-    this.producto.idCategoria = this.categoria.id;
-    this.service.agregarProducto(this.producto).subscribe((res) => {
+    this.producto.categoryId = this.categoria.id;
+    this.service.postProducts(this.producto).subscribe((res) => {
       this.messageService.add({ severity: 'success', summary: 'Creacíon de producto', detail: res.message, life: 3000 });
-      this.productos.push(res.payload as Producto);
-      this.productoDialog = false;
+      this.productos.push(res.payload as Product);
+      this.productDialog = false;
     });
   }
 
   CerrarDialog(){
     this.submitted = false;
-    this.productoDialog = false;
+    this.productDialog = false;
+  }
+
+  routeProductSupplier(producto: Product){
+    this.router.navigate(['/productos-proveedores', producto.id]);
   }
 
 
 
-  editarLocalidad(localidad:Producto ) {
+  editProductForm(product:Product ) {
+    this.editarForm = true;
+    this.productDialog = true;
   }
 
-  borrarProducto(producto: Producto){
+  borrarProducto(producto: Product){
     this.producto = producto;
-    this.confirmacionService.confirm({message: '¿Estas seguro de borrar el siguiente producto: ' + this.producto.descripcion + '?',
+    this.confirmacionService.confirm({message: '¿Estas seguro de borrar el siguiente producto: ' + this.producto.description + '?',
     header: 'Eliminar producto',
     icon: 'pi pi-exclamation-triangle',
     acceptLabel:'Aceptar',
@@ -78,13 +93,13 @@ constructor(
   }
 
   eliminarForm(){
-    this.service.eliminarProducto(this.producto.id)
+    this.service.deleteProduct(this.producto.id)
     .subscribe(
     {
       next:(res) => {
         this.messageService.add({ severity: 'success', summary: 'Eliminar producto', detail: res.message, life: 3000 });
         this.productos = this.productos.filter((val) => val.id !== this.producto.id);
-        this.producto = {id:0, idCategoria:0, categoria:'', descripcion:'', cantidad:0};
+        this.producto = {id:0, categoryId:0, categoriaName:'', description:'', amount:0};
         this.cerrarConfirm();
       },
       error: (err) => {

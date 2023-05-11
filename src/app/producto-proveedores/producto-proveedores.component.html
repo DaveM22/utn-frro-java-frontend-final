@@ -1,41 +1,42 @@
 <p-toast></p-toast>
 <p-card>
-    <p-table #dt [value]="productoProveedores" 
-    responsiveLayout="stack" [breakpoint]="'960px'" 
-    [tableStyle]="{'min-width': '10rem'}"
-    styleClass="p-datatable-sm p-datatable-striped">
-    <ng-template pTemplate="caption">
-        <div class="flex flex-column md:flex-row card-container justify-content-between">
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <div class="col-12 md:col-6 lg:col-12 text-center">
-                    <h3 class="m-0">{{titulo}}</h3>
+    <p-table #dt [value]="productoProveedores" responsiveLayout="stack" [breakpoint]="'960px'"
+        [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+        <ng-template pTemplate="caption">
+            <div class="flex flex-column md:flex-row card-container justify-content-between">
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <div class="col-12 md:col-6 lg:col-12 text-center">
+                        <h3 class="m-0">{{titulo}}</h3>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Buscar" />
+                    </span>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <button pButton pRipple label="Agregar proveedor" icon="pi pi-plus" class="p-button-success mr-2"
+                        (click)="editarProductoProveedorDialog()"></button>
                 </div>
             </div>
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
-                </span>
-            </div>
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                <button pButton pRipple label="Agregar proveedor" icon="pi pi-plus" class="p-button-success mr-2" (click)="editarProductoProveedorDialog()" ></button>
-            </div>
-        </div>
 
-    </ng-template>
+        </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th>Razón Social</th>
                 <th class="text-center">Cantidad</th>
                 <th class="text-center">Precio vigente</th>
-              </tr>
+            </tr>
         </ng-template>
         <ng-template pTemplate="body" let-productoProveedor>
             <tr>
                 <td><span class="p-column-title">Razón Social</span>{{productoProveedor.supplierName}}</td>
                 <td class="text-center"><span class="p-column-title">Cantidad</span>{{productoProveedor.amount}}</td>
-                <td class="text-center"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
-              </tr>
+                <td class="text-center"><span class="p-column-title">Precio
+                        vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
+            </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
             <tr>
@@ -44,28 +45,51 @@
         </ng-template>
     </p-table>
 
-    
+
 </p-card>
-<p-dialog header="Header" [resizable]="false" [modal]="true" [maximizable]="true" appendTo="body" [(visible)]="productoProveedorDialog" [style]="{width: '75vw'}" [contentStyle]="{height: '300px'}">
-    <p-table [value]="productoProveedores" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}">
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Name</th>
-                <th>Country</th>
-                <th>Company</th>
-                <th>Representative</th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-customer>
-            <tr>
-                <td><span class="p-column-title">Name</span>asd</td>
-                <td><span class="p-column-title">Country</span>asd</td>
-                <td><span class="p-column-title">Company</span>asd</td>
-                <td><span class="p-column-title">Representative</span>asd</td>
-            </tr>
-        </ng-template>
-    </p-table>
-    <ng-template pTemplate="footer">
-        <button type="button" pButton pRipple icon="pi pi-times" (click)="productoProveedorDialog=false" label="Dismiss" class="p-button-text"></button>
+<p-dialog header="Seleccione un proveedor" position="top" [modal]="true" styleClass="p-fluid" [modal]="true"
+    [maximizable]="true" appendTo="body" [(visible)]="productoProveedorDialog" [style]="{width: '75vw'}"
+    [contentStyle]="{height: '300px'}">
+    <ng-template pTemplate="content">
+
+        <form [formGroup]="productSupplierForm">
+            <div class="col-12 md:col-3">
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" pInputText id="descripcion" formControlName="amount" />
+
+                </div>
+            </div>
+            <div >
+                <p-table [value]="suppliers" responsiveLayout="stack" [breakpoint]="'960px'"
+                [tableStyle]="{'min-width': '10rem'}">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 4rem"></th>
+                        <th>CUIT</th>
+                        <th>Razón social</th>
+                        <th>Dirección</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-supplier>
+                    <tr>
+                        <td>
+                            <span class="p-column-title text-left">Seleccionar</span>
+                            <p-tableRadioButton [value]="supplier" formControlName="productSupplier"></p-tableRadioButton>
+                        </td>
+                        <td><span class="p-column-title">CUIT</span>{{supplier.cuit}}</td>
+                        <td><span class="p-column-title">Razón social</span>{{supplier.businessName}}</td>
+                        <td><span class="p-column-title">Dirección</span>{{supplier.direction}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            </div>
+
+        </form>
+        <button pButton pRipple (click)="addSupplier()" label="Guardar proveedor"
+        class="p-button-success"></button>
     </ng-template>
+
+
+
 </p-dialog>
