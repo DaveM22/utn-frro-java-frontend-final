@@ -1,7 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Localidad, Provincia } from 'src/models/models';
-import { LocalidadService } from 'src/services/localidad/localidad.service';
+import { Location, Province, ResponseHttp } from 'src/models/models';
+import { LocationService } from 'src/services/localidad/localidad.service';
 import { ProvinciaService } from 'src/services/provincia/provincia.service';
 
 @Component({
@@ -10,32 +11,39 @@ import { ProvinciaService } from 'src/services/provincia/provincia.service';
   styleUrls: ['./localidades.component.scss']
 })
 export class LocalidadesComponent implements OnInit {
-  localidades:Localidad[] = [];
-  provincias:Provincia[] = [];
-  localidad!:any;
-  provincia!:any;
+  localidades: Location[] = [];
+  provincias: Province[] = [];
+  location!: Location;
+  provincia!: Province;
+  blockedPanel!:boolean;
   isMobile = false;
-  submitted!:boolean;
-  localidadDialog!:boolean;
-  loading:boolean = true;
+  locationDialog!: boolean;
+  loading: boolean = true;
+  locationForm = this.fb.group({
+    postalCode: [0, Validators.required],
+    city: ['', Validators.required],
+    provinceCode: [0, Validators.required]
+  });
+  isEditForm!: boolean;
 
   constructor(
-    private service:LocalidadService, 
-    private serviceProvincia:ProvinciaService, 
-    private confirmacionService:ConfirmationService,
-    private messageService:MessageService) { }
+    private locationService: LocationService,
+    private provinceService: ProvinciaService,
+    private confirmacionService: ConfirmationService,
+    private messageService: MessageService,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
-    this.service.getLocalidades().subscribe((res:any) => this.localidades = res);
-    this.serviceProvincia.getProvincias().subscribe((res:any) => {
+    this.locationService.getLocation().subscribe((res: any) => this.localidades = res.payload);
+    this.provinceService.getProvincias().subscribe((res: any) => {
       this.provincias = res.payload
       this.loading = false;
     })
- 
+
   }
 
   @HostListener('window:resize', ['$event'])
-  onResize(event:any) {
+  onResize(event: any) {
     this.checkScreenSize();
   }
 
@@ -43,52 +51,103 @@ export class LocalidadesComponent implements OnInit {
     this.isMobile = window.innerWidth < 768;
   }
 
-  abrirNuevo() {
-    this.localidad = {};
-    this.submitted = false;
-    this.localidadDialog = true;
+  openModalForm() {
+    this.locationDialog = true;
+    this.isEditForm = false;
   }
 
-  CerrarDialog(){
-    this.localidadDialog = false;
-    this.submitted = false;
+
+  closeModalForm() {
+    this.locationDialog = false;
+    this.locationForm.reset();
   }
 
-  Guardar(){
-    this.submitted = true;
-    if(this.localidad.codigo != undefined || this.localidad.codigo != null){
-      this.service.editLocalidad(this.localidad, this.provincia).subscribe((res) => {
-        this.localidades[this.localidades.indexOf(res)] = res;
-        this.messageService.add({ severity: 'success', summary: 'Editar localidad', detail: 'Se ha modificado la localidad de manera exitosa', life: 3000 });
-      });
+  save() {
+    if (this.isEditForm) {
+      this.edit();
     }
-    else{
-      this.service.saveLocalidad(this.localidad, this.provincia).subscribe((res) => {
-        this.localidades.push(res);
-      });
+    else {
+      this.create();
     }
-    this.localidadDialog = false;
-    this.localidad = {};
   }
 
-  editarLocalidad(localidad: Localidad) {
-    this.localidad = localidad;
-    this.provincia = this.provincias.find(x => x.codigo == localidad.provincia.codigo);
-    this.localidadDialog = true;    
+  create() {
+    this.blockedPanel = true;
+    let obj = this.locationForm.value as Location;
+    let location = { postalCode: obj.postalCode!, city: obj.city!, provinceCode: obj.provinceCode, provinceName: this.provincia.name };
+    this.locationService.postLocation(location).subscribe({
+      next: (res) => {
+        let response = res.payload as Location;
+        this.blockedPanel = false;
+        this.messageService.add({ severity: 'success', summary: 'Crear localidad', detail: res.message, life: 3000 });
+        this.locationDialog = false;
+        this.localidades.push(response);
+      },
+      error: (err) => {
+        this.blockedPanel = false;
+        this.messageService.add({ severity: 'error', summary: 'Error al crear localidad', detail: err.error.errorMessage, life: 3000 });
+      }
+    })
   }
 
-  borrarLocalidad(localidad: Localidad){
-    this.localidad = localidad;
-    this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente localidad: ' + this.localidad.ciudad + '?',
-    header: 'Eliminar localidad',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel:'Aceptar',
-    rejectLabel:'Cancelar'
+  edit() {
+    let location = this.locationForm.value as Location;
+    this.location = { postalCode: location.postalCode!, city: location.city!, provinceCode: location.provinceCode, provinceName: this.provincia.name };
+    this.locationService.putLocation(location).subscribe({
+      next: (res: ResponseHttp) => {
+        let response = res.payload as Province;
+        this.messageService.add({ severity: 'success', summary: 'Editar localidad', detail: res.message, life: 3000 });
+        this.locationDialog = false;
+        this.provincias[this.provincias.findIndex(z => z.provinceCode === response.provinceCode)] = response;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error al editar localidad', detail: err.error.errorMessage, life: 3000 });
+      }
     });
   }
 
-  borrar(){
-    this.service.borrarLocalidad(this.localidad.codigo).subscribe();
+  onChange(event: any) {
+    this.provincia = this.provincias.find(x => x.provinceCode === event.value)!;
+  }
+
+  editEntity(location: Location) {
+    this.locationForm.patchValue(location);
+    this.provincia = this.provincias.find(x => x.provinceCode === location.provinceCode)!;
+    this.isEditForm = true;
+    this.locationDialog = true;
+  }
+
+  deleteEntity(localidad: Location) {
+    this.location = localidad;
+    this.confirmacionService.confirm({
+      message: '¿Estas seguro de borrar la siguiente localidad: ' + this.location.city + '?',
+      header: 'Eliminar localidad',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
+    });
+  }
+
+  delete() {
+    this.blockedPanel = true;
+    this.locationService.deleteLocation(this.location.postalCode).subscribe({
+      next: (res) => {
+        this.messageService.add({ severity: 'success', summary: 'Borrar localidad', detail: res.message, life: 3000 });
+        
+        this.confirmacionService.close();
+        this.blockedPanel = false;
+        this.localidades = this.localidades.filter((val) => val.postalCode !== this.location.postalCode);
+
+      },
+      error: (err) => {
+        this.blockedPanel = false;
+        this.messageService.add({ severity: 'error', summary: 'Borrar localidad', detail: err.error.errorMessage, life: 3000 });
+      }
+    });
+
+  }
+
+  closeDialog() {
     this.confirmacionService.close();
   }
 }

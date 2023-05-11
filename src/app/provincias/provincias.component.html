@@ -23,7 +23,7 @@
                             </span>
                         </div>
                         <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                            <p-button label="Agregar provincia" icon="pi pi-plus" styleClass="p-button-sm p-button-success" (click)="abrirNuevo()"></p-button>
+                            <p-button label="Agregar provincia" icon="pi pi-plus" styleClass="p-button-sm p-button-success font-bold" (click)="openModalForm()"></p-button>
                         </div>
                     </div>
 
@@ -36,10 +36,10 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-entity>
                     <tr>
-                        <td><span class="p-column-title">Provincia</span>{{entity.nombre}}</td>
+                        <td><span class="p-column-title">Provincia</span>{{entity.name}}</td>
                         <td class="text-right">
-                            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-success mr-2 p-button-rounded" (click)="editarProvincia(entity)"></p-button>
-                            <p-button icon="pi pi-trash" styleClass="p-button-sm p-button-success mr-2 p-button-rounded p-button-warning" (click)="borrarProvincia(entity)"></p-button>
+                            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-success mr-2 font-bold p-button-rounded" (click)="editEntity(entity)"></p-button>
+                            <p-button icon="pi pi-trash" styleClass="p-button-sm  mr-2 p-button-rounded font-bold p-button-danger" (click)="deleteEntity(entity)"></p-button>
                         </td>
                       </tr>
                 </ng-template>
@@ -54,22 +54,22 @@
         <ng-template pTemplate="content">
             <form [formGroup]="provinciaForm" (ngSubmit)="save()">
             <div class="field">
-                <label for="code">Código postal</label>
+                <label for="code">Código</label>
                 <p-inputNumber inputId="code" formControlName="code" placeholder="Ingrese código postal"> </p-inputNumber>
-                <small class="p-error block" *ngIf="provinciaForm.controls['code'].invalid && provinciaForm.controls['code'].dirty">
+                <small class="p-error block" *ngIf="provinciaForm.controls['provinceCode'].invalid && provinciaForm.controls['provinceCode'].dirty">
                     El campo nombre es requerido
                 </small>
             </div>
             <div class="field">
                 <label for="provincia">Nombre de provincia</label>
-                <input type="text" required pInputText id="provincia" formControlName="nombre" placeholder="Nombre de provincia" />
-                <small class="p-error block" *ngIf="provinciaForm.controls['nombre'].invalid && provinciaForm.controls['nombre'].dirty">
+                <input type="text" required pInputText id="provincia" formControlName="name" placeholder="Nombre de provincia" />
+                <small class="p-error block" *ngIf="provinciaForm.controls['name'].invalid && provinciaForm.controls['name'].dirty">
                     El campo nombre es requerido
                 </small>
             </div>
             <div class="flex align-items-center">
-                <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" [disabled]="provinciaForm.invalid"></button>
-                <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click) = "CerrarDialog()"></button>           
+                <button type="button" pButton pRipple icon="pi pi-check" label="Guardar" (click)="save()" class="mr-2 font-bold p-button-success" [disabled]="provinciaForm.invalid"></button>
+                <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
             </div>
         </form>
         </ng-template>
@@ -77,8 +77,8 @@
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="borrar()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()" ></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()"></button>
     </ng-template>
 </p-confirmDialog>
 

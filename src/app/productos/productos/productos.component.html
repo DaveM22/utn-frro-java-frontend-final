@@ -67,7 +67,7 @@
             <p-dropdown [(ngModel)]="categoria" [options]="categorias" option-label="categoria"  inputId="categoria"   placeholder="Seleccione una categoría">
                 <ng-template pTemplate="selectedItem">
                     <div class="country-item country-item-value" *ngIf="categoria">
-                      <div>{{ categoria.nombre }}</div>
+                      <div>{{ categoria.name }}</div>
                     </div>
                   </ng-template>
                 <ng-template let-option pTemplate="item">

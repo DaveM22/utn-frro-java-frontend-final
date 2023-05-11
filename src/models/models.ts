@@ -15,21 +15,21 @@ export interface ResponseCredential {
     sub:string
 }
 
-export interface Localidad {
-    codigo:number
-    ciudad:string,
-    codProvincia:number,
-    provincia:Provincia
+export interface Location {
+    postalCode:number
+    city:string,
+    provinceCode:number,
+    provinceName:string;
 }
 
-export interface Provincia {
-    codigo:number,
-    nombre:string
+export interface Province {
+    provinceCode:number,
+    name:string
 }
 
-export interface Categoria {
+export interface Category {
     id:number,
-    nombre:string
+    name:string
 }
 
 export interface Producto {

@@ -6,3 +6,10 @@
 
 
 
+
+:host ::ng-deep .p-button-success {
+    background-color: #25d366;
+}
+:host ::ng-deep .p-button-danger {
+    background-color:#fc636b;
+}

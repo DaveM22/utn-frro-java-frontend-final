@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, FilterService, MessageService } from 'primeng/api';
-import { Provincia } from 'src/models/models';
+import { Province, ResponseHttp } from 'src/models/models';
 import { ProvinciaService } from 'src/services/provincia/provincia.service';
 
 @Component({
@@ -10,14 +10,15 @@ import { ProvinciaService } from 'src/services/provincia/provincia.service';
   styleUrls: ['./provincias.component.scss']
 })
 export class ProvinciasComponent implements OnInit {
-  provincias:Provincia[] = [];
-  provincia!:Provincia;
+  provincias:Province[] = [];
+  provincia!:Province;
   isMobile = false;
   submitted!:boolean;
   provinciaDialog!:boolean;
+  isEditForm:boolean = false;
   provinciaForm = this.fb.group({
-    code:[0, Validators.required],
-    nombre:['', Validators.required],
+    provinceCode:[0, Validators.required],
+    name:['', Validators.required],
   });
 
   constructor(private service:ProvinciaService,
@@ -28,7 +29,7 @@ export class ProvinciasComponent implements OnInit {
   
   ngOnInit(): void {
     this.service.getProvincias().subscribe(res => {
-      this.provincias = res.payload as Provincia[];
+      this.provincias = res.payload as Province[];
     });
   }
 
@@ -42,46 +43,87 @@ export class ProvinciasComponent implements OnInit {
       this.isMobile = window.innerWidth < 768;
     }
   
-    abrirNuevo() {
+    openModalForm() {
       this.submitted = false;
       this.provinciaDialog = true;
+      this.isEditForm = false;
     }
+
   
-    CerrarDialog(){
+    closeModalForm(){
       this.provinciaDialog = false;
       this.submitted = false;
     }
   
     save(){
-      let obj = this.provinciaForm.value as Provincia;
+      if(this.isEditForm){
+        this.edit();
+      }
+      else{
+       this.create();
+      }
+    }
+
+    create(){
+      let obj = this.provinciaForm.value as Province;
       this.service.postProvince(obj).subscribe({
         next:(res) => {
+          let response = res.payload as Province;
           this.messageService.add({ severity: 'success', summary: 'Crear provincia', detail: res.message, life: 3000 });
           this.provinciaDialog = false;
+          this.provincias.push(response);
         },
         error:(err) => {
-          this.messageService.add({ severity: 'error', summary: 'Crear producto', detail: err.error.errorMessage, life: 3000 });
+          this.messageService.add({ severity: 'error', summary: 'Error al crear provincia', detail: err.error.errorMessage, life: 3000 });
+        }
+      });
+    }
+
+    edit(){
+      let obj = this.provinciaForm.value as Province;
+      this.service.putProvince(obj).subscribe({
+        next:(res:ResponseHttp) => {
+          let response = res.payload as Province;
+          this.messageService.add({ severity: 'success', summary: 'Editar provincia', detail: res.message, life: 3000 });
+          this.provinciaDialog = false;
+          this.provincias[this.provincias.findIndex(z => z.provinceCode === response.provinceCode)] = response;
+        },
+        error:(err) => {
+          this.messageService.add({ severity: 'error', summary: 'Error al editar provincia', detail: err.error.errorMessage, life: 3000 });
         }
       });
     }
   
-    editarProvincia(provincia: Provincia) {
-      this.provincia = provincia;
+    editEntity(provincia: Province) {
+      this.provinciaForm.patchValue(provincia);
+      this.isEditForm = true;
       this.provinciaDialog = true;    
     }
   
-    borrarProvincia(provincia: Provincia){
+    deleteEntity(provincia: Province){
       this.provincia = provincia;
-      this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente localidad: ' + this.provincia.nombre + '?',
-      header: 'Eliminar localidad',
+      this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente provincia: ' + this.provincia.name + '?',
+      header: 'Eliminar provincia',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel:'Aceptar',
       rejectLabel:'Cancelar'
       });
     }
   
-    borrar(){
-      this.service.borrarProvincia(this.provincia.codigo).subscribe();
+    delete(){
+      this.service.deleteProvincia(this.provincia.provinceCode).subscribe({
+        next:(res) => {
+          this.messageService.add({ severity: 'success', summary: 'Borrar provincia', detail: res.message, life: 3000 });
+          this.confirmacionService.close();
+        },
+        error:(err) => {
+          this.messageService.add({ severity: 'error', summary: 'Borrar provincia', detail: err.error.errorMessage, life: 3000 });
+        }
+      });
+
+    }
+
+    closeDialog(){
       this.confirmacionService.close();
     }
 

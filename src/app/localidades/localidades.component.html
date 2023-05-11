@@ -1,4 +1,8 @@
 <p-toast></p-toast>
+<p-blockUI [blocked]="blockedPanel">
+    <p-progressSpinner></p-progressSpinner>
+    <p>Procesando...</p>
+</p-blockUI>
 <p-card>
     <div class="grid flex flex-wrap align-items-center justify-content-center">
         <div class="col-12 md:col-12 lg:col-8">
@@ -7,7 +11,7 @@
     responsiveLayout="stack" [breakpoint]="'960px'" 
     [tableStyle]="{'min-width': '10rem'}"
     [loading]="loading"
-    [globalFilterFields]="['ciudad','provincia.nombre']">
+    [globalFilterFields]="['postalCode','city','provinceName']">
         <ng-template pTemplate="caption">
             <div class="flex flex-column md:flex-row card-container justify-content-between">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -22,7 +26,7 @@
                     </span>
                 </div>
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
+                    <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
                 </div>
             </div>
         </ng-template>
@@ -40,11 +44,11 @@
         </ng-template>
         <ng-template pTemplate="body" let-localidad>
             <tr>
-                <td><span class="p-column-title">Localidad</span>{{localidad.ciudad}}</td>
-                <td><span class="p-column-title">Provincia</span>{{localidad.provincia.nombre}}</td>
+                <td><span class="p-column-title">Localidad</span>{{localidad.city}}</td>
+                <td><span class="p-column-title">Provincia</span>{{localidad.provinceName}}</td>
                 <td class="text-right">
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarLocalidad(localidad)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarLocalidad(localidad)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(localidad)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(localidad)"></button>
                 </td>
               </tr>
         </ng-template>
@@ -56,37 +60,52 @@
 
 
 
-<p-dialog [(visible)]="localidadDialog" [style]="{width: '450px'}" header="Agregar localidad" [modal]="true" styleClass="p-fluid">
+<p-dialog #dialog [(visible)]="locationDialog" [style]="{width: '450px'}" header="Agregar localidad" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="field">
-            <label for="ciudad">Ciudad</label>
-            <input type="text" pInputText id="ciudad" [(ngModel)]="localidad.ciudad" required autofocus />
-            <small class="p-error" *ngIf="submitted && !localidad.ciudad">La ciudad es un campo obligatorio</small>
-        </div>
-        <div class="field">
-            <label for="provincia">Provincia</label>
-            <p-dropdown [(ngModel)]="provincia" [options]="provincias" option-label="nombre"  inputId="nombre"   placeholder="Seleccione una provincia">
+        <form [formGroup]="locationForm" (ngSubmit)="save()">
+            <div class="field">
+                <label for="postalCode">Código postal</label>
+                <p-inputNumber inputId="postalCode" formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
+                <small class="p-error block" *ngIf="locationForm.controls['postalCode'].invalid && locationForm.controls['postalCode'].dirty">El código postal es un campo obligatorio</small>
+            </div>
+            <div class="field">
+                <label for="city">Ciudad</label>
+                <input type="text" pInputText id="city" formControlName="city" />
+                <small class="p-error block" *ngIf="locationForm.controls['city'].invalid && locationForm.controls['city'].dirty">La ciudad es un campo obligatorio</small>
+            </div>
+            <div class="field">
+                <label for="provincia">Provincia</label>
+                <p-dropdown [options]="provincias" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Select a Client" optionLabel="name"
+                dataKey="provinceCode"  optionValue="provinceCode"
+                formControlName="provinceCode" (onChange)="onChange($event)">
+            
                 <ng-template pTemplate="selectedItem">
-                    <div class="country-item country-item-value" *ngIf="provincia">
-                      <div>{{ provincia.nombre }}</div>
+                    <div class="flex align-items-center gap-2" *ngIf="provincia">
+                        <div>{{ provincia.name }}</div>
                     </div>
-                  </ng-template>
-                <ng-template let-option pTemplate="item">
-                    <span [class]="'product-badge status-' + option.codigo">{{option.nombre}}</span>
                 </ng-template>
+                <ng-template let-prov pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ prov.name }}</div>
+                    </div>
+                </ng-template>
+            
             </p-dropdown>
-        </div>
-    </ng-template>
+              <small class="p-error block" *ngIf="locationForm.controls['provinceCode'].invalid && locationForm.controls['provinceCode'].dirty">Provincia es un campo obligatorio</small>
+            </div>
+            <div class="flex align-items-center">
+                <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="locationForm.invalid"></button>
+                <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
+            </div>
+        </form>
+   
 
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click) = "Guardar()"></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click) = "CerrarDialog()"></button>
     </ng-template>
 </p-dialog>
 
-<p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+<p-confirmDialog #dialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="borrar()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()" ></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()"></button>
     </ng-template>
 </p-confirmDialog>

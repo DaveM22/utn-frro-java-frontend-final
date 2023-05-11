@@ -1,30 +1,31 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-import { Localidad, Provincia } from 'src/models/models';
+import { Location, Province, ResponseHttp } from 'src/models/models';
 
 @Injectable({
   providedIn: 'root'
 })
-export class LocalidadService {
+export class LocationService {
 
   private baseUrl = environment.apiUrl;
   constructor(private http:HttpClient) { }
 
-  getLocalidades(){
-    return this.http.get(this.baseUrl + "/localidades");
+  getLocation(){
+    return this.http.get(this.baseUrl + "/locations");
   }
 
-  saveLocalidad(loc:Localidad, provincia:Provincia){
-    return this.http.post<Localidad>(this.baseUrl + "/localidades/nuevo",{ciudad:loc.ciudad, provincia: provincia});
+  postLocation(loc:Location){
+    return this.http.post<ResponseHttp>(this.baseUrl + "/locations",loc);
   }
 
-  editLocalidad(loc:Localidad, provincia:Provincia){
-    return this.http.put<Localidad>(this.baseUrl + "/localidades",{codigo:loc.codigo,ciudad:loc.ciudad, provincia: provincia});
+  putLocation(loc:Location) : Observable<ResponseHttp> {
+    return this.http.put<ResponseHttp>(this.baseUrl + "/locations",loc);
   }
 
-  borrarLocalidad(codigo:number){
-    return this.http.delete<string>(this.baseUrl + "/localidades/"+codigo);
+  deleteLocation(codigo:number) : Observable<ResponseHttp> {
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/locations/"+codigo);
   }
 }

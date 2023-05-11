@@ -1,9 +1,9 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError } from 'rxjs';
-import { Categoria, Producto, ResponseHttp } from 'src/models/models';
+import { Category, Producto, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
-import { LocalidadService } from 'src/services/localidad/localidad.service';
+import { LocationService } from 'src/services/localidad/localidad.service';
 import { ProductoService } from 'src/services/productos/producto.service';
 
 @Component({
@@ -13,15 +13,15 @@ import { ProductoService } from 'src/services/productos/producto.service';
 })
 export class ProductosComponent implements OnInit {
 productos:Producto[] = [];
-categorias:Categoria[] = []
+categorias:Category[] = []
 isMobile = false;
 producto:Producto = {id:0, idCategoria:0, categoria:'', descripcion:'', cantidad:0};
-categoria!:Categoria;
+categoria!:Category;
 submitted!:boolean;
 productoDialog!:boolean;
 constructor(
   private service:ProductoService, 
-  private serviceLocalidad:LocalidadService, 
+  private serviceLocalidad:LocationService, 
   private confirmacionService:ConfirmationService,
   private categoriasService:CategoriasService,
   private messageService:MessageService
@@ -31,7 +31,7 @@ constructor(
   
   ngOnInit(): void {
     this.service.listaProductos().subscribe((res) => this.productos = res.payload as Producto[]);
-    this.categoriasService.listaCategorias().subscribe(res => this.categorias = res.payload as Categoria[])
+    this.categoriasService.listaCategorias().subscribe(res => this.categorias = res.payload as Category[])
   }
 
   @HostListener('window:resize', ['$event'])
@@ -85,6 +85,7 @@ constructor(
         this.messageService.add({ severity: 'success', summary: 'Eliminar producto', detail: res.message, life: 3000 });
         this.productos = this.productos.filter((val) => val.id !== this.producto.id);
         this.producto = {id:0, idCategoria:0, categoria:'', descripcion:'', cantidad:0};
+        this.cerrarConfirm();
       },
       error: (err) => {
         this.messageService.add({ severity: 'error', summary: 'Eliminar producto', detail: err.error.errorMessage, life: 3000 });
@@ -92,9 +93,8 @@ constructor(
     });
   }
 
-
-
   cerrarConfirm(){
     this.confirmacionService.close();
   }
+
 }

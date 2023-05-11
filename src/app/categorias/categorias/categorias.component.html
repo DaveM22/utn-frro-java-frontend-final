@@ -1,6 +1,7 @@
 <p-toast></p-toast>
 <p-card>
-    <p-table #dt [value]="categorias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped">
+    <p-table #dt [value]="categorias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped"
+    [globalFilterFields]="['name']">
         <ng-template pTemplate="caption">
             <div class="flex flex-column md:flex-row card-container justify-content-between">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -15,7 +16,7 @@
                     </span>
                 </div>
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nueva categoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirNuevo()" ></button>
+                    <button pButton pRipple label="Agregar nueva categoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
                 </div>
             </div>
         </ng-template>
@@ -25,36 +26,39 @@
                 <th></th>
               </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-categoria>
+        <ng-template pTemplate="body" let-entity>
             <tr>
-                <td><span class="p-column-title">Categoría</span>{{categoria.nombre}}</td>
+                <td><span class="p-column-title">Categoría</span>{{entity.name}}</td>
                 <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editarCategoria(categoria)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="borrarCategoria(categoria)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(entity)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(entity)"></button>
                 </td>
               </tr>
         </ng-template>
     </p-table>
 </p-card>
 
-<p-dialog [(visible)]="categoriaDialog" [style]="{width: '450px'}" header="Agregar categoria" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" header="Agregar categoria" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <div class="field">
-            <label for="categoria">Nombre de categoría</label>
-            <input type="text" pInputText id="categoria" [(ngModel)]="categoria.nombre" required autofocus />
-            <small class="p-error" *ngIf="submitted && !categoria.nombre">La categoría es un campo obligatorio</small>
-        </div>
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" (click) = "Guardar()"></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click) = "CerrarDialog()"></button>
+        <form [formGroup]="categoryForm" (ngSubmit)="save()">
+            <div class="field">
+                <label for="categoria">Nombre de categoría</label>
+                <input type="text" pInputText id="categoria" formControlName="name" placeholder="Ingrese nombre de categoría" form required autofocus />
+                <small class="p-error block" *ngIf="categoryForm.controls['name'].invalid && categoryForm.controls['name'].dirty">
+                    El campo Nombre es obligatorio
+                </small>
+            </div>
+            <div class="flex align-items-center">
+                <button type="button" pButton pRipple icon="pi pi-check" label="Guardar" (click)="save()" class="mr-2 font-bold p-button-success" [disabled]="categoryForm.invalid"></button>
+                <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
+            </div>
+        </form>
     </ng-template>
 </p-dialog>
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="borrar()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()" ></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()" ></button>
     </ng-template>
 </p-confirmDialog>

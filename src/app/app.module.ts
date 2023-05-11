@@ -21,7 +21,7 @@ import {ToolbarModule} from 'primeng/toolbar';
 import {DialogModule} from 'primeng/dialog';
 import { ProvinciasComponent } from './provincias/provincias.component';
 import { LocalidadesComponent } from './localidades/localidades.component';
-import { LocalidadService } from 'src/services/localidad/localidad.service';
+import { LocationService } from 'src/services/localidad/localidad.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CategoriasComponent } from './categorias/categorias/categorias.component';
@@ -50,9 +50,11 @@ import { ProductsPricesComponent } from './products-prices/products-prices.compo
 import { ResumeOrderComponent } from './components/resume-order/resume-order.component';
 import { PriceFormComponent } from './components/price-form/price-form.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CalendarModule } from 'primeng/calendar';
 import { JWT_OPTIONS, JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { MainComponent } from './main/main.component';
+import { BlockUIModule } from 'primeng/blockui';
 @NgModule({
   declarations: [
     AppComponent,
@@ -111,9 +113,12 @@ import { MainComponent } from './main/main.component';
     InputNumberModule,
     CalendarModule,
     TranslateModule.forRoot(),
-    JwtModule
+    JwtModule,
+    BlockUIModule,
+    ProgressSpinnerModule
+
   ],
-  providers: [MessageService, LocalidadService, ConfirmationService,TranslateService,
+  providers: [MessageService, LocationService, ConfirmationService,TranslateService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
   {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],

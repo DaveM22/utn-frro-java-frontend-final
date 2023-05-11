@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Categoria } from 'src/models/models';
+import { Category, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
 
 @Component({
@@ -10,16 +11,23 @@ import { CategoriasService } from 'src/services/categorias/categorias.service';
 })
 export class CategoriasComponent implements OnInit {
 
-  categorias:Categoria[] = [];
+  categorias:Category[] = [];
 
-  categoria!:Categoria; 
+  categoria!:Category; 
   submitted!:boolean;
-  categoriaDialog!:boolean;
+  categoryDialog!: boolean;
+  isEditForm!: boolean;
+
+  categoryForm = this.fb.group({
+    id:[0, Validators.required],
+    name:['', Validators.required],
+  });
 
   constructor(
     private categoriaService:CategoriasService,
     private confirmacionService:ConfirmationService,
-    private messageService:MessageService){
+    private messageService:MessageService,
+    private fb:FormBuilder){
 
   }
 
@@ -28,54 +36,92 @@ export class CategoriasComponent implements OnInit {
     this.categoriaService.listaCategorias().subscribe((res:any) => this.categorias = res.payload);
   }
 
-  abrirNuevo() {
-    this.categoria = { id:0,nombre:''};
+
+
+  openModalForm() {
+    this.categoryForm.reset();
     this.submitted = false;
-    this.categoriaDialog = true;
+    this.categoryDialog = true;
+    this.isEditForm = false;
   }
 
-  CerrarDialog(){
-    this.confirmacionService.close();
+
+  closeModalForm(){
+    this.categoryDialog = false;
+    this.submitted = false;
   }
 
-  Guardar(){
-    this.submitted = true;
-    if(this.categoria.id === 0){
-      this.categoriaService.crearCategoria(this.categoria).subscribe((res:any) => {
-        this.categorias.push(res.payload);
-        this.messageService.add({ severity: 'success', summary: 'Crear categoria', detail: res.message, life: 5000 });
-      });
+  save(){
+    if(this.isEditForm){
+      this.edit();
     }
     else{
-      this.categoriaService.editarCategoria(this.categoria).subscribe((res:any) => {
-        this.categorias[this.categorias.indexOf(res.payload.id)] = res.payload;
-        this.messageService.add({ severity: 'success', summary: 'Editar categoria', detail: res.message , life: 5000 });
-      })
+     this.create();
     }
-    this.categoriaDialog = false;
-    this.categoria = {id:0, nombre:''};
   }
 
-  editarCategoria(categoria: Categoria) {  
-    this.categoria = categoria;
-    this.categoriaDialog = true;   
+  create(){
+    let obj = this.categoryForm.value as Category;
+    this.categoriaService.postCategory(obj).subscribe({
+      next:(res) => {
+        let response = res.payload as Category;
+        this.messageService.add({ severity: 'success', summary: 'Crear categoría', detail: res.message, life: 3000 });
+        this.categoryDialog = false;
+        this.categorias.push(response);
+      },
+      error:(err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error al crear categoría', detail: err.error.errorMessage, life: 3000 });
+      }
+    });
   }
 
-  borrarCategoria(categoria: Categoria){
+  edit(){
+    let obj = this.categoryForm.value as Category;
+    this.categoriaService.putCategory(obj).subscribe({
+      next:(res:ResponseHttp) => {
+        let response = res.payload as Category;
+        this.messageService.add({ severity: 'success', summary: 'Editar categoría', detail: res.message, life: 3000 });
+        this.categoryDialog = false;
+        this.categorias[this.categorias.findIndex(z => z.id === response.id)] = response;
+      },
+      error:(err) => {
+        this.messageService.add({ severity: 'error', summary: 'Error al editar categoría', detail: err.error.errorMessage, life: 3000 });
+      }
+    });
+  }
+
+  editEntity(category: Category) {
+    this.categoryForm.patchValue(category);
+    this.isEditForm = true;
+    this.categoryDialog = true;    
+  }
+
+  deleteEntity(categoria: Category){
     this.categoria = categoria;
-    this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente categoria: ' + this.categoria.nombre + '?',
-    header: 'Eliminar categoria',
+    this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente categoría: ' + this.categoria.name + '?',
+    header: 'Eliminar categoría',
     icon: 'pi pi-exclamation-triangle',
     acceptLabel:'Aceptar',
     rejectLabel:'Cancelar'
     });
   }
 
-  borrar(){
-    this.categoriaService.borrarCategoria(this.categoria.id).subscribe((res:any) => {
-      this.categorias = this.categorias.filter((val) => val.id !== this.categoria.id);
-      this.messageService.add({ severity: 'success', summary: 'Borrar categoria', detail: res.message , life: 5000 });
-    })
+  delete(){
+    this.categoriaService.borrarCategoria(this.categoria.id).subscribe({
+      next:(res) => {
+        this.messageService.add({ severity: 'success', summary: 'Borrar categoría', detail: res.message, life: 3000 });
+        this.confirmacionService.close();
+        this.categorias = this.categorias.filter((val) => val.id !== this.categoria.id);
+      },
+      error:(err) => {
+        this.messageService.add({ severity: 'error', summary: 'Borrar categoría', detail: err.error.errorMessage, life: 3000 });
+      }
+    });
+
+  }
+
+  closeDialog(){
     this.confirmacionService.close();
   }
+
 }
