@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ProductSupplierOrder } from 'src/models/models';
+import { Discount, ProductSupplierOrder } from 'src/models/models';
+import { DiscountService } from 'src/services/discount/discount.service';
 
 @Component({
   selector: 'app-resume-order',
@@ -11,16 +12,25 @@ export class ResumeOrderComponent implements OnInit {
   @Output() finishOrder$:EventEmitter<any> = new EventEmitter<any>();
   @Input() productsOrder!:ProductSupplierOrder[]
   totals!:number;
+  subtotal!:number;
+  discounts!:Discount[]
 
   productOrders!: ProductSupplierOrder[]
 
+  constructor(private discountService:DiscountService){
+    
+  }
   ngOnInit(): void {
     this.totals = 0;
     this.productOrders = this.productsOrder;
-    if(this.productOrders !== undefined){
-     this.calculateTotals(); 
-    };
-    
+    this.discountService.getDiscountsToday().subscribe(x => {
+      this.discounts = x.payload as Discount[]
+      if(this.productOrders !== undefined){
+        this.calculateTotals(); 
+       };
+    });
+
+ 
     
   }
 
@@ -32,7 +42,12 @@ export class ResumeOrderComponent implements OnInit {
     this.productOrders.forEach(element => {
       element.total = element.validityPrice * element.amountOrder;
       this.totals += element.total
-    });
+    }
+    
+    );
+    this.subtotal = this.totals;
+    this.totals  = this.totals - this.totals * (this.getTotalDiscount(this.totals)/100);
+
   }
 
   getValidResume(){
@@ -44,4 +59,13 @@ export class ResumeOrderComponent implements OnInit {
     }
   }
 
+  getTotalDiscount(total:number){
+    let discount = 0;
+    this.discounts.forEach(x => {
+        if (total >= x.amountPrice || total === x.amountPrice) {    
+              discount = x.discount;
+        }
+    })
+    return discount;
+  }
 }

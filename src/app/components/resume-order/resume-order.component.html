@@ -31,12 +31,16 @@
                     <td><span class="p-column-title">Proveedor</span>{{entity.supplierName}}</td>
                     <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice || 'Sin precio'}}</td>
                     <td><span class="p-column-title">Cantidad</span>{{entity.amountOrder || 'Sin cantidad'}}</td>
-                    <td><span class="p-column-title">Total por cantidad</span>{{entity.total || 'Sin cantidad'}}</td>
+                    <td><span class="p-column-title">Total por cantidad</span>$ {{entity.total || 'Sin cantidad'}}</td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="footer">
                 <tr>
-                    <td colspan="4" class="text-right">Totales</td>
+                    <td colspan="5" class="text-right">Subtotal</td>
+                    <td>{{subtotal || 0}}</td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-right">Total</td>
                     <td>{{totals || 0}}</td>
                 </tr>
             </ng-template>

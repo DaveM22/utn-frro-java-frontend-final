@@ -15,7 +15,7 @@
         </ng-template>
         <ng-template pTemplate="body" let-order>
             <tr>
-                <td><span class="p-column-title">Fecha del pedido</span>{{order.dateFrom}}</td>
+                <td><span class="p-column-title">Fecha del pedido</span>{{ order.dateFrom| date:'yyyy-MM-dd' }}</td>
                 <td><span class="p-column-title">Cliente</span>{{order.customerName}}</td>
                 <td class="text-center"><span></span>{{order.amountProducts}}</td>
                 <th><button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()" class="p-button-warning mr-2" pTooltip="PDF" tooltipPosition="bottom"></button></th>

@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  title = 'Ferreteria';
+  title = 'Funense S.A';
   
 
 
@@ -68,10 +68,7 @@ export class AppComponent implements OnInit {
         label:"Configuración",
         icon:'pi pi-cog',
         items:[
-          {
-            label:"Usuarios",
-            RouterLink:"usuarios"
-          },
+
           {
             label:"Provincias",
             routerLink:'provincias'
@@ -79,6 +76,10 @@ export class AppComponent implements OnInit {
           {
             label:"Localidades",
             routerLink:'localidades'
+          },
+          {
+            label:"Descuentos",
+            routerLink:"descuentos"
           }
         ],
         visible:this.isAdmin
@@ -113,8 +114,10 @@ export class AppComponent implements OnInit {
             label:'Precios',
             routerLink:'precios-productos'
           }
-        ]
+        ],
+        visible:this.isAdmin
       },
+      
       {
         label:'Pedidos',
         icon:'pi pi-dollar',

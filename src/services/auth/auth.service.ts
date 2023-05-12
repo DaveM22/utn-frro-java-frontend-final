@@ -38,13 +38,12 @@ export class AuthService  {
           this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
           this.isAuthenticated.next(true);
           let decodedToken = jwtDecode(res.token) as any;
-          console.log(decodedToken.roles);
           this.userRoles.next(decodedToken.roles);
-          console.log(history.state);
           this.router.navigate([history.state.returnUrl || '/']);
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: "Los datos de nombre de usuario y/o contraseña son incorrectos", life: 3000 });
+          console.log(err);
+          this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: err.error.errorMessage, life: 3000 });
         }
       });
   ;

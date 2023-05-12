@@ -17,11 +17,13 @@ import { adminGuard, permissionGuard } from 'src/util/user-guard.guard';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
 import { UsersComponent } from './users/users.component';
+import { DiscountComponent } from './discount/discount.component';
+import { UsuariosComponent } from 'src/forms/usuarios/usuarios.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent },
   {path:'', component:MainComponent, canActivate:[permissionGuard]},
-  {path:'usuarios', component:UsersComponent, canActivate:[adminGuard]},
+  {path:'descuentos', component:DiscountComponent, canActivate: [adminGuard]},
   {path:'localidades', component:LocalidadesComponent, canActivate: [adminGuard]},
   {path:'categorias', component:CategoriasComponent, canActivate: [permissionGuard]},
   {path:'productos', component:ProductosComponent, canActivate: [permissionGuard]},
@@ -33,7 +35,7 @@ const routes: Routes = [
   {path:'clientes', component:CostumerComponent, canActivate: [permissionGuard]},
   {path:'proveedores', component:SupplierComponent, canActivate: [permissionGuard]},
   {path:'precios-productos', component:ProductsPricesComponent, canActivate: [permissionGuard]},
-  {path:'precios-productos/:idProducto/:idPersona', component:PricesComponent, canActivate: [permissionGuard]}
+  {path:'precios-productos/:idProducto/:idPersona', component:PricesComponent, canActivate: [permissionGuard]},
 ];
 
 @NgModule({
