@@ -106,4 +106,12 @@ export interface Supplier extends Persona{
 export interface ProductSupplierOrder extends ProductSupplier {
     amountOrder:number;
     total:number;
+    subtotal:number;
+    discount:number;
+}
+
+export interface Discount {
+     validityDate: Date;
+     amountPrice:number;
+     discount: number;
 }
