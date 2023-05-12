@@ -29,7 +29,7 @@
                 <tr>
                     <td><span class="p-column-title">Producto</span>{{entity.productName}}</td>
                     <td><span class="p-column-title">Proveedor</span>{{entity.supplierName}}</td>
-                    <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice}}</td>
+                    <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice || 'Sin precio'}}</td>
                     <td><span class="p-column-title">Cantidad</span>{{entity.amountOrder || 'Sin cantidad'}}</td>
                     <td><span class="p-column-title">Total por cantidad</span>{{entity.total || 'Sin cantidad'}}</td>
                 </tr>

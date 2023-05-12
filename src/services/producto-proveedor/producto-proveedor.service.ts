@@ -14,14 +14,14 @@ export class ProductoProveedorService {
   constructor(private http:HttpClient) { }
 
   listaProductoProveedores(productoId:number):Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/productos-proveedores/" + productoId);
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/productos-proveedores/" + productoId);
   }
 
   getProductsSupplier() : Observable<ResponseHttp> {
-    return this.http.get<ResponseHttp>(this.baseUrl + "/productos-proveedores");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/productos-proveedores");
   }
 
   postProductSupplier(productSupplier:ProductSupplier){
-    return this.http.post<ResponseHttp>(this.baseUrl + "/product-supplier/"+productSupplier.personaId+"/new", productSupplier);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/product-supplier/"+productSupplier.personaId+"/new", productSupplier);
   }
 }

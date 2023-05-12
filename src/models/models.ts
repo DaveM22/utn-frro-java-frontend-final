@@ -28,7 +28,7 @@ export interface Province {
 }
 
 export interface Category {
-    id:number,
+    categoryId:number,
     name:string
 }
 
@@ -36,7 +36,7 @@ export interface Product {
     id:number,
     description:string,
     categoryId:number,
-    categoriaName:string,
+    categoryName:string,
     amount:number
 }
 
@@ -63,6 +63,12 @@ export interface Order {
     date:number;
     personaId:number;
     details:OrderDetail[];
+}
+
+export interface OrderView {
+    dateFrom:Date;
+    customerName:String;
+    amountProducts:number;
 }
 
 export interface OrderDetail{

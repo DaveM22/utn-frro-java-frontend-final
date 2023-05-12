@@ -14,8 +14,11 @@ export class PriceService {
 
   constructor(private http:HttpClient) { }
 
+  getPrices(productId:number, supplierId:number){
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/prices/"+productId+"/"+supplierId);
+  }
 
   postPrice(price:Prices) : Observable<ResponseHttp> {
-    return this.http.post<ResponseHttp>(this.baseUrl + "/prices", price);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/prices", price);
   }
 }

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Validators,FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import jwtDecode from 'jwt-decode';
 import { MessageService } from 'primeng/api';
 import { Credentials } from 'src/models/models';
 import { AuthService } from 'src/services/auth/auth.service';
@@ -10,16 +11,16 @@ import { AuthService } from 'src/services/auth/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent  {
   loginForm!: FormGroup;
   returnUrl!:any;
   creds: Credentials = {
     email: '',
     password: ''
   }
-  submitted = false;
 
-  constructor(private authService:AuthService, private router:Router, private messageService:MessageService ){}
+  constructor(private authService:AuthService ){}
+
 
   ngOnInit() {
     this.returnUrl = history.state.returnUrl || '/';
@@ -30,21 +31,8 @@ export class LoginComponent {
   }
 
   onSubmit() { 
-    this.submitted = true;
 
-    this.authService.login(this.creds).subscribe(
-    {
-      next:(res:any) => {
-        localStorage.removeItem("token");
-        localStorage.setItem("token", res.token);
-        this.router.navigate([this.returnUrl]);
-        this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: "Los datos de nombre de usuario y/o contraseña son incorrectos", life: 3000 });
-      }
-    });
-
+    this.authService.login(this.creds);
     }
   
 }

@@ -83,9 +83,15 @@ export class NewOrderComponent implements OnInit {
       this.orderDetails.push(obj);
     })
     this.order = {date:Date.now(), orderNumber:0, personaId:this.customer.id, details: this.orderDetails };
-    this.orderService.postOrder(this.order).subscribe(x => {
-      this.router.navigateByUrl("/")
-      this.messageService.add({ severity: 'success', summary: 'Creación', detail: "Se ha completado la compra del pedido de manera exitosa", life: 3000 });
+    this.orderService.postOrder(this.order).subscribe(
+      {
+        next: (res) => {
+          this.router.navigateByUrl("/pedidos")
+          this.messageService.add({ severity: 'success', summary: 'Creación de pedido', detail: res.message, life: 3000 });
+        },
+        error:(err) => {
+          this.messageService.add({ severity: 'error', summary: 'Error al crear pedido', detail: err.error.errorMessage, life: 3000 });
+        }
     });
   }
 

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/services/auth/auth.service';
 @Component({
   selector: 'app-root',
@@ -10,24 +11,21 @@ import { AuthService } from 'src/services/auth/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  mostrarMenu = true;
+  mostrarMenu!:boolean;
+  isAdmin!: boolean;
   isLogged!:boolean;
+  data!: string;
+
+  roles!: string;
+  items!:any;
+
 
   constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router){
-    router.events.subscribe((val) => {
-      if(val instanceof NavigationEnd){
-        if(val.url === '/login'){
-          this.mostrarMenu = false;
-        }
-        else{
-          this.mostrarMenu = true;
-        }
-      }
-    });
+
+
   }
 
 
-  items!: MenuItem[];
   title = 'Ferreteria';
   
 
@@ -35,18 +33,45 @@ export class AppComponent implements OnInit {
 
 
   logout(){
-    localStorage.removeItem("token");
+    this.authService.logout();
     this.router.navigateByUrl("/login")
   }
 
+  
+
 
   ngOnInit(): void {
+
+    this.authService.getIsAuthenticated().subscribe(isAuthenticated => {
+      console.log(isAuthenticated);
+      this.mostrarMenu = isAuthenticated;
+
+
+
+  });
+  this.authService.getUserRoles().subscribe(userRoles => {
+    this.roles = userRoles;
+    this.isAdmin = this.roles.includes("ADMIN");
+    this.setMenuBar();
+  });
+
+
+
+
     this.translateService.setDefaultLang('es');
+    
+  }
+
+  setMenuBar(){
     this.items = [
       {
         label:"Configuración",
         icon:'pi pi-cog',
         items:[
+          {
+            label:"Usuarios",
+            RouterLink:"usuarios"
+          },
           {
             label:"Provincias",
             routerLink:'provincias'
@@ -55,7 +80,8 @@ export class AppComponent implements OnInit {
             label:"Localidades",
             routerLink:'localidades'
           }
-        ]
+        ],
+        visible:this.isAdmin
       },
       {
         label: 'Personal',

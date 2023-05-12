@@ -13,18 +13,18 @@ export class ProductoService {
 
 
   getProducts() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/products");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/products");
   }
 
   postProducts(producto:Product) : Observable<ResponseHttp>{
-    return this.http.post<ResponseHttp>(this.baseUrl + "/products", producto);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/products", producto);
   }
 
   putProducts(producto:Product) : Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/products", producto);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/products", producto);
   }
 
   deleteProduct(idProducto:number): Observable<ResponseHttp>{
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/products/" + idProducto);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/products/" + idProducto);
   }
 }

@@ -15,11 +15,11 @@ export class OrderService {
 
 
   getOrders() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/orders");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/orders");
   }
 
   postOrder(order:Order){
-    return this.http.post<ResponseHttp>(this.baseUrl + "/orders", order);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/orders", order);
   }
 
 }

@@ -15,50 +15,50 @@ export class PersonaService {
   constructor(private http:HttpClient) { }
 
   getCustomerParticulars() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/customer/particular");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/customer/particular");
   }
 
   deleteCustomerParticular(id:number) : Observable<ResponseHttp> {
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/customer/particular/"+id);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/customer/particular/"+id);
   }
 
   postCustomerParticular(customer:CustomerParticular) : Observable<ResponseHttp> {
-    return this.http.post<ResponseHttp>(this.baseUrl + "/customer/particular", customer);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/customer/particular", customer);
   }
 
   putCustomerParticular(customer:CustomerParticular) : Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/customer/particular", customer);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/customer/particular", customer);
   }
 
   getCustomersCompany() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/customer/company");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/customer/company");
   }
 
   deleteCustomerCompany(id:number) : Observable<ResponseHttp> {
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/customer/company/"+id);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/customer/company/"+id);
   }
 
   postCustomerCompany(customer:CustomerCompany) : Observable<ResponseHttp> {
-    return this.http.post<ResponseHttp>(this.baseUrl + "/customer/company", customer);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/customer/company", customer);
   }
 
   putCustomerCompany(customer:CustomerCompany) : Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/customer/company", customer);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/customer/company", customer);
   }
 
   getSuppliers() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/supplier");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/supplier");
   }
 
   deleteSupplier(id:number) : Observable<ResponseHttp> {
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/supplier"+id);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/supplier"+id);
   }
 
   postSupplier(supplier:Supplier) : Observable<ResponseHttp> {
-    return this.http.post<ResponseHttp>(this.baseUrl + "/supplier", supplier);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/supplier", supplier);
   }
 
   putSupplier(supplier:Supplier) : Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/supplier", supplier);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/supplier", supplier);
   }
 }

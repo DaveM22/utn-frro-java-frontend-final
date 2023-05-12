@@ -55,6 +55,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { JWT_OPTIONS, JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { MainComponent } from './main/main.component';
 import { BlockUIModule } from 'primeng/blockui';
+import { UsersComponent } from './users/users.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -83,7 +84,8 @@ import { BlockUIModule } from 'primeng/blockui';
     ProductsPricesComponent,
     ResumeOrderComponent,
     PriceFormComponent,
-    MainComponent
+    MainComponent,
+    UsersComponent
   ],
   imports: [
     BrowserModule,

@@ -15,18 +15,18 @@ export class ProvinciaService {
 
 
   getProvincias() : Observable<ResponseHttp>{
-    return this.http.get<ResponseHttp>(this.baseUrl + "/provinces");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/provinces");
   }
 
   deleteProvincia(codProvince:number): Observable<ResponseHttp>{
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/provinces/"+codProvince);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/provinces/"+codProvince);
   }
 
   postProvince(province:Province):Observable<ResponseHttp> {
-    return this.http.post<ResponseHttp>(this.baseUrl + "/provinces", province);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/provinces", province);
   }
 
   putProvince(province:Province):Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/provinces", province);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/provinces", province);
   }
 }

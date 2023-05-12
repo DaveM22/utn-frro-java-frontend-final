@@ -32,7 +32,7 @@ export class PricesComponent implements OnInit {
   ngOnInit(): void {
     const state = history.state;
     this.productSupplier = state.supplier;
-    this.prices = this.productSupplier.prices;
+    this.priceService.getPrices(this.productSupplier.productId, this.productSupplier.personaId).subscribe(x => {this.prices = x.payload as Prices[]});
   }
 
 

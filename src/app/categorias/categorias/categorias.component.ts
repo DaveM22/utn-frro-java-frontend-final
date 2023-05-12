@@ -82,7 +82,7 @@ export class CategoriasComponent implements OnInit {
         let response = res.payload as Category;
         this.messageService.add({ severity: 'success', summary: 'Editar categoría', detail: res.message, life: 3000 });
         this.categoryDialog = false;
-        this.categorias[this.categorias.findIndex(z => z.id === response.id)] = response;
+        this.categorias[this.categorias.findIndex(z => z.categoryId === response.categoryId)] = response;
       },
       error:(err) => {
         this.messageService.add({ severity: 'error', summary: 'Error al editar categoría', detail: err.error.errorMessage, life: 3000 });
@@ -107,11 +107,11 @@ export class CategoriasComponent implements OnInit {
   }
 
   delete(){
-    this.categoriaService.borrarCategoria(this.categoria.id).subscribe({
+    this.categoriaService.borrarCategoria(this.categoria.categoryId).subscribe({
       next:(res) => {
         this.messageService.add({ severity: 'success', summary: 'Borrar categoría', detail: res.message, life: 3000 });
         this.confirmacionService.close();
-        this.categorias = this.categorias.filter((val) => val.id !== this.categoria.id);
+        this.categorias = this.categorias.filter((val) => val.categoryId !== this.categoria.categoryId);
       },
       error:(err) => {
         this.messageService.add({ severity: 'error', summary: 'Borrar categoría', detail: err.error.errorMessage, life: 3000 });

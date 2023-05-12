@@ -19,7 +19,8 @@
                     <th style="width: 4rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th>Razón Social</th>
+                    <th>Producto</th>
+                    <th>Proveedor</th>
                     <th class="text-center">Cantidad</th>
                     <th class="text-center">Precio vigente</th>
                 </tr>
@@ -30,7 +31,8 @@
                         <span class="p-column-title text-left">Seleccionar</span>
                         <p-tableCheckbox [value]="entity"></p-tableCheckbox>
                     </td>
-                    <td><span class="p-column-title text-left">Razón Social</span>{{entity.supplierName}}</td>
+                    <td><span class="p-column-title text-left">Produto</span>{{entity.productName}}</td>
+                    <td><span class="p-column-title text-left">Proveedor</span>{{entity.supplierName}}</td>
                     <td class="text-center"><span class="p-column-title text-left">Cantidad</span>{{entity.amount}}</td>
                     <td class="text-center"><span class="p-column-title text-left">Precio vigente</span>{{entity.validityPrice ||
                         "Sin precio"}}</td>

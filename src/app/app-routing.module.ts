@@ -16,16 +16,18 @@ import { ProductsPricesComponent } from './products-prices/products-prices.compo
 import { adminGuard, permissionGuard } from 'src/util/user-guard.guard';
 import { AppComponent } from './app.component';
 import { MainComponent } from './main/main.component';
+import { UsersComponent } from './users/users.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent, data: { mostrarMenu: false } },
+  {path: 'login', component: LoginComponent },
   {path:'', component:MainComponent, canActivate:[permissionGuard]},
+  {path:'usuarios', component:UsersComponent, canActivate:[adminGuard]},
   {path:'localidades', component:LocalidadesComponent, canActivate: [adminGuard]},
   {path:'categorias', component:CategoriasComponent, canActivate: [permissionGuard]},
   {path:'productos', component:ProductosComponent, canActivate: [permissionGuard]},
   {path:'productos-proveedores/:idProducto', component:ProductoProveedoresComponent, canActivate: [permissionGuard]},
   {path:'productos-proveedores/:idProducto/nuevo', component:ProductSupplierFormComponent, canActivate: [permissionGuard]},
-  {path:'provincias', component:ProvinciasComponent, canActivate: [permissionGuard]},
+  {path:'provincias', component:ProvinciasComponent, canActivate: [adminGuard]},
   {path:'pedidos', component:PedidosComponent, canActivate: [permissionGuard]},
   {path:'pedidos/nuevo', component:NewOrderComponent, canActivate: [permissionGuard]},
   {path:'clientes', component:CostumerComponent, canActivate: [permissionGuard]},
