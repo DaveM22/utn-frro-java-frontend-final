@@ -14,18 +14,18 @@ export class LocationService {
   constructor(private http:HttpClient) { }
 
   getLocation(){
-    return this.http.get(this.baseUrl + "/api/locations");
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/locations");
   }
 
   postLocation(loc:Location){
-    return this.http.post<ResponseHttp>(this.baseUrl + "/api//locations",loc);
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/locations",loc);
   }
 
   putLocation(loc:Location) : Observable<ResponseHttp> {
-    return this.http.put<ResponseHttp>(this.baseUrl + "/api//locations",loc);
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/locations",loc);
   }
 
   deleteLocation(codigo:number) : Observable<ResponseHttp> {
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/api//locations/"+codigo);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/locations/"+codigo);
   }
 }

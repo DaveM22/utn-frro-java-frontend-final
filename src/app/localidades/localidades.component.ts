@@ -1,9 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Component, ElementRef, HostListener, OnInit, TemplateRef, Type, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DialogService } from 'primeng/dynamicdialog';
+import { Observable } from 'rxjs';
 import { Location, Province, ResponseHttp } from 'src/models/models';
 import { LocationService } from 'src/services/localidad/localidad.service';
-import { ProvinciaService } from 'src/services/provincia/provincia.service';
+import { LocationAdd, LocationDelete, LocationListAction } from 'src/store/actions/location.actions';
+import { LocationState } from 'src/store/states/location.state';
+import { LocationFormModalComponent } from '../components/forms/location-form-modal/location-form-modal.component';
+import { ProvinceState } from 'src/store/states/province.state';
+import { ProvinceListAction } from 'src/store/actions/province.actions';
+import { UtilState } from 'src/store/states/util.state';
+import { FormActivate } from 'src/store/actions/util.actions';
 
 @Component({
   selector: 'app-localidades',
@@ -11,6 +20,9 @@ import { ProvinciaService } from 'src/services/provincia/provincia.service';
   styleUrls: ['./localidades.component.scss']
 })
 export class LocalidadesComponent implements OnInit {
+  @Select(LocationState.getLocations) locations$!: Observable<Location[]>;
+  @Select(ProvinceState.getProvinces) provinces$!: Observable<Province[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   localidades: Location[] = [];
   provincias: Province[] = [];
   location!: Location;
@@ -22,24 +34,23 @@ export class LocalidadesComponent implements OnInit {
   locationForm = this.fb.group({
     postalCode: [0, Validators.required],
     city: ['', Validators.required],
-    provinceCode: [0, Validators.required]
+    provinceCode: [0, Validators.required],
+    provinceName: ['']
   });
   isEditForm!: boolean;
 
   constructor(
     private locationService: LocationService,
-    private provinceService: ProvinciaService,
     private confirmacionService: ConfirmationService,
+    private dialogService:DialogService,
     private messageService: MessageService,
-    private fb: FormBuilder) { }
+    private store:Store,
+    private fb: NonNullableFormBuilder) { }
 
   ngOnInit() {
-    this.locationService.getLocation().subscribe((res: any) => this.localidades = res.payload);
-    this.provinceService.getProvincias().subscribe((res: any) => {
-      this.provincias = res.payload
-      this.loading = false;
-    })
-
+    this.blockedPanel = false;
+    this.store.dispatch(new LocationListAction());
+    this.store.dispatch(new  ProvinceListAction());
   }
 
   @HostListener('window:resize', ['$event'])
@@ -52,13 +63,12 @@ export class LocalidadesComponent implements OnInit {
   }
 
   openModalForm() {
-    this.locationDialog = true;
-    this.isEditForm = false;
+    this.store.dispatch(new FormActivate(true));
   }
 
 
   closeModalForm() {
-    this.locationDialog = false;
+    this.store.dispatch(new FormActivate(false));
     this.locationForm.reset();
   }
 
@@ -74,20 +84,7 @@ export class LocalidadesComponent implements OnInit {
   create() {
     this.blockedPanel = true;
     let obj = this.locationForm.value as Location;
-    let location = { postalCode: obj.postalCode!, city: obj.city!, provinceCode: obj.provinceCode, provinceName: this.provincia.name };
-    this.locationService.postLocation(location).subscribe({
-      next: (res) => {
-        let response = res.payload as Location;
-        this.blockedPanel = false;
-        this.messageService.add({ severity: 'success', summary: 'Crear localidad', detail: res.message, life: 3000 });
-        this.locationDialog = false;
-        this.localidades.push(response);
-      },
-      error: (err) => {
-        this.blockedPanel = false;
-        this.messageService.add({ severity: 'error', summary: 'Error al crear localidad', detail: err.error.errorMessage, life: 3000 });
-      }
-    })
+    this.store.dispatch(new LocationAdd(obj));
   }
 
   edit() {
@@ -130,21 +127,7 @@ export class LocalidadesComponent implements OnInit {
 
   delete() {
     this.blockedPanel = true;
-    this.locationService.deleteLocation(this.location.postalCode).subscribe({
-      next: (res) => {
-        this.messageService.add({ severity: 'success', summary: 'Borrar localidad', detail: res.message, life: 3000 });
-        
-        this.confirmacionService.close();
-        this.blockedPanel = false;
-        this.localidades = this.localidades.filter((val) => val.postalCode !== this.location.postalCode);
-
-      },
-      error: (err) => {
-        this.blockedPanel = false;
-        this.messageService.add({ severity: 'error', summary: 'Borrar localidad', detail: err.error.errorMessage, life: 3000 });
-      }
-    });
-
+    this.store.dispatch(new LocationDelete(this.location.postalCode));
   }
 
   closeDialog() {

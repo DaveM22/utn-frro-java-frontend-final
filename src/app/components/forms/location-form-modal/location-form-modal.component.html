@@ -1,0 +1,36 @@
+<form [formGroup]="locationForm" (ngSubmit)="save()">
+    <div class="field">
+        <label for="postalCode">Código postal</label>
+        <p-inputNumber inputId="postalCode" formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
+        <small class="p-error block" *ngIf="locationForm.controls['postalCode'].invalid && locationForm.controls['postalCode'].dirty">El código postal es un campo obligatorio</small>
+    </div>
+    <div class="field">
+        <label for="city">Ciudad</label>
+        <input type="text" pInputText id="city" formControlName="city" />
+        <small class="p-error block" *ngIf="locationForm.controls['city'].invalid && locationForm.controls['city'].dirty">La ciudad es un campo obligatorio</small>
+    </div>
+    <div class="field">
+        <label for="provincia">Provincia</label>
+        <p-dropdown [options]="(provinces$ | async)!" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Seleccionar localidad" optionLabel="name"
+        dataKey="provinceCode"  optionValue="provinceCode"
+        formControlName="provinceCode" (onChange)="onChange($event)">
+    
+        <ng-template let-prov  pTemplate="selectedItem">
+            <div class="flex align-items-center gap-2" *ngIf="provincia">
+                <div>{{ prov.name }}</div>
+            </div>
+        </ng-template>
+        <ng-template let-prov pTemplate="item">
+            <div class="flex align-items-center gap-2">
+                <div>{{ prov.name }}</div>
+            </div>
+        </ng-template>
+    
+    </p-dropdown>
+      <small class="p-error block" *ngIf="locationForm.controls['provinceCode'].invalid && locationForm.controls['provinceCode'].dirty">Provincia es un campo obligatorio</small>
+    </div>
+    <div class="flex align-items-center">
+        <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="locationForm.invalid"></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  ></button>      
+    </div>
+</form>

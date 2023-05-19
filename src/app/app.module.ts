@@ -56,6 +56,14 @@ import { JWT_OPTIONS, JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { MainComponent } from './main/main.component';
 import { BlockUIModule } from 'primeng/blockui';
 import { UsersComponent } from './users/users.component';
+import { NgxsModule } from '@ngxs/store';
+import { LocationState } from 'src/store/states/location.state';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { LocationFormModalComponent } from './components/forms/location-form-modal/location-form-modal.component';
+import { ProvinceState } from 'src/store/states/province.state';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { UtilState } from 'src/store/states/util.state';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,7 +93,8 @@ import { UsersComponent } from './users/users.component';
     ResumeOrderComponent,
     PriceFormComponent,
     MainComponent,
-    UsersComponent
+    UsersComponent,
+    LocationFormModalComponent
   ],
   imports: [
     BrowserModule,
@@ -117,10 +126,15 @@ import { UsersComponent } from './users/users.component';
     TranslateModule.forRoot(),
     JwtModule,
     BlockUIModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    NgxsModule.forRoot([LocationState, ProvinceState, UtilState]),
+    DialogModule,
+    DynamicDialogModule,
+    NgxsLoggerPluginModule.forRoot({
 
+    })
   ],
-  providers: [MessageService, LocationService, ConfirmationService,TranslateService,
+  providers: [MessageService, LocationService, ConfirmationService,TranslateService,DialogService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
   {provide:HTTP_INTERCEPTORS, useClass:JwtInterceptorInterceptor, multi:true}],

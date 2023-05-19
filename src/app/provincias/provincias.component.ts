@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, FilterService, MessageService } from 'primeng/api';
 import { Province, ResponseHttp } from 'src/models/models';
-import { ProvinciaService } from 'src/services/provincia/provincia.service';
+import { ProvinceService } from 'src/services/provincia/provincia.service';
 
 @Component({
   selector: 'app-provincias',
@@ -21,7 +21,7 @@ export class ProvinciasComponent implements OnInit {
     name:['', Validators.required],
   });
 
-  constructor(private service:ProvinciaService,
+  constructor(private service:ProvinceService,
     private confirmacionService:ConfirmationService,
     private messageService:MessageService,
     private fb:FormBuilder){}

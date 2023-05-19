@@ -38,8 +38,9 @@ export class ProductoProveedoresComponent implements OnInit {
 
   onRowUnselect($event:any){
     this.productSupplierForm.get('supplier')?.setValue(null);
-    this.productSupplierForm.get('supplier')?.markAsTouched;
-    this.productSupplierForm.get('supplier')?.markAsDirty;
+    this.productSupplierForm.get('supplier')?.markAllAsTouched()
+    this.productSupplierForm.get('supplier')?.markAsDirty();
+    console.log(this.productSupplierForm.get('supplier'))
   }
 
   onRowSelect($event:any) {

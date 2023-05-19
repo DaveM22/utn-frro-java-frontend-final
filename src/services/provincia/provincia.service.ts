@@ -7,7 +7,7 @@ import { Province, ResponseHttp } from 'src/models/models';
 @Injectable({
   providedIn: 'root'
 })
-export class ProvinciaService {
+export class ProvinceService {
 
   private baseUrl = environment.apiUrl;
 
