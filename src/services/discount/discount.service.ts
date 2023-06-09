@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { ResponseHttp } from 'src/models/models';
+import { Discount, ResponseHttp } from 'src/models/models';
 
 @Injectable({
   providedIn: 'root'
@@ -13,5 +13,13 @@ export class DiscountService {
 
   getDiscountsToday(){
     return this.http.get<ResponseHttp>(this.baseUrl + "/api/discount");
+  }
+
+  getAll(){
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/discount/all");
+  }
+
+  post(discount:Discount){
+    return this.http.post<ResponseHttp>(this.baseUrl + "/api/discount", discount);
   }
 }

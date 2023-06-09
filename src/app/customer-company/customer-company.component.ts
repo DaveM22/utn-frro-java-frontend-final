@@ -1,20 +1,32 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { CustomerCompany } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
+import { AddCustomerCompanyAction, CustomerCompanyListAction, DeleteCustomerCompanyAction, EditCustomerCompanyAction } from 'src/store/actions/customer-company.action';
+import { FormActivate } from 'src/store/actions/util.actions';
+import { CustomerCompanyState } from 'src/store/states/customer.company.state';
+import { UtilState } from 'src/store/states/util.state';
+import { CRUD } from 'src/util/abm-interface';
 
 @Component({
   selector: 'app-customer-company',
   templateUrl: './customer-company.component.html',
   styleUrls: ['./customer-company.component.scss']
 })
-export class CustomerCompanyComponent {
+export class CustomerCompanyComponent implements CRUD {
+  @Select(CustomerCompanyState.getCustomerCompany) customer$!: Observable<CustomerCompany[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
   customersCompany!:CustomerCompany[];
   customerCompany!:CustomerCompany;
   submitted!:boolean;
   companyDialog!:boolean;
-  emptyMessage!:string;
+  emptyMessage:string = "No se han agregado clientes";
+  isEdit!:boolean;
+  title!:string;
   customerCompanyForm = this.fb.group({
     id:[0, Validators.required],
     cuit:['', Validators.required],
@@ -22,89 +34,65 @@ export class CustomerCompanyComponent {
     direction:['',Validators.required],
     email:['',Validators.required],
     phoneNumber:['', Validators.required],
-    postalCod:[0,Validators.required]
+    postalCode:[0,Validators.required]
   });
 
   constructor(
-    private personaService:PersonaService,
     private confirmacionService:ConfirmationService,
-    private messageService:MessageService,
+    private store:Store,
     private fb:FormBuilder){
 
   }
 
   ngOnInit(): void {
-    this.personaService.getCustomersCompany().subscribe(x => {
-      this.customersCompany = x.payload as CustomerCompany[];
-    })
+    this.store.dispatch(new CustomerCompanyListAction());
   }
 
-  deleteModal(customer: CustomerCompany): void {
-    this.customerCompany = customer;
+  openModalForm(): void {
+    this.title = "Nuevo cliente";
+    this.isEdit = false;
+    this.store.dispatch(new FormActivate(true));
+  }
+  closeModalForm(): void {
+    this.store.dispatch(new FormActivate(false));
+  }
+  save(): void {
+    if(this.isEdit){
+      this.edit();
+    }
+    else{
+      this.create();
+    }
+  }
+  create(): void {
+    this.customerCompany = this.customerCompanyForm.getRawValue()!;
+    this.store.dispatch(new AddCustomerCompanyAction(this.customerCompany));
+  }
+  edit(): void {
+    this.customerCompany = this.customerCompanyForm.getRawValue()!;
+    this.store.dispatch(new EditCustomerCompanyAction(this.customerCompany));
+  }
+  editEntity(entity: CustomerCompany): void {
+    this.title = "Editar cliente"
+    this.isEdit = true;
+    this.customerCompanyForm.patchValue(entity);
+  }
+  deleteEntity(entity: any): void {
+    this.customerCompany = entity;
     this.confirmacionService.confirm(
-      {message: '¿Estas seguro de borrar el siguiente cliente: '  + this.customerCompany.businessName+ ' ' + '?',
+      {message: '¿Estas seguro de borrar el siguiente cliente: ' 
+      + this.customerCompany.businessName +'?',
     header: 'Eliminar cliente',
     icon: 'pi pi-exclamation-triangle',
     acceptLabel:'Aceptar',
     rejectLabel:'Cancelar'
     });
   }
-
-  deleteConfirm() : void {
-    this.personaService.deleteCustomerCompany(this.customerCompany.id).subscribe(
-      {
-        next:(res) => {
-          this.messageService.add({key: 'tc', severity: 'success', summary: 'Eliminar cliente', detail: res.message, life: 3000 });
-          this.customersCompany = this.customersCompany.filter((val:CustomerCompany) => val.id !== this.customerCompany.id);
-          this.confirmacionService.close();
-        },
-        error:(error) => {
-          this.emptyMessage = "No se pudieron recuperar los clientes, intente mas tarde"
-        }
-      }
-    );
+  delete(): void {
+    this.store.dispatch(new DeleteCustomerCompanyAction(this.customerCompany.id!));
   }
-
-  closeDeleteConfirm() : void {
-    this.confirmacionService.close();
-    this.messageService.add({key: 'tc', severity: 'warn', summary: 'Eliminar cliente', detail: "Se ha cancelado la eliminación del cliente", life: 3000 });
-  }
-
-  saveForm(): void {
-    let obj = this.customerCompanyForm.value as CustomerCompany;
-    if(obj.id === 0){
-      this.personaService.postCustomerCompany(obj).subscribe(x => {
-        this.companyDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Crear cliente', detail: x.message, life: 3000 });
-        this.customersCompany.push(x.payload as CustomerCompany);
-      });
-    }
-    else {
-      this.personaService.postCustomerCompany(obj).subscribe(x => {
-        let responseCustomer = x.payload as CustomerCompany;
-        this.companyDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Editar cliente', detail: x.message, life: 3000 });
-        this.customersCompany[this.customersCompany.findIndex(z => z.id === responseCustomer.id)] = responseCustomer;
-        this.companyDialog = false;
-      });
-    }
-  }
-
   closeDialog(): void {
-    this.companyDialog = false;
-    this.submitted = false;
-  }
-
-  addDialog() {
-    this.submitted = false;
-    this.companyDialog = true;
-  }
-
-  editDialog(customer:CustomerCompany){
-    this.companyDialog = true;
-    this.customerCompanyForm.patchValue(customer);
+    this.confirmacionService.close();
   }
 
 }

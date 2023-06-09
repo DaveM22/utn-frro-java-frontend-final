@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Prices, ProductSupplier } from 'src/models/models';
+import { Price, ProductSupplier } from 'src/models/models';
 import { PriceService } from 'src/services/prices/price.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 
@@ -11,7 +11,7 @@ import { ProductoProveedorService } from 'src/services/producto-proveedor/produc
 })
 export class ProductsPricesComponent implements OnInit {
   productSuppliers:ProductSupplier[] = []
-  prices!:Prices[];
+  prices!:Price[];
   showListPrices!:boolean;
   priceDialog!:boolean;
   showProductSupplier!:boolean;

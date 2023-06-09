@@ -3,11 +3,13 @@ import { ActivatedRoute, Router, RouterStateSnapshot } from "@angular/router";
 import { AuthService } from "src/services/auth/auth.service";
 import jwtDecode, * as jwt_decode from 'jwt-decode';
 import { state } from "@angular/animations";
+import { Store } from "@ngxs/store";
+import { LoginState } from "src/store/states/login.state";
 export const permissionGuard = () => {
 
-    const router = inject(Router);
-    const service = inject(AuthService);   
-      if (!service.isLoggedIn()) {
+  const state = inject(Store)
+    const router = inject(Router); 
+      if (!state.selectSnapshot(LoginState.isLogged)) {
         router.navigate(['/login'], { state: { returnUrl: router.url } });
         return false;
       } else {
@@ -18,10 +20,10 @@ export const permissionGuard = () => {
 
 
   export const adminGuard = () => {
-
+    const state = inject(Store)
     const router = inject(Router);
-    const service = inject(AuthService);
-      if (!service.isLoggedIn()) {
+
+      if (!state.selectSnapshot(LoginState.isLogged)) {
 
 
           router.navigate(['/login'], { state: { returnUrl: router.url } });
@@ -45,9 +47,9 @@ export const permissionGuard = () => {
   }
 
   export const managerGuard = () => {
+    const state = inject(Store)
     const router = inject(Router);
-    const service = inject(AuthService);
-      if (!service.isLoggedIn()) {
+      if (!state.selectSnapshot(LoginState.isLogged)) {
 
 
           router.navigate(['/login'], { state: { returnUrl: router.url } });

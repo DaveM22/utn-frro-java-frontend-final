@@ -1,1 +1,85 @@
-<p>discount works!</p>
+<p-card>
+    <div class="grid flex flex-wrap align-items-center justify-content-center">
+        <div class="col-12 md:col-12 lg:col-8">
+    <p-table #dt [value]="(discounts | async)!"
+    styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
+    responsiveLayout="stack" [breakpoint]="'960px'" 
+    [tableStyle]="{'min-width': '10rem'}"
+>
+        <ng-template pTemplate="caption">
+            <div class="flex flex-column md:flex-row card-container justify-content-between">
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <div class="col-12 md:col-6 lg:col-12 text-center">
+                        <h2 class="m-0">Descuentos</h2>
+                    </div>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                    </span>
+                </div>
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                    <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
+                </div>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="loadingbody">
+            <tr >
+                <td class="text-center" colspan="3">Cargando...</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Fecha</th>
+                <th>Monto desde</th>
+                <th>Porcentaje de descuento</th>
+                <th></th>
+              </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-descuento>
+            <tr>
+                <td><span class="p-column-title">Fecha</span>{{descuento.validityDate | date:'yyyy-MM-dd'}}</td>
+                <td><span class="p-column-title">Monto desde</span>{{descuento.amountPrice}}</td>
+                <td><span class="p-column-title">Porcentaje de descuento</span>{{descuento.discount}}</td>
+                <td class="text-right">
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(descuento)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(descuento)"></button>
+                </td>
+              </tr> 
+        </ng-template>
+
+    </p-table>
+</div>
+</div>
+</p-card>
+
+<p-dialog [visible]="(modal | async)!" header="Establecer precio" [closable]="false" [modal]="true"
+    styleClass="p-fluid">
+
+    <ng-template pTemplate="content" >
+        <form [formGroup]="discountForm" (ngSubmit)="save()">
+
+            <div class="field">
+                <label for="precio">Monto</label>
+                <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="amountPrice">
+                </p-inputNumber>
+            </div>
+            <div class="field">
+                <label for="precio">Porcentaje</label>
+                <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="discount">
+                </p-inputNumber>
+            </div>
+            <div class="field">
+                <label for="precio">Fecha vigencia</label>
+                <p-calendar [showIcon]="true" appendTo="body" formControlName="validityDate"></p-calendar>
+            </div>
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check"
+                    class="p-button-rounded p-button-sm p-button-success mr-2" [disabled]="discountForm.invalid"></button>
+                <button type="button" pButton pRipple label="Cancelar" icon="pi pi-times"
+                    class="p-button-rounded p-button-sm p-button-danger" (click)="closeModalForm()"></button>
+            </div>
+        </form>
+    </ng-template>
+</p-dialog>

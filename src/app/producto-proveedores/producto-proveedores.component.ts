@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
 import { MessageService } from 'primeng/api';
-import { Prices, Product, ProductSupplier, Supplier } from 'src/models/models';
+import { Observable } from 'rxjs';
+import { Price, Product, ProductSupplier, Supplier } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
+import { AddProductSupplierAction, ProductSupplierByProductAction } from 'src/store/actions/product-supplier.action';
+import { SupplierListAction } from 'src/store/actions/supplier.action';
+import { FormActivate } from 'src/store/actions/util.actions';
+import { ProductSupplierState } from 'src/store/states/product-supplier.state,';
+import { SupplierState } from 'src/store/states/supplier.state';
+import { UtilState } from 'src/store/states/util.state';
 
 @Component({
   selector: 'app-producto-proveedores',
@@ -13,26 +21,26 @@ import { ProductoProveedorService } from 'src/services/producto-proveedor/produc
 })
 export class ProductoProveedoresComponent implements OnInit {
 
-  productoProveedores:ProductSupplier[] = []
-  suppliers!:Supplier[];
+  @Select(SupplierState.getSuppliers) suppliers!:Observable<Supplier[]>
+  @Select(ProductSupplierState.getProductTitle) title!:Observable<string>
+  @Select(ProductSupplierState.getProductSupplier) productSuppliers!:Observable<ProductSupplier[]>
+  @Select(UtilState.modalForm) modal!:Observable<boolean>
+
   idProducto!:number
   titulo!:String
   productoProveedorDialog!:boolean
   supplier!:ProductSupplier
   submitted!:boolean;
-  prices!:Prices[]
+  prices!:Price[]
   productSupplierForm = this.fb.group({
     amount: [null, Validators.required],
     supplier: [null, Validators.required]
   });
 
-
   constructor(
-    private productoProveedorService:ProductoProveedorService, 
     private route:ActivatedRoute,
-    private personaService:PersonaService,
-    private messageService:MessageService,
-    private fb:FormBuilder){
+    private fb:FormBuilder,
+    private store:Store){
 
   }
 
@@ -40,51 +48,37 @@ export class ProductoProveedoresComponent implements OnInit {
     this.productSupplierForm.get('supplier')?.setValue(null);
     this.productSupplierForm.get('supplier')?.markAllAsTouched()
     this.productSupplierForm.get('supplier')?.markAsDirty();
-    console.log(this.productSupplierForm.get('supplier'))
   }
 
   onRowSelect($event:any) {
     this.productSupplierForm.get('supplier')!.setValue($event.data);
   }
+
   ngOnInit(): void {
 
     this.idProducto = this.route.snapshot.params['idProducto'];
-    this.productoProveedorService.listaProductoProveedores(this.idProducto).subscribe(res => {
-      this.productoProveedores = res.payload as ProductSupplier[];
-      this.titulo = res.message;
-    })
-    this.personaService.getSuppliers().subscribe(x => {
-      this.suppliers = x.payload as Supplier[];
-    })
+    this.store.dispatch(new ProductSupplierByProductAction(this.idProducto));
+    this.store.dispatch(new SupplierListAction);
   }
-
-
 
   addSupplier(){
     console.log(this.productSupplierForm);
   }
 
-  editarProductoProveedorDialog(){
-    this.productoProveedorDialog = true;   
+  openModalForm(){
+    this.store.dispatch(new FormActivate(true));   
+  }
+
+  closeModalForm(){
+    this.store.dispatch(new FormActivate(false));
+    this.productSupplierForm.reset();
   }
 
   save(){
     let obj = this.productSupplierForm.value.supplier! as Supplier;
     let amount = this.productSupplierForm.value.amount;
-    this.supplier = {personaId: obj.id, cuit: obj.cuit, productName: obj.businessName, supplierName: obj.businessName, amount: amount!, productId: this.idProducto, prices:[], validityPrice:0};
-    this.productoProveedorService.postProductSupplier(this.supplier).subscribe({
-      next:(res) => {
-        let response = res.payload as ProductSupplier;
-        this.messageService.add({ severity: 'success', summary: 'Agregar nuevo proveedor', detail: res.message, life: 3000 });
-        this.productoProveedorDialog = false;
-        this.productoProveedores.push(response);
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error al agregar proveedor', detail: err.error.errorMessage, life: 3000 });
-      }
-
-    });
+    this.supplier = {personaId: obj.id!, cuit: obj.cuit!, productName: obj.businessName!, supplierName: obj.businessName!, amount: amount!, productId: this.idProducto, prices:[], validityPrice:0};
+    this.store.dispatch(new AddProductSupplierAction(this.supplier));
   }
-
 
 }

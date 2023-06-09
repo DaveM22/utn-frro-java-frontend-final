@@ -3,7 +3,7 @@ import { FormBuilder, NonNullableFormBuilder, Validators } from '@angular/forms'
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Province } from 'src/models/models';
-import { LocationAdd } from 'src/store/actions/location.actions';
+import { AddLocationAction } from 'src/store/actions/location.actions';
 import { ProvinceListAction } from 'src/store/actions/province.actions';
 import { ProvinceState } from 'src/store/states/province.state';
 
@@ -37,7 +37,7 @@ export class LocationFormModalComponent implements OnInit {
 
   save(){
     let obj = this.locationForm.getRawValue();
-    this.store.dispatch(new LocationAdd(obj));
+    this.store.dispatch(new AddLocationAction(obj));
   }
 
 }

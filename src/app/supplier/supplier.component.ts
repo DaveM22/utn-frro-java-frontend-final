@@ -1,22 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
+import { Select, Store } from '@ngxs/store';
 import { Supplier } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
+
+import { CRUD } from 'src/util/abm-interface';
+import { UtilState } from 'src/store/states/util.state';
+import { SupplierState } from 'src/store/states/supplier.state';
+import { AddSupplierAction, DeleteSupplierAction, EditSupplierAction, SupplierListAction } from 'src/store/actions/supplier.action';
+import { FormActivate } from 'src/store/actions/util.actions';
 
 @Component({
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.scss']
 })
-export class SupplierComponent implements OnInit {
-
+export class SupplierComponent implements OnInit, CRUD {  
+  @Select(SupplierState.getSuppliers) suppliers$!: Observable<Supplier[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
 
   suppliers!:Supplier[];
   suppler!:Supplier;
   submitted!:boolean;
   supplierDialog!:boolean;
   emptyMessage!:string;
+  isEdit!:boolean;
   supplierForm = this.fb.group({
     id:[0, Validators.required],
     cuit:['', Validators.required],
@@ -24,82 +35,67 @@ export class SupplierComponent implements OnInit {
     direction:['',Validators.required],
     email:['',Validators.required],
     phoneNumber:['', Validators.required],
-    postalCod:[0,Validators.required]
+    postalCode:[0,Validators.required]
   });
+  title!: string;
 
   constructor(
-    private service:PersonaService, 
     private fb:FormBuilder,
-    private messageService:MessageService,
+    private store:Store,
     private confirmationService:ConfirmationService){}
 
 
   ngOnInit(): void {
-    this.service.getSuppliers().subscribe(x => {
-      this.suppliers = x.payload as Supplier[];
+    this.store.dispatch(new SupplierListAction());
+  }
+  openModalForm(): void {
+    this.title = "Nuevo proveedor";
+    this.store.dispatch(new FormActivate(true));
+    this.supplierForm.reset();
+  }
+  closeModalForm(): void {
+    this.store.dispatch(new FormActivate(false));
+  }
+  save(): void {
+    if(this.isEdit){
+      this.edit();
+    }
+    else{
+      this.create();
+    }
+  }
+  create(): void {
+    this.suppler = this.supplierForm.getRawValue()!;
+    this.store.dispatch(new AddSupplierAction(this.suppler));
+  }
+  edit(): void {
+    this.suppler = this.supplierForm.getRawValue()!;
+    this.store.dispatch(new EditSupplierAction(this.suppler));
+  }
+  editEntity(entity: Supplier): void {
+    this.title = "Editar proveedor";
+    this.supplierForm.patchValue(entity);
+    this.isEdit = true;
+    this.store.dispatch(new FormActivate(true));
+  }
+  deleteEntity(entity: any): void {
+    this.suppler = entity;
+    this.confirmationService.confirm({
+      message: '¿Estas seguro de borrar el siguiente proveedor: ' + entity.businessName + '?',
+      header: 'Eliminar localidad',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
     });
   }
-
-  addDialog(){
-    this.submitted = false;
-    this.supplierDialog = true;
+  delete(): void {
+    this.store.dispatch(new DeleteSupplierAction(this.suppler.id!));
   }
-
-  editDialog(entity:Supplier){
-    this.supplierDialog = true;
-    this.supplierForm.patchValue(entity);
-  }
-
-  deleteModal(entity:Supplier){
-
-  }
-
-  saveForm(){
-    let obj = this.supplierForm.value as Supplier;
-    if(obj.id === 0){
-      this.service.postSupplier(obj).subscribe(x => {
-        this.supplierDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Crear proveedor', detail: x.message, life: 3000 });
-        this.suppliers.push(x.payload as Supplier);
-      });
-    }
-    else {
-      this.service.postCustomerCompany(obj).subscribe(x => {
-        let responseCustomer = x.payload as Supplier;
-        this.supplierDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Editar proveedor', detail: x.message, life: 3000 });
-        this.suppliers[this.suppliers.findIndex(z => z.id === responseCustomer.id)] = responseCustomer;
-        this.supplierDialog = false;
-      });
-    }
-  }
-
-  closeDialog(){
-    this.supplierDialog = false;
-    this.submitted = false;
-  }
-
-  deleteConfirm(){
-    this.service.deleteCustomerCompany(this.suppler.id).subscribe(
-      {
-        next:(res) => {
-          this.messageService.add({key: 'tc', severity: 'success', summary: 'Eliminar cliente', detail: res.message, life: 3000 });
-          this.suppliers = this.suppliers.filter((val:Supplier) => val.id !== this.suppler.id);
-          this.confirmationService.close();
-        },
-        error:(error) => {
-          this.emptyMessage = "No se pudieron recuperar los clientes, intente mas tarde"
-        }
-      }
-    );
-  }
-
-  closeDeleteConfirm(){
+  closeDialog(): void {
     this.confirmationService.close();
-    this.messageService.add({ severity: 'warn', summary: 'Eliminar cliente', detail: "Se ha cancelado la eliminación del cliente", life: 3000 });
   }
 
 
 }
+
+

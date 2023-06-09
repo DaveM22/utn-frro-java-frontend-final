@@ -1,7 +1,6 @@
-<p-toast></p-toast>
 <p-card>
     <p-table #dt 
-    [value]="productos" responsiveLayout="stack" 
+    [value]="(products$ | async)!" responsiveLayout="stack" 
     [breakpoint]="'960px'" 
     [tableStyle]="{'min-width': '10rem'}"
     styleClass="p-datatable-sm p-datatable-striped"
@@ -21,15 +20,15 @@
                     </span>
                 </div>
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nuevo producto" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalNew()" ></button>
+                    <button pButton pRipple label="Agregar nuevo producto" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
                 </div>
             </div>
 
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th>Nombre de categoria</th>
-                <th>Categoria</th>
+                <th>Nombre de producto</th>
+                <th>Categoría</th>
                 <th class="text-center">Cantidad total de inventario</th>
                 <th class="text-center">Acciones</th>
               </tr>
@@ -37,12 +36,12 @@
         <ng-template pTemplate="body" let-producto>
             <tr>
                 <td><span class="p-column-title">Descripción</span>{{producto.description}}</td>
-                <td><span class="p-column-title">Categoria</span>{{producto.categoryName}}</td>
+                <td><span class="p-column-title">Categoría</span>{{producto.categoryName}}</td>
                 <td class="text-center"><span class="p-column-title">Cant. total de inventario</span>{{producto.amount}}</td>
                 <td class="text-center">
-                    <button pButton pRipple label="Ver proveedores" class="p-button-rounded p-button-sm mr-2" (click)="routeProductSupplier(producto)" ></button>
-                    <button pButton pRipple icon="pi pi-pencil" label="Editar" class="p-button-rounded p-button-sm p-button-success mr-2" (click)="editProductForm(producto)"></button>
-                    <button pButton pRipple icon="pi pi-trash" label="Eliminar" class="p-button-rounded p-button-sm p-button-danger" (click)="deleteProduct(producto)" ></button>
+                    <button pButton pRipple label="Ver proveedores" class="p-button-rounded p-button-sm mr-2" (click)="redirectToProductSupplier(producto)" ></button>
+                    <button pButton pRipple icon="pi pi-pencil" label="Editar" class="p-button-rounded p-button-sm p-button-success mr-2" (click)="editEntity(producto)"></button>
+                    <button pButton pRipple icon="pi pi-trash" label="Eliminar" class="p-button-rounded p-button-sm p-button-danger" (click)="deleteEntity(producto)" ></button>
                 </td>
               </tr>
         </ng-template>
@@ -54,7 +53,7 @@
     </p-table>
 </p-card>
 
-<p-dialog [(visible)]="productDialog" [style]="{width: '450px'}" header="Agregar producto" [modal]="true" styleClass="p-fluid">
+<p-dialog [visible]="(modalForm | async)!" [closable]="false"   [style]="{width: '450px'}" [header]="title" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="productForm" (ngSubmit)="save()">
         <div class="field">
@@ -64,9 +63,9 @@
         </div>
         <div class="field">
             <label for="categoria">Categoría</label>
-            <p-dropdown [options]="categories" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Seleccionar una categoría" optionLabel="name"
+            <p-dropdown [options]="(categories$ | async)!" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Seleccionar una categoría" optionLabel="name"
             dataKey="categoryId"  optionValue="categoryId"
-            formControlName="category" (onChange)="onChange($event)">
+            formControlName="categoryId" (onChange)="onChange($event)">
         
             <ng-template pTemplate="selectedItem">
                 <div class="flex align-items-center gap-2" *ngIf="category">
@@ -81,11 +80,11 @@
             </ng-template>
         
         </p-dropdown>
-        <small class="p-error" *ngIf="productForm.controls['category'].invalid && productForm.controls['category'].dirty">La categoría es un campo obligatorio</small>
+        <small class="p-error" *ngIf="productForm.controls['categoryId'].invalid && productForm.controls['categoryId'].dirty">La categoría es un campo obligatorio</small>
     </div>
     <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
         <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-success mr-2"></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="CerrarDialog()"></button>
+        <button type="button" pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="closeModalForm()"></button>
     </div>
     </form>
     </ng-template>
@@ -93,7 +92,7 @@
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteProductForm()" ></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeConfirm()" ></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()" ></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()" ></button>
     </ng-template>
 </p-confirmDialog>

@@ -11,19 +11,19 @@ export class CategoriasService {
   private baseUrl = environment.apiUrl;
   constructor(private http:HttpClient) { }
 
-  listaCategorias():Observable<ResponseHttp>{
+  get():Observable<ResponseHttp>{
     return this.http.get<ResponseHttp>(this.baseUrl +'/api/categories');
   }
 
-  postCategory(cat:Category){
-    return this.http.post<ResponseHttp>(this.baseUrl +"/api/categories'", cat);
+  post(cat:Category){
+    return this.http.post<ResponseHttp>(this.baseUrl +"/api/categories", cat);
   }
 
-  putCategory(cat:Category){
+  put(cat:Category){
     return this.http.put<ResponseHttp>(this.baseUrl + '/api/categories', cat);
   }
 
-  borrarCategoria(id:number){
+  delete(id:number){
     return this.http.delete<ResponseHttp>(this.baseUrl +'/api/categories/'+id);
   }
 

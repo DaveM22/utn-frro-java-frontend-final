@@ -1,9 +1,12 @@
 <p-table #dt [value]="customersParticular" [(selection)]="customerParticular"  [breakpoint]="'960px'" responsiveLayout="stack"
- scrollHeight="400px"
+    scrollHeight="50vh"
     [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
     (onRowUnselect)="unselected()"
     (onRowSelect)="selected()"
     [globalFilterFields]="['dni', 'firstName', 'lastName', 'phoneNumber', 'postalCod', 'email']"
+    [paginator]="true"
+    [rows]="5"
+    [showCurrentPageReport]="true"
     >
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container justify-content-between">
@@ -26,7 +29,11 @@
             </div>
         </div>
     </ng-template>
+    <ng-template pTemplate="paginatorleft">
 
+    </ng-template>
+    <ng-template pTemplate="paginatorright">
+    </ng-template>
     <ng-template pTemplate="header">
         <tr>
             <th style="width: 4rem"></th>
@@ -66,4 +73,5 @@
             <td colspan="8">{{emptyMessage}}</td>
         </tr>
     </ng-template>
+
 </p-table>

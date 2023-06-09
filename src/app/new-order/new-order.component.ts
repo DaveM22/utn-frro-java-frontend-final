@@ -79,7 +79,7 @@ export class NewOrderComponent implements OnInit {
     this.orderDetails = [];
     this.selectedProducts = $event;
     this.selectedProducts.forEach(x => {
-      let obj = {orderNumber:0, productId:x.productId, personaId:x.personaId, total: x.total, amount: x.amountOrder  };
+      let obj = {orderNumber:0, productId:x.productId!, personaId:x.personaId!, total: x.total!, amount: x.amountOrder!  };
       this.orderDetails.push(obj);
     })
     this.order = {date:Date.now(), orderNumber:0, personaId:this.customer.id, details: this.orderDetails };

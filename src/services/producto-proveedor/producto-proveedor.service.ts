@@ -13,7 +13,7 @@ export class ProductoProveedorService {
   
   constructor(private http:HttpClient) { }
 
-  listaProductoProveedores(productoId:number):Observable<ResponseHttp>{
+  getAll(productoId:number):Observable<ResponseHttp>{
     return this.http.get<ResponseHttp>(this.baseUrl + "/api/productos-proveedores/" + productoId);
   }
 

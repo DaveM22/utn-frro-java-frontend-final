@@ -1,130 +1,93 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, NonNullableFormBuilder, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, FilterService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { Province, ResponseHttp } from 'src/models/models';
 import { ProvinceService } from 'src/services/provincia/provincia.service';
+import { AddProvince, DeleteProvince, EditProvince, ProvinceListAction } from 'src/store/actions/province.actions';
+import { DialogActivate, FormActivate } from 'src/store/actions/util.actions';
+import { ProvinceState } from 'src/store/states/province.state';
+import { UtilState } from 'src/store/states/util.state';
+import { CRUD } from 'src/util/abm-interface';
 
 @Component({
   selector: 'app-provincias',
   templateUrl: './provincias.component.html',
   styleUrls: ['./provincias.component.scss']
 })
-export class ProvinciasComponent implements OnInit {
-  provincias:Province[] = [];
-  provincia!:Province;
-  isMobile = false;
-  submitted!:boolean;
-  provinciaDialog!:boolean;
-  isEditForm:boolean = false;
+export class ProvinciasComponent implements OnInit, CRUD {
+  @Select(ProvinceState.getProvinces) provinces$!: Observable<Province[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
+  isEdit!:boolean;
+  province!:Province;
+  title!:string;
+
   provinciaForm = this.fb.group({
     provinceCode:[0, Validators.required],
     name:['', Validators.required],
   });
 
-  constructor(private service:ProvinceService,
-    private confirmacionService:ConfirmationService,
-    private messageService:MessageService,
-    private fb:FormBuilder){}
+  constructor(private fb:NonNullableFormBuilder, private store:Store, private confirmationService:ConfirmationService){}
+
   
   
   ngOnInit(): void {
-    this.service.getProvincias().subscribe(res => {
-      this.provincias = res.payload as Province[];
-    });
+    this.store.dispatch(new ProvinceListAction());
   }
 
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event:any) {
-      this.checkScreenSize();
-    }
-  
-    checkScreenSize() {
-      this.isMobile = window.innerWidth < 768;
-    }
-  
-    openModalForm() {
-      this.submitted = false;
-      this.provinciaDialog = true;
-      this.isEditForm = false;
+    openModalForm(): void {
+      this.title = "Crear provincia";
+      this.provinciaForm.reset();
+      this.isEdit = false;
+      this.store.dispatch(new FormActivate(true));
     }
 
-  
-    closeModalForm(){
-      this.provinciaDialog = false;
-      this.submitted = false;
+    closeModalForm(): void {
+      this.store.dispatch(new FormActivate(false));
     }
-  
-    save(){
-      if(this.isEditForm){
-        this.edit();
+    save(): void {
+      if(this.isEdit){
+        this.edit()
       }
       else{
-       this.create();
+        this.create();
       }
-    }
 
-    create(){
-      let obj = this.provinciaForm.value as Province;
-      this.service.postProvince(obj).subscribe({
-        next:(res) => {
-          let response = res.payload as Province;
-          this.messageService.add({ severity: 'success', summary: 'Crear provincia', detail: res.message, life: 3000 });
-          this.provinciaDialog = false;
-          this.provincias.push(response);
-        },
-        error:(err) => {
-          this.messageService.add({ severity: 'error', summary: 'Error al crear provincia', detail: err.error.errorMessage, life: 3000 });
-        }
+    }
+    create(): void {
+      this.province = this.provinciaForm.getRawValue()!;
+      this.store.dispatch(new AddProvince(this.province));
+    }
+    edit(): void {
+      this.province = this.provinciaForm.getRawValue()!;
+      this.store.dispatch(new EditProvince(this.province));
+    }
+    editEntity(entity: any): void {
+      this.title = "Editar provincia";
+      this.provinciaForm.patchValue(entity);
+      this.isEdit = true;
+      this.store.dispatch(new FormActivate(true));
+    }
+    deleteEntity(entity: any): void {
+      this.province = entity;
+      this.confirmationService.confirm({
+        message: '¿Estas seguro de borrar la siguiente provincia: ' + entity.name + '?',
+        header: 'Eliminar localidad',
+        icon: 'pi pi-exclamation-triangle',
+        acceptLabel: 'Aceptar',
+        rejectLabel: 'Cancelar'
       });
     }
-
-    edit(){
-      let obj = this.provinciaForm.value as Province;
-      this.service.putProvince(obj).subscribe({
-        next:(res:ResponseHttp) => {
-          let response = res.payload as Province;
-          this.messageService.add({ severity: 'success', summary: 'Editar provincia', detail: res.message, life: 3000 });
-          this.provinciaDialog = false;
-          this.provincias[this.provincias.findIndex(z => z.provinceCode === response.provinceCode)] = response;
-        },
-        error:(err) => {
-          this.messageService.add({ severity: 'error', summary: 'Error al editar provincia', detail: err.error.errorMessage, life: 3000 });
-        }
-      });
+    delete(): void {
+      this.store.dispatch(new DialogActivate(true));
+      this.store.dispatch(new DeleteProvince(this.province.provinceCode!));
+    }
+    closeDialog(): void {
+      this.confirmationService.close();
     }
   
-    editEntity(provincia: Province) {
-      this.provinciaForm.patchValue(provincia);
-      this.isEditForm = true;
-      this.provinciaDialog = true;    
-    }
-  
-    deleteEntity(provincia: Province){
-      this.provincia = provincia;
-      this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente provincia: ' + this.provincia.name + '?',
-      header: 'Eliminar provincia',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel:'Aceptar',
-      rejectLabel:'Cancelar'
-      });
-    }
-  
-    delete(){
-      this.service.deleteProvincia(this.provincia.provinceCode).subscribe({
-        next:(res) => {
-          this.messageService.add({ severity: 'success', summary: 'Borrar provincia', detail: res.message, life: 3000 });
-          this.confirmacionService.close();
-        },
-        error:(err) => {
-          this.messageService.add({ severity: 'error', summary: 'Borrar provincia', detail: err.error.errorMessage, life: 3000 });
-        }
-      });
-
-    }
-
-    closeDialog(){
-      this.confirmacionService.close();
-    }
 
 }

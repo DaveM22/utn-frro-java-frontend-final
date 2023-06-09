@@ -7,30 +7,24 @@ import jwtDecode from 'jwt-decode';
 
 import * as moment from 'moment';
 import { MessageService } from 'primeng/api';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService  {
-  private isAuthenticated = new BehaviorSubject<boolean>(false);
-  private userRoles = new BehaviorSubject<string>('');
 
   private baseUrl = environment.apiUrl;
     redirectUrl: any;
   constructor(private http:HttpClient, private jwtHelper: JwtHelperService, private router: Router, private messageService:MessageService) { 
 
-    this.isAuthenticated.next(this.isLoggedIn());
-    if(this.isLoggedIn()){
-      this.userRoles.next(this.getRoles());
-    }
   }
 
 
-  login(creds:any){
-    localStorage.removeItem("token");
-    return this.http.post(this.baseUrl + "/auth/authenticate", creds).subscribe(
+  login(creds:any) : Observable<any>{
+
+    return this.http.post(this.baseUrl + "/auth/authenticate", creds);/* .subscribe(
       {
         next:(res:any) => {
          
@@ -46,15 +40,11 @@ export class AuthService  {
           this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: err.error.errorMessage, life: 3000 });
         }
       });
-  ;
+  ; */
   }
 
   logout(){
     localStorage.removeItem('token');
-
-    // Actualizar el estado de autenticación y los roles
-    this.isAuthenticated.next(false);
-    this.userRoles.next('');
   }
 
   getRoles(): string {
@@ -92,12 +82,6 @@ export class AuthService  {
     return this.jwtHelper.isTokenExpired(token);
   }   
 
-  getIsAuthenticated(): BehaviorSubject<boolean> {
-    return this.isAuthenticated;
-  }
 
-  getUserRoles(): BehaviorSubject<string> {
-    return this.userRoles;
-  }
 
 }

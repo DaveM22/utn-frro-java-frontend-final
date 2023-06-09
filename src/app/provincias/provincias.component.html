@@ -1,9 +1,8 @@
- <p-toast></p-toast>
 <p-card>
     <div class="grid flex flex-wrap align-items-center justify-content-center">
         <div class="col-12 md:col-12 lg:col-8">
-            <p-table #dt [value]="provincias" 
-            [globalFilterFields]="['nombre']"
+            <p-table #dt [value]="(provinces$ | async)!" 
+            [globalFilterFields]="['name']"
             responsiveLayout="stack" 
             [breakpoint]="'960px'" 
             [tableStyle]="{'min-width': '10rem'}"
@@ -49,17 +48,10 @@
 
 </p-card>
 
-<p-dialog [(visible)]="provinciaDialog"  header="Agregar provincia" [modal]="true" styleClass="p-fluid">
+<p-dialog [visible]="(modalForm | async)!" [closable]="false"  [header]="title" [modal]="true" styleClass="p-fluid">
    
         <ng-template pTemplate="content">
             <form [formGroup]="provinciaForm" (ngSubmit)="save()">
-            <div class="field">
-                <label for="code">Código</label>
-                <p-inputNumber inputId="code" formControlName="code" placeholder="Ingrese código postal"> </p-inputNumber>
-                <small class="p-error block" *ngIf="provinciaForm.controls['provinceCode'].invalid && provinciaForm.controls['provinceCode'].dirty">
-                    El campo nombre es requerido
-                </small>
-            </div>
             <div class="field">
                 <label for="provincia">Nombre de provincia</label>
                 <input type="text" required pInputText id="provincia" formControlName="name" placeholder="Nombre de provincia" />
@@ -68,7 +60,7 @@
                 </small>
             </div>
             <div class="flex align-items-center">
-                <button type="button" pButton pRipple icon="pi pi-check" label="Guardar" (click)="save()" class="mr-2 font-bold p-button-success" [disabled]="provinciaForm.invalid"></button>
+                <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="provinciaForm.invalid"></button>
                 <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
             </div>
         </form>

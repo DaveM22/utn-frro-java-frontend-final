@@ -21,7 +21,7 @@
                 <td class="text-right"><span class="p-column-title">Cantidad</span>{{productoProveedor.amount}}</td>
                 <td class="text-right"><span class="p-column-title">Precio vigente</span>{{productoProveedor.validityPrice || "Sin precio"}}</td>
                 <td class="text-center">
-                    <a class="p-button-success mr-2" (click)="showPrices(productoProveedor)">Ver precios</a>
+                    <button type="button" pButton pRipple class="p-button-rounded p-button-sm p-button-success" (click)="showPrices(productoProveedor)">Ver lista de precios</button>
                 </td>
               </tr>
         </ng-template>

@@ -40,7 +40,7 @@ export class ResumeOrderComponent implements OnInit {
 
   calculateTotals(){
     this.productOrders.forEach(element => {
-      element.total = element.validityPrice * element.amountOrder;
+      element.total = element.validityPrice * element.amountOrder!;
       this.totals += element.total
     }
     
@@ -62,8 +62,8 @@ export class ResumeOrderComponent implements OnInit {
   getTotalDiscount(total:number){
     let discount = 0;
     this.discounts.forEach(x => {
-        if (total >= x.amountPrice || total === x.amountPrice) {    
-              discount = x.discount;
+        if (total >= x.amountPrice! || total === x.amountPrice) {    
+              discount = x.discount!;
         }
     })
     return discount;

@@ -1,71 +1,72 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { catchError } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 import { Category, Product, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
 import { LocationService } from 'src/services/localidad/localidad.service';
 import { ProductoService } from 'src/services/productos/producto.service';
+import { CategoryListAction } from 'src/store/actions/category.action';
+import { AddProductAction, DeleteProductAction, EditProductAction, ProductListAction } from 'src/store/actions/product.action,';
+import { FormActivate } from 'src/store/actions/util.actions';
+import { CategoryState } from 'src/store/states/category.state';
+import { ProductState } from 'src/store/states/product.state';
+import { UtilState } from 'src/store/states/util.state';
+import { CRUD } from 'src/util/abm-interface';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.component.html',
   styleUrls: ['./productos.component.scss']
 })
-export class ProductosComponent implements OnInit {
-productos:Product[] = [];
-categories:Category[] = []
-isMobile = false;
-product!:Product
-category!:Category;
-submitted!:boolean;
-productDialog!:boolean;
+export class ProductosComponent implements OnInit, CRUD {
+  @Select(ProductState.getProducts) products$!: Observable<Product[]>;
+  @Select(CategoryState.getCategories) categories$!: Observable<Category[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
+  isEdit!: boolean;
+  product!: Product
+  category!: Category;
+  productDialog!: boolean;
+  title!: string;
   productForm = this.fb.group({
-    id:[0],
-    description:['', Validators.required],
-    category:[{}, Validators.required],
-    amount:[0]
+    id: [0],
+    description: ['', Validators.required],
+    categoryId: [0, Validators.required],
+    categoryName: [''],
+    amount: [0]
   });
-  isEditForm: any;
-constructor(
-  private service:ProductoService,  
-  private confirmationService:ConfirmationService,
-  private categoryService:CategoriasService,
-  private messageService:MessageService,
-  private router:Router,
-  private fb:FormBuilder
-){}
+  constructor(
+    private confirmationService: ConfirmationService,
+    private router: Router,
+    private fb: FormBuilder,
+    private store: Store
+  ) { }
 
-
-  
   ngOnInit(): void {
-    this.service.getProducts().subscribe((res) => this.productos = res.payload as Product[]);
-    this.categoryService.listaCategorias().subscribe(res => this.categories = res.payload as Category[])
+    this.store.dispatch(new ProductListAction());
+    this.store.dispatch(new CategoryListAction());
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event:any) {
-    this.checkScreenSize();
+  redirectToProductSupplier(entity: Product){
+    this.router.navigate(['/productos-proveedores', entity.id ])
   }
 
-  checkScreenSize() {
-    this.isMobile = window.innerWidth < 768;
+  openModalForm(): void {
+    this.title = "Nuevo producto";
+    this.isEdit = false;
+    this.store.dispatch(new FormActivate(true));
   }
 
-  onChange($event:any){
-    this.category = this.categories.find(x => x.categoryId === $event.value)!;
-  }
-
-  openModalNew() {
-    this.productDialog = true;
-    this.isEditForm = false;
+  closeModalForm(): void {
+    this.store.dispatch(new FormActivate(false));
     this.productForm.reset();
   }
 
-
-  save() {
-    if (this.isEditForm) {
+  save(): void {
+    if (this.isEdit) {
       this.edit();
     }
     else {
@@ -73,84 +74,44 @@ constructor(
     }
   }
 
-
-  edit(){
-    this.product = this.productForm.value as Product;
-    this.product.categoryId = this.category.categoryId;
-    this.product.categoryName = this.category.name;
-    this.service.putProducts(this.product).subscribe({
-      next:(res) => {
-        let response = res.payload as Product;
-        this.messageService.add({ severity: 'success', summary: 'Editar producto', detail: res.message, life: 3000 });
-        this.productos[this.productos.findIndex(z => z.id === response.id)] = response;
-        this.productDialog = false;
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Editar producto', detail: err.error.errorMessage, life: 3000 });
-      }
-    })
+  create(): void {
+    this.product = this.productForm.getRawValue()!
+    this.store.dispatch(new AddProductAction(this.product));
   }
 
-  create(){
-    this.product.categoryId = this.category.categoryId;
-    this.service.postProducts(this.product).subscribe({
-      next:(res) => {
-        this.messageService.add({ severity: 'success', summary: 'Crear producto', detail: res.message, life: 3000 });
-        this.productos.push(res.payload as Product);
-        this.productDialog = false;
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Crear producto', detail: err.error.errorMessage, life: 3000 });
-      }
+  edit(): void {
+    this.product = this.productForm.getRawValue()!
+    this.store.dispatch(new EditProductAction(this.product));
+  }
+
+  editEntity(entity: Product): void {
+    this.title = "Editar producto";
+    this.isEdit = true;
+    this.category = this.store.selectSnapshot(CategoryState.getCategories).find(x => x.categoryId === entity.categoryId)!;
+    this.productForm.patchValue(entity);
+    this.store.dispatch(new FormActivate(true));
+  }
+
+  deleteEntity(entity: Product): void {
+    this.product = entity;
+    this.confirmationService.confirm({
+      message: '¿Estas seguro de borrar el siguiente producto: ' + entity.description + '?',
+      header: 'Eliminar producto',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
     });
   }
 
-  CerrarDialog(){
-    this.submitted = false;
-    this.productDialog = false;
+  delete(): void {
+    this.store.dispatch(new DeleteProductAction(this.product.id!));
   }
 
-  routeProductSupplier(producto: Product){
-    this.router.navigate(['/productos-proveedores', producto.id]);
-  }
-
-
-
-  editProductForm(product:Product ) {
-    this.productForm.patchValue(product);
-    this.category = this.categories.find(x => x.categoryId === product.categoryId)!;
-    this.isEditForm = true;
-    this.productDialog = true;
-  }
-
-  deleteProduct(producto: Product){
-    this.product = producto;
-    this.confirmationService.confirm({message: '¿Estas seguro de borrar el siguiente producto: ' + this.product.description + '?',
-    header: 'Eliminar producto',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel:'Aceptar',
-    rejectLabel:'Cancelar'
-    });
-  }
-
-  deleteProductForm(){
-    this.service.deleteProduct(this.product.id)
-    .subscribe(
-    {
-      next:(res) => {
-        this.messageService.add({ severity: 'success', summary: 'Eliminar producto', detail: res.message, life: 3000 });
-        this.productos = this.productos.filter((val) => val.id !== this.product.id);
-        this.product = {id:0, categoryId:0, categoryName:'', description:'', amount:0};
-        this.closeConfirm();
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Eliminar producto', detail: err.error.errorMessage, life: 3000 });
-      }
-    });
-  }
-
-  closeConfirm(){
+  closeDialog(): void {
     this.confirmationService.close();
   }
 
+  onChange($event: any) {
+    this.category = this.store.selectSnapshot(CategoryState.getCategories).find(x => x.categoryId === $event.value)!;
+  }
 }

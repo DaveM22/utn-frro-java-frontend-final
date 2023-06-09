@@ -4,26 +4,19 @@ export class LocationListAction {
     static readonly type = '[Location API] Get All';
   }
 
-export class LocationAdd{
+export class AddLocationAction{
   static readonly type = "[Location API] Add";
-  constructor(public payload:any){
-
-  }
+  constructor(public payload:any){}
 }
 
-export class LocationDelete {
+export class EditLocationAction {
+  static readonly type = "[Location API] Edit";
+  constructor(public payload:Location){}
+}
+
+export class DeleteLocationAction {
   static readonly type = "[Location API] Delete";
-  constructor(public id:number){
-
-  }
+  constructor(public id:number){}
 }
 
-export class LocationSuccess {
-  static readonly type = "[Location API] Success";
-  constructor(public message:string){}
-}
 
-export class LocationError {
-  static readonly type = "[Location API] Error";
-  constructor(public message:string){}
-}

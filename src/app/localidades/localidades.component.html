@@ -68,14 +68,14 @@
                 <small class="p-error block" *ngIf="locationForm.controls['city'].invalid && locationForm.controls['city'].dirty">La ciudad es un campo obligatorio</small>
             </div>
             <div class="field">
-                <label for="provincia">Provincia</label>
-                <p-dropdown [options]="(provinces$ | async)!" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Seleccionar localidad" optionLabel="name"
+                <label>Provincia</label>
+                <p-dropdown id="provinceCode" [options]="(provinces$ | async)!" appendTo="body" [filter]="true" filterBy="name" [showClear]="true" placeholder="Seleccionar provincia" optionLabel="name"
                 dataKey="provinceCode"  optionValue="provinceCode"
                 formControlName="provinceCode" (onChange)="onChange($event)">
             
-                <ng-template let-prov  pTemplate="selectedItem">
-                    <div class="flex align-items-center gap-2" *ngIf="prov">
-                        <div>{{ prov.name }}</div>
+                <ng-template pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-2" *ngIf="provincia">
+                        <div>{{ provincia.name }}</div>
                     </div>
                 </ng-template>
                 <ng-template let-prov pTemplate="item">

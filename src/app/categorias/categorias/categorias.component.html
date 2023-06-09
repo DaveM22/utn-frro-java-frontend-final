@@ -1,6 +1,7 @@
-<p-toast></p-toast>
 <p-card>
-    <p-table #dt [value]="categorias" responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped"
+    <div class="grid flex flex-wrap align-items-center justify-content-center">
+        <div class="col-12 md:col-12 lg:col-8">
+    <p-table #dt [value]="(categories$ | async)!" responsiveLayout="stack" [loading]="(loading | async)!" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped"
     [globalFilterFields]="['name']">
         <ng-template pTemplate="caption">
             <div class="flex flex-column md:flex-row card-container justify-content-between">
@@ -29,16 +30,19 @@
         <ng-template pTemplate="body" let-entity>
             <tr>
                 <td><span class="p-column-title">Categoría</span>{{entity.name}}</td>
-                <td>
+                <td class="text-right">
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(entity)"></button>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(entity)"></button>
                 </td>
               </tr>
         </ng-template>
     </p-table>
+</div>
+</div>
 </p-card>
 
-<p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" header="Agregar categoria" [modal]="true" styleClass="p-fluid">
+
+<p-dialog [visible]="(modalForm | async)!" [closable]="false"  [header]="title" [style]="{width: '450px'}" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="categoryForm" (ngSubmit)="save()">
             <div class="field">

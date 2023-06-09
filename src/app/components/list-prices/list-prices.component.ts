@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Prices } from 'src/models/models';
+import { Price } from 'src/models/models';
 import { PriceService } from 'src/services/prices/price.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { PriceService } from 'src/services/prices/price.service';
 export class ListPricesComponent {
 
 
-  @Input() prices!: Prices[]
+  @Input() prices!: Price[]
 
   constructor(private priceService:PriceService){
     

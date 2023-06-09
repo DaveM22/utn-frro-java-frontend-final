@@ -2,12 +2,12 @@ import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { LocationStateModel } from "../model/location.modelstate";
 import { Injectable } from "@angular/core";
 import { LocationService } from "src/services/localidad/localidad.service";
-import { LocationAdd, LocationDelete, LocationError, LocationListAction, LocationSuccess } from "../actions/location.actions";
-import { catchError, tap } from "rxjs";
+import { AddLocationAction, DeleteLocationAction, EditLocationAction, LocationListAction } from "../actions/location.actions";
+import { catchError, of, tap } from "rxjs";
 import { Location, ResponseHttp } from "src/models/models";
 import { MessageService } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
-import { FormActivate } from "../actions/util.actions";
+import { ErrorApi, FormActivate, Success } from "../actions/util.actions";
 
 
 @State<LocationStateModel>({
@@ -19,7 +19,7 @@ import { FormActivate } from "../actions/util.actions";
   @Injectable()
   export class LocationState {
 
-    constructor(private service:LocationService, private messageService:MessageService, private dialogService:DialogService){
+    constructor(private service:LocationService, private messageService:MessageService){
 
     }
 
@@ -43,52 +43,67 @@ import { FormActivate } from "../actions/util.actions";
             );
           }
 
-        @Action(LocationAdd)
+        @Action(AddLocationAction)
         addLocation(ctx: StateContext<LocationStateModel>, { payload }: any){
-          return this.service.postLocation(payload).subscribe({
-            next:(res) => {              
+          return this.service.postLocation(payload).pipe(
+            tap((res: ResponseHttp) => {
               const state=ctx.getState();
               ctx.patchState({
                   items:[...state.items, res.payload as Location]
               })
-              ctx.dispatch(new LocationSuccess(res.message));
+              ctx.dispatch(new Success("Agregar localidad",res.message));
               ctx.dispatch(new FormActivate(false));
-            },
-            error:(err) => {
-              ctx.dispatch(new LocationError(err.error.errorMessage));
-            }
-          })      
+            }),
+            catchError(error => {
+              return of(ctx.dispatch(new ErrorApi("Error al agregar localidad", error.error.errorMessage)));
+            })
+          )
         }
 
-        @Action(LocationDelete)
-        deleteLocation(ctx: StateContext<LocationStateModel>, action:LocationDelete){
-          return this.service.deleteLocation(action.id).subscribe({
-            next:(res) => {
+        @Action(EditLocationAction)
+        editLocation(ctx: StateContext<LocationStateModel>, action:EditLocationAction){
+          return this.service.putLocation(action.payload).pipe(
+            tap((res: ResponseHttp) => {
+
+              const obj = res.payload as Location;
+              const state = ctx.getState();
+              const locations = [...state.items];
+              const locationIndex = locations.findIndex(item => item.postalCode === obj.postalCode);
+              locations[locationIndex] = res.payload as Location;
+              ctx.patchState({
+                items: locations,
+            });
+              ctx.dispatch(new Success("Editar localidad",res.message));
+              ctx.dispatch(new FormActivate(false));
+            }),
+            catchError(error => {
+              return of(ctx.dispatch(new ErrorApi("Error al editar localidad", error.error.errorMessage)));
+            })
+          )
+        }
+
+
+
+        @Action(DeleteLocationAction)
+        deleteLocation(ctx: StateContext<LocationStateModel>, action:DeleteLocationAction){
+          return this.service.deleteLocation(action.id).pipe(
+            tap((res: ResponseHttp) => {
               const state=ctx.getState();
               const filteredArray=state.items.filter(contents=>contents.postalCode!==action.id);
-
+      
               ctx.setState({
                   ...state,
                   items:filteredArray
               })
+              ctx.dispatch(new Success("Eliminar localidad",res.message));
+              ctx.dispatch(new FormActivate(false));
+            }),
+            catchError(error => {
+              return of(ctx.dispatch(new ErrorApi("Error al eliminar localidad", error.error.errorMessage)));
+            })
+          )}
 
-              ctx.dispatch(new LocationSuccess(res.message));
-            },
-            error:(err) => {
-              ctx.dispatch(new LocationError(err.error.errorMessage));
-            }
-          })   
-        }
 
-        @Action(LocationSuccess)
-        successLocation(ctx: StateContext<LocationStateModel>, action:LocationSuccess){
-          this.messageService.add({ severity: 'success', summary: 'Crear localidad', detail: action.message, life: 3000 });
-        }
-
-        @Action(LocationError)
-        errorLocation(message:any){
-          this.messageService.add({ severity: 'error', summary: 'Error al crear localidad', detail: message, life: 3000 });
-        }
 
   }
 

@@ -6,7 +6,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { Observable } from 'rxjs';
 import { Location, Province, ResponseHttp } from 'src/models/models';
 import { LocationService } from 'src/services/localidad/localidad.service';
-import { LocationAdd, LocationDelete, LocationListAction } from 'src/store/actions/location.actions';
+import { AddLocationAction, DeleteLocationAction, EditLocationAction, LocationListAction } from 'src/store/actions/location.actions';
 import { LocationState } from 'src/store/states/location.state';
 import { LocationFormModalComponent } from '../components/forms/location-form-modal/location-form-modal.component';
 import { ProvinceState } from 'src/store/states/province.state';
@@ -23,6 +23,7 @@ export class LocalidadesComponent implements OnInit {
   @Select(LocationState.getLocations) locations$!: Observable<Location[]>;
   @Select(ProvinceState.getProvinces) provinces$!: Observable<Province[]>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
   localidades: Location[] = [];
   provincias: Province[] = [];
   location!: Location;
@@ -40,10 +41,7 @@ export class LocalidadesComponent implements OnInit {
   isEditForm!: boolean;
 
   constructor(
-    private locationService: LocationService,
     private confirmacionService: ConfirmationService,
-    private dialogService:DialogService,
-    private messageService: MessageService,
     private store:Store,
     private fb: NonNullableFormBuilder) { }
 
@@ -63,6 +61,7 @@ export class LocalidadesComponent implements OnInit {
   }
 
   openModalForm() {
+    this.isEditForm = false;
     this.store.dispatch(new FormActivate(true));
   }
 
@@ -84,34 +83,26 @@ export class LocalidadesComponent implements OnInit {
   create() {
     this.blockedPanel = true;
     let obj = this.locationForm.value as Location;
-    this.store.dispatch(new LocationAdd(obj));
+    this.store.dispatch(new AddLocationAction(obj));
   }
 
   edit() {
     let location = this.locationForm.value as Location;
-    this.location = { postalCode: location.postalCode!, city: location.city!, provinceCode: location.provinceCode, provinceName: this.provincia.name };
-    this.locationService.putLocation(location).subscribe({
-      next: (res: ResponseHttp) => {
-        let response = res.payload as Province;
-        this.messageService.add({ severity: 'success', summary: 'Editar localidad', detail: res.message, life: 3000 });
-        this.locationDialog = false;
-        this.provincias[this.provincias.findIndex(z => z.provinceCode === response.provinceCode)] = response;
-      },
-      error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error al editar localidad', detail: err.error.errorMessage, life: 3000 });
-      }
-    });
+    this.location = { postalCode: location.postalCode!, city: location.city!, provinceCode: location.provinceCode, provinceName: this.provincia.name! };
+    this.store.dispatch(new EditLocationAction(this.location));
   }
 
   onChange(event: any) {
-    this.provincia = this.provincias.find(x => x.provinceCode === event.value)!;
+    this.provincia = this.store.selectSnapshot(ProvinceState.getProvinces).find(x => x.provinceCode === event.value)!;
   }
 
   editEntity(location: Location) {
     this.locationForm.patchValue(location);
-    this.provincia = this.provincias.find(x => x.provinceCode === location.provinceCode)!;
+    this.provincia = this.store.selectSnapshot(ProvinceState.getProvinces).find(x => x.provinceCode === location.provinceCode)!;
     this.isEditForm = true;
-    this.locationDialog = true;
+    console.log(this.locationForm.value);
+    console.log(this.provincia);
+    this.store.dispatch(new FormActivate(true));
   }
 
   deleteEntity(localidad: Location) {
@@ -127,7 +118,7 @@ export class LocalidadesComponent implements OnInit {
 
   delete() {
     this.blockedPanel = true;
-    this.store.dispatch(new LocationDelete(this.location.postalCode));
+    this.store.dispatch(new DeleteLocationAction(this.location.postalCode));
   }
 
   closeDialog() {

@@ -1,127 +1,99 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { Category, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
+import { AddCategoryAction, CategoryListAction, DeleteCategoryAction, EditCategoryAction } from 'src/store/actions/category.action';
+import { FormActivate } from 'src/store/actions/util.actions';
+import { CategoryState } from 'src/store/states/category.state';
+import { UtilState } from 'src/store/states/util.state';
+import { CRUD } from 'src/util/abm-interface';
 
 @Component({
   selector: 'app-categorias',
   templateUrl: './categorias.component.html',
   styleUrls: ['./categorias.component.scss']
 })
-export class CategoriasComponent implements OnInit {
-
-  categorias:Category[] = [];
-
+export class CategoriasComponent implements OnInit, CRUD {
+  @Select(CategoryState.getCategories) categories$!: Observable<Category[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
+  @Select(UtilState.blockTable) loading!:Observable<boolean>;
+  title!:string;
   categoria!:Category; 
   submitted!:boolean;
   categoryDialog!: boolean;
-  isEditForm!: boolean;
+  isEdit!: boolean;
 
   categoryForm = this.fb.group({
-    id:[0, Validators.required],
+    categoryId:[0],
     name:['', Validators.required],
   });
 
   constructor(
-    private categoriaService:CategoriasService,
-    private confirmacionService:ConfirmationService,
-    private messageService:MessageService,
+    private store:Store,
+    private confirmationService:ConfirmationService,
     private fb:FormBuilder){
 
   }
 
-
+  
   ngOnInit(): void {
-    this.categoriaService.listaCategorias().subscribe((res:any) => this.categorias = res.payload);
+    this.store.dispatch(new CategoryListAction())
   }
 
+  openModalForm(): void {
+    this.isEdit = false;
+    this.title = "Nueva categoría";
+    this.store.dispatch(new FormActivate(true));
+  }
 
-
-  openModalForm() {
+  closeModalForm(): void {
+    this.store.dispatch(new FormActivate(false));
     this.categoryForm.reset();
-    this.submitted = false;
-    this.categoryDialog = true;
-    this.isEditForm = false;
   }
 
-
-  closeModalForm(){
-    this.categoryDialog = false;
-    this.submitted = false;
-  }
-
-  save(){
-    if(this.isEditForm){
+  save(): void {
+    if(this.isEdit){
       this.edit();
     }
     else{
-     this.create();
+      this.create();
     }
   }
 
-  create(){
-    let obj = this.categoryForm.value as Category;
-    this.categoriaService.postCategory(obj).subscribe({
-      next:(res) => {
-        let response = res.payload as Category;
-        this.messageService.add({ severity: 'success', summary: 'Crear categoría', detail: res.message, life: 3000 });
-        this.categoryDialog = false;
-        this.categorias.push(response);
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error al crear categoría', detail: err.error.errorMessage, life: 3000 });
-      }
+  create(): void {
+    this.categoria = this.categoryForm.getRawValue();
+    this.store.dispatch(new AddCategoryAction(this.categoria));
+  }
+  edit(): void {
+    this.categoria = this.categoryForm.getRawValue();
+    this.store.dispatch(new EditCategoryAction(this.categoria));
+  }
+  editEntity(entity: Category): void {
+    this.isEdit = true;
+    this.title = "Editar categoría";
+    this.categoryForm.patchValue(entity);
+    this.store.dispatch(new FormActivate(true));
+  }
+  deleteEntity(entity: Category): void {
+    this.categoria = entity;
+    this.confirmationService.confirm({
+      message: '¿Estas seguro de borrar la siguiente categoría: ' + entity.name + '?',
+      header: 'Eliminar categoría',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
     });
   }
-
-  edit(){
-    let obj = this.categoryForm.value as Category;
-    this.categoriaService.putCategory(obj).subscribe({
-      next:(res:ResponseHttp) => {
-        let response = res.payload as Category;
-        this.messageService.add({ severity: 'success', summary: 'Editar categoría', detail: res.message, life: 3000 });
-        this.categoryDialog = false;
-        this.categorias[this.categorias.findIndex(z => z.categoryId === response.categoryId)] = response;
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error al editar categoría', detail: err.error.errorMessage, life: 3000 });
-      }
-    });
+  delete(): void {
+    this.store.dispatch(new DeleteCategoryAction(this.categoria.categoryId!));
+  }
+  closeDialog(): void {
+    this.confirmationService.close();
   }
 
-  editEntity(category: Category) {
-    this.categoryForm.patchValue(category);
-    this.isEditForm = true;
-    this.categoryDialog = true;    
-  }
-
-  deleteEntity(categoria: Category){
-    this.categoria = categoria;
-    this.confirmacionService.confirm({message: '¿Estas seguro de borrar la siguiente categoría: ' + this.categoria.name + '?',
-    header: 'Eliminar categoría',
-    icon: 'pi pi-exclamation-triangle',
-    acceptLabel:'Aceptar',
-    rejectLabel:'Cancelar'
-    });
-  }
-
-  delete(){
-    this.categoriaService.borrarCategoria(this.categoria.categoryId).subscribe({
-      next:(res) => {
-        this.messageService.add({ severity: 'success', summary: 'Borrar categoría', detail: res.message, life: 3000 });
-        this.confirmacionService.close();
-        this.categorias = this.categorias.filter((val) => val.categoryId !== this.categoria.categoryId);
-      },
-      error:(err) => {
-        this.messageService.add({ severity: 'error', summary: 'Borrar categoría', detail: err.error.errorMessage, life: 3000 });
-      }
-    });
-
-  }
-
-  closeDialog(){
-    this.confirmacionService.close();
-  }
 
 }

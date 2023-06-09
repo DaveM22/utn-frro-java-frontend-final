@@ -23,21 +23,21 @@ export interface Location {
 }
 
 export interface Province {
-    provinceCode:number,
-    name:string
+    provinceCode:number | null,
+    name:string | null
 }
 
 export interface Category {
-    categoryId:number,
-    name:string
+    categoryId:number | null,
+    name:string | null
 }
 
 export interface Product {
-    id:number,
-    description:string,
-    categoryId:number,
-    categoryName:string,
-    amount:number
+    id:number | null,
+    description:string | null,
+    categoryId:number | null,
+    categoryName:string | null,
+    amount:number | null
 }
 
 export interface ProductSupplier {
@@ -47,15 +47,15 @@ export interface ProductSupplier {
     productName:string,
     amount:number,
     supplierName:string,
-    prices:Prices[],
+    prices:Price[],
     validityPrice:number
 }
 
-export interface Prices {
-    price:number
-    dateFrom:Date
-    personaId:number
-    productId:number
+export interface Price {
+    price:number | null
+    dateFrom:Date | null
+    personaId:number | null
+    productId:number | null
 }
 
 export interface Order {
@@ -80,38 +80,38 @@ export interface OrderDetail{
 }
 
 export interface Persona {
-    id:number;
-    direction:string;
-    phoneNumber:string;
-    email:string;
-    postalCod:number;
+    id:number | null;
+    direction:string | null;
+    phoneNumber:string | null;
+    email:string | null;
+    postalCode:number | null;
 }
 
 export interface CustomerParticular extends Persona {
-    firstName:string;
-    lastName:string;
-    dni:string;
+    firstName:string | null;
+    lastName:string | null;
+    dni:string | null;
 }
 
 export interface CustomerCompany extends Persona {
-    cuit:string;
-    businessName:string;
+    cuit:string | null;
+    businessName:string | null;
 }
 
 export interface Supplier extends Persona{
-    cuit:string;
-    businessName:string;
+    cuit:string | null;
+    businessName:string | null;
 }
 
 export interface ProductSupplierOrder extends ProductSupplier {
-    amountOrder:number;
-    total:number;
-    subtotal:number;
-    discount:number;
+    amountOrder:number | null;
+    total:number | null;
+    subtotal:number | null;
+    discount:number | null;
 }
 
 export interface Discount {
-     validityDate: Date;
-     amountPrice:number;
-     discount: number;
+     validityDate: Date | null;
+     amountPrice:number | null;
+     discount: number | null;
 }

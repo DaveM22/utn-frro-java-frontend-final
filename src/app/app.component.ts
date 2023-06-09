@@ -1,26 +1,29 @@
 import { AfterViewChecked, AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Select, Selector, Store } from '@ngxs/store';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/services/auth/auth.service';
+import { IsLoginAction, LogoutAction } from 'src/store/actions/login.action';
+import { LoginState } from 'src/store/states/login.state';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  @Select(LoginState.isLogged) isLogged!:Observable<boolean>;
   mostrarMenu!:boolean;
   isAdmin!: boolean;
-  isLogged!:boolean;
   data!: string;
-
+  login!:boolean;
   roles!: string;
   items!:any;
 
 
-  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router){
+  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router, private store:Store){
 
 
   }
@@ -33,7 +36,7 @@ export class AppComponent implements OnInit {
 
 
   logout(){
-    this.authService.logout();
+    this.store.dispatch(new LogoutAction());
     this.router.navigateByUrl("/login")
   }
 
@@ -41,25 +44,9 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
-
-    this.authService.getIsAuthenticated().subscribe(isAuthenticated => {
-      console.log(isAuthenticated);
-      this.mostrarMenu = isAuthenticated;
-
-
-
-  });
-  this.authService.getUserRoles().subscribe(userRoles => {
-    this.roles = userRoles;
-    this.isAdmin = this.roles.includes("ADMIN");
-    this.setMenuBar();
-  });
-
-
-
-
+    this.store.dispatch(new IsLoginAction());
     this.translateService.setDefaultLang('es');
-    
+    this.setMenuBar();
   }
 
   setMenuBar(){
@@ -82,7 +69,7 @@ export class AppComponent implements OnInit {
             routerLink:"descuentos"
           }
         ],
-        visible:this.isAdmin
+        
       },
       {
         label: 'Personal',
@@ -115,7 +102,7 @@ export class AppComponent implements OnInit {
             routerLink:'precios-productos'
           }
         ],
-        visible:this.isAdmin
+
       },
       
       {

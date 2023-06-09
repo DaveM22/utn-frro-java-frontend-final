@@ -1,5 +1,5 @@
 <p-card>
-    <p-table #dt [value]="suppliers" responsiveLayout="stack" [breakpoint]="'960px'"
+    <p-table #dt [value]="(suppliers$ | async)!" responsiveLayout="stack" [breakpoint]="'960px'"
     [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped"
     [globalFilterFields]="['cuit','businessName', 'direction', 'phoneNumber', 'postalCod', 'email']">
     <ng-template pTemplate="caption">
@@ -17,7 +17,7 @@
             </div>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <button pButton pRipple label="Agregar nuevo proveedor" icon="pi pi-plus" class="p-button-success"
-                (click)="addDialog()"></button>
+                (click)="openModalForm()"></button>
             </div>
         </div>
     </ng-template>
@@ -39,13 +39,13 @@
             <td><span class="p-column-title">Nombre</span>{{entity.businessName}}</td>
             <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
             <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCode}}</td>
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
             <td class="text-right">
                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm"
-                    (click)="editDialog(entity)"></button>
+                    (click)="editEntity(entity)"></button>
                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning p-button-sm"
-                    (click)="deleteModal(entity)"></button>
+                    (click)="deleteEntity(entity)"></button>
             </td>
         </tr>
     </ng-template>
@@ -60,10 +60,10 @@
 
 
 
-<p-dialog [(visible)]="supplierDialog" [style]="{width: '450px'}" header="Agregar nuevo proveedor" [modal]="true"
+<p-dialog [visible]="(modalForm | async)!" [style]="{width: '450px'}" [header]="title" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <form [formGroup]="supplierForm">
+        <form [formGroup]="supplierForm" (ngSubmit)="save()">
 
             <div class="field">
                 <label for="cuit">CUIT</label>
@@ -93,22 +93,20 @@
 
             <div class="field">
                 <label for="postal">Código postal</label>
-                <input type="number" pInputText id="postal" formControlName="postalCod" placeholder="Código postal" />
+                <input type="number" pInputText id="postal" formControlName="postalCode" placeholder="Código postal" />
+            </div>
+            <div class="flex align-items-center">
+                <button type="button" pButton pRipple icon="pi pi-check" label="Guardar" (click)="save()" class="mr-2 font-bold p-button-success" [disabled]="supplierForm.invalid"></button>
+                <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
             </div>
         </form>
-    </ng-template>
-    <ng-template pTemplate="footer">
-        <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text"
-            (click)="saveForm()"></button>
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text"
-            (click)="closeDialog()"></button>
     </ng-template>
 </p-dialog>
 
 
 <p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
     <ng-template pTemplate="footer">
-        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="deleteConfirm()"></button>
-        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDeleteConfirm()"></button>
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()"></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()"></button>
     </ng-template>
 </p-confirmDialog>

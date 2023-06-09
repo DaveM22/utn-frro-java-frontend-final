@@ -63,6 +63,17 @@ import { LocationFormModalComponent } from './components/forms/location-form-mod
 import { ProvinceState } from 'src/store/states/province.state';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { UtilState } from 'src/store/states/util.state';
+import { SupplierState } from 'src/store/states/supplier.state';
+import { CategoryState } from 'src/store/states/category.state';
+import { ProductState } from 'src/store/states/product.state';
+import { DiscountComponent } from './discount/discount.component';
+import { CustomerParticularState } from 'src/store/states/customer.particular.state';
+import { CustomerCompanyState } from 'src/store/states/customer.company.state';
+import { ProductSupplierState } from 'src/store/states/product-supplier.state,';
+import { PriceState } from 'src/store/states/price.state';
+import { LoginState } from 'src/store/states/login.state';
+import { DiscountState } from 'src/store/states/discount.state';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +105,9 @@ import { UtilState } from 'src/store/states/util.state';
     PriceFormComponent,
     MainComponent,
     UsersComponent,
-    LocationFormModalComponent
+    LocationFormModalComponent,
+    DiscountComponent,
+    OrderDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -127,7 +140,19 @@ import { UtilState } from 'src/store/states/util.state';
     JwtModule,
     BlockUIModule,
     ProgressSpinnerModule,
-    NgxsModule.forRoot([LocationState, ProvinceState, UtilState]),
+    NgxsModule.forRoot([
+      LocationState, 
+      ProvinceState, 
+      UtilState, 
+      SupplierState, 
+      CategoryState, 
+      ProductState, 
+      CustomerParticularState, 
+      CustomerCompanyState,
+      ProductSupplierState,
+      PriceState,
+      DiscountState,
+     LoginState]),
     DialogModule,
     DynamicDialogModule,
     NgxsLoggerPluginModule.forRoot({

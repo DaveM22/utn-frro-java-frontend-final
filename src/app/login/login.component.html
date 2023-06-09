@@ -5,19 +5,19 @@
           <div >
             <h1 class="text-center">Iniciar sesión</h1>
           </div>
-        <form>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
           <div class="p-fluid mb-3">
             <div class="p-field">
               <label for="username">Nombre de usuario</label>
-              <input id="username" type="text" pInputText [(ngModel)]="creds.email" name="email" />
+              <input id="username" type="text" pInputText formControlName="email" name="email" />
             </div>
             <div class="p-field">
               <label for="password">Contraseña</label>
-              <input id="password" type="password" pInputText [(ngModel)]="creds.password" name="password"  />
+              <input id="password" type="password" pInputText formControlName="password" name="password"  />
             </div>
           </div>
           <div class="flex justify-content-center">
-            <button pButton label="Iniciar sesión" class="col-12 md:col-6 lg:col-6" (click)="onSubmit()"></button>
+            <button type="submit" pButton label="Iniciar sesión" class="col-12 md:col-6 lg:col-6"></button>
           </div>
         </form>
       </p-card>

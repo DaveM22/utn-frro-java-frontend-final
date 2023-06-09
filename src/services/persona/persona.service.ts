@@ -51,7 +51,7 @@ export class PersonaService {
   }
 
   deleteSupplier(id:number) : Observable<ResponseHttp> {
-    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/supplier"+id);
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/supplier/"+id);
   }
 
   postSupplier(supplier:Supplier) : Observable<ResponseHttp> {

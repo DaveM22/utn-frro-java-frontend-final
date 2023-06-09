@@ -1,16 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { CustomerParticular } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
+import { DeleteCategoryAction } from 'src/store/actions/category.action';
+import { AddCustomerParticularAction, CustomerParticularListAction, EditCustomerParticularAction } from 'src/store/actions/customer-particular.action';
+import { FormActivate } from 'src/store/actions/util.actions';
+import { CustomerParticularState } from 'src/store/states/customer.particular.state';
+import { UtilState } from 'src/store/states/util.state';
+import { CRUD } from 'src/util/abm-interface';
 
 @Component({
   selector: 'app-customer-particular',
   templateUrl: './particular.component.html',
   styleUrls: ['./particular.component.scss']
 })
-export class ParticularComponent implements OnInit {
-
+export class ParticularComponent implements OnInit, CRUD {
+  @Select(CustomerParticularState.getCustomerParticular) customer$!: Observable<CustomerParticular[]>;
+  @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
+  @Select(UtilState.dialog) dialog!: Observable<boolean>;
+  isEdit!:boolean;
+  title!:string;
   customersParticular!:CustomerParticular[];
   customerParticular!:CustomerParticular;
   tabs!: MenuItem[];
@@ -25,25 +37,58 @@ export class ParticularComponent implements OnInit {
     direction:['',Validators.required],
     email:['',Validators.required],
     phoneNumber:['', Validators.required],
-    postalCod:[0,Validators.required]
+    postalCode:[0,Validators.required]
   });
 
   constructor(
-    private personaService:PersonaService,
     private confirmacionService:ConfirmationService,
-    private messageService:MessageService,
+    private store:Store,
     private fb:FormBuilder){
-
   }
 
   ngOnInit(): void {
-    this.personaService.getCustomerParticulars().subscribe(x => {
-      this.customersParticular = x.payload as CustomerParticular[];
-    })
+    this.store.dispatch(new CustomerParticularListAction());
   }
 
-  deleteModalParticular(customer: CustomerParticular): void {
-    this.customerParticular = customer;
+  openModalForm(): void {
+    this.title = "Nuevo cliente";
+    this.isEdit = false;
+    this.store.dispatch(new FormActivate(true));
+  }
+
+  closeModalForm(): void {
+    this.store.dispatch(new FormActivate(false));
+    this.customerParticularForm.reset();
+  }
+
+  save(): void {
+    if(this.isEdit) {
+      this.edit();
+    }
+    else{
+      this.create();
+    }
+  }
+
+  create(): void {
+    this.customerParticular = this.customerParticularForm.getRawValue()!;
+    this.store.dispatch(new AddCustomerParticularAction(this.customerParticular));
+  }
+
+  edit(): void {
+    this.customerParticular = this.customerParticularForm.getRawValue()!;
+    this.store.dispatch(new EditCustomerParticularAction(this.customerParticular));
+  }
+
+  editEntity(entity: CustomerParticular): void {
+    this.isEdit = true;
+    this.customerParticularForm.patchValue(entity);
+    this.title = "Editar cliente";
+    this.store.dispatch(new FormActivate(true));
+  }
+
+  deleteEntity(entity: CustomerParticular): void {
+    this.customerParticular = entity;
     this.confirmacionService.confirm(
       {message: '¿Estas seguro de borrar el siguiente cliente: ' 
       + this.customerParticular.dni + ' ' + this.customerParticular.firstName +' '+ this.customerParticular.lastName + ' ' + '?',
@@ -54,61 +99,12 @@ export class ParticularComponent implements OnInit {
     });
   }
 
-  deleteConfirm() : void {
-    this.personaService.deleteCustomerParticular(this.customerParticular.id).subscribe(
-      {
-        next:(res) => {
-          this.messageService.add({key: 'tc', severity: 'success', summary: 'Eliminar cliente', detail: res.message, life: 3000 });
-          this.customersParticular = this.customersParticular.filter((val:CustomerParticular) => val.id !== this.customerParticular.id);
-          this.confirmacionService.close();
-        },
-        error:(error) => {
-          this.emptyMessage = "No se pudieron recuperar los clientes, intente mas tarde"
-        }
-      }
-    );
-  }
-
-  closeDeleteConfirm() : void {
-    this.confirmacionService.close();
-    this.messageService.add({key: 'tc', severity: 'warn', summary: 'Eliminar cliente', detail: "Se ha cancelado la eliminación del cliente", life: 3000 });
-  }
-
-  saveForm(): void {
-    let obj = this.customerParticularForm.value as CustomerParticular;
-    if(obj.id === 0){
-      this.personaService.postCustomerParticular(obj).subscribe(x => {
-        this.particularDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Crear cliente', detail: x.message, life: 3000 });
-        this.customersParticular.push(x.payload as CustomerParticular);
-      });
-    }
-    else {
-      this.personaService.putCustomerParticular(obj).subscribe(x => {
-        let responseCustomer = x.payload as CustomerParticular;
-        this.particularDialog = false;
-        this.submitted = false;
-        this.messageService.add({ severity: 'success', summary: 'Editar cliente', detail: x.message, life: 3000 });
-        this.customersParticular[this.customersParticular.findIndex(z => z.id === responseCustomer.id)] = responseCustomer;
-        this.particularDialog = false;
-      });
-    }
+  delete(): void {
+    this.store.dispatch(new DeleteCategoryAction(this.customerParticular.id!));
   }
 
   closeDialog(): void {
-    this.particularDialog = false;
-    this.submitted = false;
-  }
-
-  addDialog() {
-    this.submitted = false;
-    this.particularDialog = true;
-  }
-
-  editDialog(customer:CustomerParticular){
-    this.particularDialog = true;
-    this.customerParticularForm.patchValue(customer);
+    this.confirmacionService.close();
   }
 
 }
