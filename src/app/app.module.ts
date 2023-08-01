@@ -167,7 +167,7 @@ import { OrderState } from 'src/store/states/order.state';
     DialogModule,
     DynamicDialogModule,
     NgxsLoggerPluginModule.forRoot({
-      disabled: !environment.production,
+      disabled: environment.production,
       logger: console
     })
   ],

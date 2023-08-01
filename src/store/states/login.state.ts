@@ -44,7 +44,7 @@ export class LoginState {
 
             }),
             catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear producto", error.error.errorMessage)));
+                return of(ctx.dispatch(new ErrorApi("Ingresar al sistema", error.error.errorMessage)));
             })
         );
     }
