@@ -18,7 +18,23 @@ export class ErrorApi {
     constructor(public title:string, public message:string){}
 }
 
+export class ErrorBusiness {
+    static readonly type = '[Error] Error de negocio';
+    constructor(public title:string, public message:string){}
+}
+
 export class BlockTable {
     static readonly type = '[Action] Block table';
     constructor(public block:boolean){}
+}
+
+export class StepCreatePedido {
+    static readonly type = '[Action] Cambiar sección de crear pedido';
+    constructor(public paso:number){}
+}
+
+
+export class ModalStockAction {
+    static readonly type = '[Modal stock] Agregar stock';
+    constructor(public visible:boolean){}
 }

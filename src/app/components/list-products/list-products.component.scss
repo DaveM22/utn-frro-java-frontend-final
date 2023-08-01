@@ -1,0 +1,31 @@
+.outofstock{
+    color: red;
+}
+
+
+.instock{
+    color:greenyellow;
+}
+
+
+
+::ng-deep .input-styling input {
+    width: 100px !important;
+  }
+
+  
+:host ::ng-deep .p-panel-header{
+    display:block;
+  }
+  
+  :host ::ng-deep .p-datatable-wrapper {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 400px);
+  }
+  
+  
+  .div-1 {
+    flex: 1 0 0;
+  }
+  

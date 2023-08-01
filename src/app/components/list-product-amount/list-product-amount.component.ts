@@ -1,5 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
 import { ProductSupplier, ProductSupplierOrder } from 'src/models/models';
+import { CreateOrderDetailsAction } from 'src/store/actions/order.action';
+import { StepCreatePedido } from 'src/store/actions/util.actions';
+import { OrderState } from 'src/store/states/order.state';
 
 @Component({
   selector: 'app-list-product-amount',
@@ -7,20 +12,53 @@ import { ProductSupplier, ProductSupplierOrder } from 'src/models/models';
   styleUrls: ['./list-product-amount.component.scss']
 })
 export class ListProductAmountComponent implements OnInit {
+  @Select(OrderState.productSelected) orders!:Observable<ProductSupplierOrder[]>
+
   @Output() productsAmount$: EventEmitter<any> = new EventEmitter<any>();
   @Input() selectedProducts: ProductSupplierOrder[] = [];
 
   clonedProducts: { [s: string]: ProductSupplierOrder } = {};
   products: ProductSupplierOrder[] = [];
 
+  constructor(private store:Store){ 
+
+    this.setTableMaxHeight();
+   }
+
   ngOnInit(): void {
-    if (this.selectedProducts !== undefined) {
-      this.products = this.selectedProducts as ProductSupplierOrder[];
-    }
+    this.onResize();
+    this.orders.subscribe(x => {
+      this.products = x;
+    })
+
+    
   }
 
+
+  setTableMaxHeight() {
+    const windowHeight = window.innerHeight;
+    console.log(windowHeight);
+  }
+
+
+  isMobileScreen: boolean = false;
+  isDesktopScreen: boolean = false;
+
+
+  // Suscribirse al evento "resize" del objeto window para detectar cambios en el tamaño de pantalla
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.isMobileScreen = window.innerWidth <= 960;
+    this.isDesktopScreen = window.innerWidth > 960;
+  }
+
+
   confirmAmounts() {
-    this.productsAmount$.emit(this.products);
+    this.store.dispatch(new CreateOrderDetailsAction(this.products));
+  }
+
+  returnToProducts(){
+    this.store.dispatch(new StepCreatePedido(2));
   }
 
   getselectedProductsLenght() {
@@ -45,5 +83,9 @@ export class ListProductAmountComponent implements OnInit {
   onRowEditCancel(product: ProductSupplierOrder, index: number) {
     this.products[index] = this.clonedProducts[index];
     delete this.clonedProducts[index];
+  }
+
+  onRowSelect(event:any){
+    console.log(event);
   }
 }

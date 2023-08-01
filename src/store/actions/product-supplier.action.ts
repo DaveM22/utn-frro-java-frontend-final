@@ -14,3 +14,8 @@ export class AddProductSupplierAction {
     constructor(public payload: ProductSupplier) { }
 }
 
+export class EditProductSupplierAction {
+    static readonly type = "[Product Supplier API] Edit Product Supplier";
+    constructor(public payload: ProductSupplier){}
+}
+

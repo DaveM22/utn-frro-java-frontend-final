@@ -1,0 +1,15 @@
+/* :host ::ng-deep .p-card .p-card-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+
+
+ */
+ :host ::ng-deep .p-datatable.p-datatable-sm .p-datatable-footer {
+    padding:0px;
+}
+/* 
+ :host ::ng-deep .p-panel .p-panel-content {
+    display:flex; flex-direction: column; height: 75vh; flex:1;
+ } */

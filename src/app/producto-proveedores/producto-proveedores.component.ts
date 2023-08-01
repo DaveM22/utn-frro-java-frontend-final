@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 import { Price, Product, ProductSupplier, Supplier } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
-import { AddProductSupplierAction, ProductSupplierByProductAction } from 'src/store/actions/product-supplier.action';
+import { AddProductSupplierAction, EditProductSupplierAction, ProductSupplierByProductAction } from 'src/store/actions/product-supplier.action';
 import { SupplierListAction } from 'src/store/actions/supplier.action';
-import { FormActivate } from 'src/store/actions/util.actions';
+import { FormActivate, ModalStockAction } from 'src/store/actions/util.actions';
 import { ProductSupplierState } from 'src/store/states/product-supplier.state,';
 import { SupplierState } from 'src/store/states/supplier.state';
 import { UtilState } from 'src/store/states/util.state';
@@ -25,6 +25,7 @@ export class ProductoProveedoresComponent implements OnInit {
   @Select(ProductSupplierState.getProductTitle) title!:Observable<string>
   @Select(ProductSupplierState.getProductSupplier) productSuppliers!:Observable<ProductSupplier[]>
   @Select(UtilState.modalForm) modal!:Observable<boolean>
+  @Select(UtilState.getModalAddStock) modalAddStock!:Observable<boolean>
 
   idProducto!:number
   titulo!:String
@@ -36,6 +37,10 @@ export class ProductoProveedoresComponent implements OnInit {
     amount: [null, Validators.required],
     supplier: [null, Validators.required]
   });
+
+  addStockForm = this.fb.group({
+    amount:[0, Validators.required]
+  })
 
   constructor(
     private route:ActivatedRoute,
@@ -65,6 +70,16 @@ export class ProductoProveedoresComponent implements OnInit {
     console.log(this.productSupplierForm);
   }
 
+  openModalAddStock(supplier:ProductSupplier){
+    this.supplier = supplier;
+    this.store.dispatch(new ModalStockAction(true));
+  }
+
+  closeModalAddStock(){
+    this.store.dispatch(new ModalStockAction(false));
+  }
+
+
   openModalForm(){
     this.store.dispatch(new FormActivate(true));   
   }
@@ -79,6 +94,11 @@ export class ProductoProveedoresComponent implements OnInit {
     let amount = this.productSupplierForm.value.amount;
     this.supplier = {personaId: obj.id!, cuit: obj.cuit!, productName: obj.businessName!, supplierName: obj.businessName!, amount: amount!, productId: this.idProducto, prices:[], validityPrice:0};
     this.store.dispatch(new AddProductSupplierAction(this.supplier));
+  }
+
+  saveAddAmount(){
+    this.supplier.amount = this.supplier.amount + (this.addStockForm.getRawValue().amount!)
+    this.store.dispatch(new EditProductSupplierAction(this.supplier));
   }
 
 }

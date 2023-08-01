@@ -24,4 +24,8 @@ export class ProductoProveedorService {
   postProductSupplier(productSupplier:ProductSupplier){
     return this.http.post<ResponseHttp>(this.baseUrl + "/api/product-supplier/"+productSupplier.personaId+"/new", productSupplier);
   }
+
+  putProductSupplier(productSupplier: ProductSupplier){
+    return this.http.put<ResponseHttp>(this.baseUrl + "/api/product-supplier/"+productSupplier.personaId+"/edit", productSupplier);
+  }
 }

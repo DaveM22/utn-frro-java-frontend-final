@@ -1,29 +1,33 @@
-<p-table #dt [value]="customersParticular" [(selection)]="customerParticular"  [breakpoint]="'960px'" responsiveLayout="stack"
-    scrollHeight="50vh"
-    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
+<div class="grid flex flex-wrap align-items-center justify-content-center">
+    <div class="col-12 md:col-12 lg:col-12">
+<p-table #dt [value]="customersParticular" dataKey="id" [(selection)]="customerParticular"  [breakpoint]="'960px'" responsiveLayout="stack"
+    [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
     (onRowUnselect)="unselected()"
+    [responsive]="true"
     (onRowSelect)="selected()"
     [globalFilterFields]="['dni', 'firstName', 'lastName', 'phoneNumber', 'postalCod', 'email']"
     [paginator]="true"
     [rows]="5"
     [showCurrentPageReport]="true"
+    currentPageReportTemplate="{first} - {last} de {totalRecords}"
+    [scrollHeight]="'flex'" 
     >
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container justify-content-between">
-            <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                 <div class="col-12 md:col-6 lg:col-12 text-center">
-                    <h2 class="m-0">Clientes particular</h2>
+                    <h4 class="m-0">Clientes particulares</h4>
                 </div>
             </div>
-            <div *ngIf="customerParticular !== null && customerParticular !== undefined" class="flex align-items-center justify-content-center font-bold text-white border-round">
-                <h4>Cliente seleccionado: Dni {{customerParticular.dni}} - {{customerParticular.lastName}} {{customerParticular.firstName}} </h4>
+            <div *ngIf="customerParticular !== null && customerParticular !== undefined" class="flex align-items-center justify-content-center font-bold text-white border-round mb-1">
+                <h4 class="m-0">Cliente seleccionado: Dni {{customerParticular.dni}} - {{customerParticular.lastName}} {{customerParticular.firstName}} </h4>
             </div>
-            <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
+            <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round">
 
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                     <span class="p-input-icon-left ml-2">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar cliente" />
+                        <input pInputText  class="p-inputtext-sm" type="text" class="p-inputtext-sm"  (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar cliente" />
                     </span>
                 </div>
             </div>
@@ -61,10 +65,11 @@
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
         </tr>
     </ng-template>
-    <ng-template pTemplate="summary">
+     <ng-template pTemplate="summary">
         <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <p-button label="Confirmar" (onClick)="confirmCustomer()"  styleClass="p-button-sm p-button-success" [disabled]="customerParticular == null"></p-button>
+                <p-button *ngIf="(customerSelected$ | async)" styleClass="p-button-sm" class="ml-2" label="Volver a seleccionar productos" (onClick)="returnToProducts()" styleClass="p-button-sm p-button-success" ></p-button>
             </div>
         </div>
     </ng-template>
@@ -75,3 +80,5 @@
     </ng-template>
 
 </p-table>
+    </div>
+</div>

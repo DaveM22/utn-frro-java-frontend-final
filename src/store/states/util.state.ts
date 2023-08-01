@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { UtilStateModel } from "../model/util.modelstate";
-import { BlockTable, DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util.actions";
+import { BlockTable, DialogActivate, ErrorApi, ErrorBusiness, FormActivate, ModalStockAction, StepCreatePedido, Success } from "../actions/util.actions";
 import { ConfirmationService, MessageService } from "primeng/api";
 
 @State<UtilStateModel>({
@@ -9,7 +9,9 @@ import { ConfirmationService, MessageService } from "primeng/api";
     defaults: {
         modalForm:false,
         dialog:false,
-        blockTable:true
+        blockTable:true,
+        paso:1,
+        modalStock:false
     },
 })
 @Injectable()
@@ -31,6 +33,16 @@ export class UtilState {
     static blockTable(state: UtilStateModel){
         return state.blockTable;
     }
+
+    @Selector()
+    static getStepCreateOrder(state:UtilStateModel){
+        return state.paso;
+    }
+
+    @Selector()
+    static getModalAddStock(state: UtilStateModel){
+        return state.modalStock;
+    }
     
     @Action(FormActivate)
     modalForm(ctx: StateContext<UtilStateModel>, action: FormActivate) {
@@ -49,6 +61,13 @@ export class UtilState {
         })
     }
 
+    @Action(ModalStockAction)
+    modalAddSTock(ctx: StateContext<UtilStateModel>, action: ModalStockAction){
+        ctx.patchState({
+            modalStock: action.visible
+        })
+    }
+
     @Action(Success)
     success(ctx: StateContext<UtilStateModel>, action:Success){
         this.messageService.add({ severity: 'success', summary: action.title, detail: action.message, life: 3000 });
@@ -59,10 +78,22 @@ export class UtilState {
         this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 3000 });
     }
 
+    @Action(ErrorBusiness)
+    errorBusiness(ctx: StateContext<UtilStateModel>, action:ErrorBusiness){
+        this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 3000 });
+    }
+
     @Action(BlockTable)
     blockTable(ctx: StateContext<UtilStateModel>, action:BlockTable){
         ctx.patchState({
             blockTable: action.block
         });
+    }
+
+    @Action(StepCreatePedido)
+    stepCreate(citx:StateContext<UtilStateModel>, action:StepCreatePedido){
+        citx.patchState({
+            paso:action.paso
+        })
     }
 }

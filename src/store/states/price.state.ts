@@ -44,7 +44,7 @@ export class PriceState {
                 ctx.patchState({
                     items:[...state.items, res.payload as Price]
                 })
-                ctx.dispatch(new Success("Crear producto", res.message));
+                ctx.dispatch(new Success("Nueva vigencia de precio", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
               catchError(error => {

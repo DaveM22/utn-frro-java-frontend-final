@@ -1,0 +1,12 @@
+
+
+:host ::ng-deep .p-datatable-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 325px);
+}
+
+
+.div-1 {
+  flex: 1 0 0;
+}

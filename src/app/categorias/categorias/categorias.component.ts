@@ -46,6 +46,7 @@ export class CategoriasComponent implements OnInit, CRUD {
 
   openModalForm(): void {
     this.isEdit = false;
+    this.categoryForm.reset();
     this.title = "Nueva categoría";
     this.store.dispatch(new FormActivate(true));
   }

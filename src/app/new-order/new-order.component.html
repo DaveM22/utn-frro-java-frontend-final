@@ -1,27 +1,16 @@
-
-<p-card>
-    <p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex" (activeIndexChange)="onActiveIndexChange($event)" ></p-steps>
-</p-card>
-
-<div *ngIf="activeIndex === 0">
-    <app-list-customer [customer]="customer" (confirmCustomer$)="setIndex($event)"></app-list-customer>
+<div *ngIf="step === 1">
+    <app-list-customer></app-list-customer>
+</div>
+<div *ngIf="step === 2">
+    <app-list-products></app-list-products>
 </div>
 
-<div *ngIf="activeIndex === 1">
-    <p-card>
-        <app-list-products [selectedProducts]="selectedProducts" [productsSupplier]="products" (productsSelected$)="confirmProductSelected($event)"></app-list-products>
-    </p-card>
+<div *ngIf="step === 3">
+    <app-list-product-amount></app-list-product-amount>
 </div>
 
-<div *ngIf="activeIndex === 2">
-    <p-card>
-        <app-list-product-amount [selectedProducts]="selectedProducts" (productsAmount$)="confirmProductAmount($event)"></app-list-product-amount>
-    </p-card>
-   
+<div *ngIf="step === 4">
+    <app-resume-order></app-resume-order>
 </div>
 
-<div *ngIf="activeIndex === 3">
-    <p-card>
-        <app-resume-order [productsOrder]="selectedProducts" (finishOrder$)="finishOrder($event)"></app-resume-order>
-    </p-card>
-</div>
+

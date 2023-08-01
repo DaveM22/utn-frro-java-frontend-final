@@ -1,6 +1,6 @@
 <p-card>
     <p-table #dt [value]="(productSuppliers | async)!" responsiveLayout="stack" [breakpoint]="'960px'"
-        [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-striped">
+        [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm">
         <ng-template pTemplate="caption">
             <div class="flex flex-column md:flex-row card-container justify-content-between">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
@@ -27,6 +27,7 @@
                 <th>Razón Social</th>
                 <th class="text-center">Cantidad</th>
                 <th class="text-center">Precio vigente</th>
+                <th></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-supplier>
@@ -35,6 +36,9 @@
                 <td class="text-center"><span class="p-column-title">Cantidad</span>{{supplier.amount}}</td>
                 <td class="text-center"><span class="p-column-title">Precio
                         vigente</span>{{supplier.validityPrice === null || supplier.validityPrice === 0  ?  "Sin precio" : supplier.validityPrice}}</td>
+                <td class="text-center">
+                    <button pButton pRipple label="Agregar stock" class="p-button-rounded p-button-sm mr-2" (click)="openModalAddStock(supplier)"></button>
+                </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
@@ -46,6 +50,29 @@
 
 
 </p-card>
+
+<p-dialog [visible]="(modalAddStock | async)!" [style]="{width: '500px'}" [closable]="false" header="Agregar stock" [modal]="true" position="top" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addStockForm" (ngSubmit)="saveAddAmount()">
+            <div class="field">
+                <label for="cantidad">Cantidad</label>
+                <p-inputNumber inputId="amount" formControlName="amount" placeholder="Ingrese cantidad a agregar"></p-inputNumber>
+                <small class="p-error block" *ngIf="addStockForm.controls['amount'].invalid && addStockForm.controls['amount'].dirty">
+                    El campo Nombre es obligatorio
+                </small>
+            </div>
+            <div class="flex align-items-center">
+                <button type="button" pButton pRipple icon="pi pi-check" label="Guardar" (click)="saveAddAmount()" class="mr-2 font-bold p-button-success" [disabled]="addStockForm.invalid"></button>
+                <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalAddStock()"></button>      
+            </div>
+        </form>
+    </ng-template>
+
+
+</p-dialog>
+
+
+
 <p-dialog [visible]="(modal | async)!" [closable]="false" [style]="{width: '1000px'}" header="Seleccionar proveedor y asignar cantidad inicial" [modal]="true"
 position="top"
 styleClass="p-fluid">
@@ -85,6 +112,7 @@ styleClass="p-fluid">
                     <td><span class="p-column-title text-left">Razón social</span>{{entity.businessName}}</td>               
                     <td><span class="p-column-title text-left">Dirección</span>{{entity.direction}}</td>
                     <td><span class="p-column-title text-left">E-mail</span>{{entity.email}}</td>
+                    <td><span class="p-column-title text-left"></span></td>
                 </tr>
             </ng-template>
         </p-table>

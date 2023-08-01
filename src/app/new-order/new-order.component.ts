@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Select, Store } from '@ngxs/store';
 import { MenuItem, MessageService } from 'primeng/api';
+import { Observable } from 'rxjs';
 import { Order, ProductSupplier, ProductSupplierOrder } from 'src/models/models';
 import { Product, OrderDetail } from 'src/models/models';
 import { OrderService } from 'src/services/orders/order.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
 import { ProductoService } from 'src/services/productos/producto.service';
+import { CustomerCompanyListAction } from 'src/store/actions/customer-company.action';
+import { CustomerParticularListAction } from 'src/store/actions/customer-particular.action';
+import { StepCreatePedido } from 'src/store/actions/util.actions';
+import { UtilState } from 'src/store/states/util.state';
 
 @Component({
   selector: 'app-new-order',
@@ -13,6 +19,8 @@ import { ProductoService } from 'src/services/productos/producto.service';
   styleUrls: ['./new-order.component.scss']
 })
 export class NewOrderComponent implements OnInit {
+
+  @Select(UtilState.getStepCreateOrder) step$!: Observable<number>;
   dialogVisible!: boolean;
   products!:ProductSupplierOrder[];
   selectedProducts!:ProductSupplierOrder[];
@@ -21,35 +29,53 @@ export class NewOrderComponent implements OnInit {
   activeIndex: number = 0;
   customer:any;
   order!:Order;
+  customerTypes:any;
+  isMobile!: boolean;
 
-  constructor(private productoService:ProductoProveedorService, private orderService:OrderService, private messageService:MessageService, private router:Router, private service:ProductoProveedorService){
+  step!:number;
+
+  constructor(
+    
+    
+    private productoService:ProductoProveedorService,
+     private messageService:MessageService, 
+     private store:Store){
     this.items = [
       {
-          label: 'Cliente'
+          label: 'Seleccionar cliente'
       },
       {
-          label: 'Productos'
+          label: 'Seleccionar productos'
       },
       {
-          label: 'Cantidades'
+          label: 'Establecer cantidades para los productos'
       },
       {
         label:'Finalizar'
       }
     ];
+
+    this.customerTypes = [
+      { name: 'Particulares' },
+      { name:'Empresas'}]
+  }
+
+  checkScreenSize() {
+    this.isMobile = window.innerWidth < 960; // Cambia el valor 768 según tu criterio de tamaño para considerar como "móvil"
   }
 
   onActiveIndexChange(event:any) {
     this.activeIndex = event;
   }
 
-
   ngOnInit(): void {
+    this.step$.subscribe(x => this.step = x);
+    this.store.dispatch(new StepCreatePedido(1));
+    this.store.dispatch(new CustomerCompanyListAction());
+    this.store.dispatch(new CustomerParticularListAction());
     this.productoService.getProductsSupplier().subscribe(x => this.products = x.payload as ProductSupplierOrder[]);
-    this.service.getProductsSupplier().subscribe(x => {
-      this.products = x.payload as ProductSupplierOrder[]
-    })
   }
+
 
 
   showDialog() {
@@ -69,31 +95,8 @@ export class NewOrderComponent implements OnInit {
   }
 
 
-  confirmProductAmount($event:any){
-    this.activeIndex = 3;
-    this.selectedProducts = $event;
-    this.messageService.add({ severity: 'success', summary: 'Cantidades de productos', detail: "Se han registrado las cantidades para cada producto", life: 3000 });
-  }
 
-  finishOrder($event:any){
-    this.orderDetails = [];
-    this.selectedProducts = $event;
-    this.selectedProducts.forEach(x => {
-      let obj = {orderNumber:0, productId:x.productId!, personaId:x.personaId!, total: x.total!, amount: x.amountOrder!  };
-      this.orderDetails.push(obj);
-    })
-    this.order = {date:Date.now(), orderNumber:0, personaId:this.customer.id, details: this.orderDetails };
-    this.orderService.postOrder(this.order).subscribe(
-      {
-        next: (res) => {
-          this.router.navigateByUrl("/pedidos")
-          this.messageService.add({ severity: 'success', summary: 'Creación de pedido', detail: res.message, life: 3000 });
-        },
-        error:(err) => {
-          this.messageService.add({ severity: 'error', summary: 'Error al crear pedido', detail: err.error.errorMessage, life: 3000 });
-        }
-    });
-  }
+
 
 
 }

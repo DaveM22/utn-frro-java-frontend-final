@@ -65,7 +65,25 @@ export interface Order {
     details:OrderDetail[];
 }
 
+export interface OrderReport {
+    dateFrom:Date;
+    customerName:string;
+    direction:string;
+    email:string;
+    details:OrderReportDetail[];
+}
+
+export interface OrderReportDetail {
+    productName:string;
+    supplierName:string;
+    amount:number;
+    total:number;
+    price:number;
+}
+
+
 export interface OrderView {
+    orderNumber:number;
     dateFrom:Date;
     customerName:String;
     amountProducts:number;
@@ -75,8 +93,11 @@ export interface OrderDetail{
     orderNumber:number;
     productId:number;
     personaId:number;
+    price:number | null;
     amount:number;
-    total:number;
+    productName:string;
+    supplierName:string;
+    total:number | null;
 }
 
 export interface Persona {

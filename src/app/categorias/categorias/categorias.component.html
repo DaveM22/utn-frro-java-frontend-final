@@ -1,15 +1,24 @@
-<p-card>
-    <div class="grid flex flex-wrap align-items-center justify-content-center">
-        <div class="col-12 md:col-12 lg:col-8">
-    <p-table #dt [value]="(categories$ | async)!" responsiveLayout="stack" [loading]="(loading | async)!" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"  styleClass="p-datatable-sm p-datatable-striped"
-    [globalFilterFields]="['name']">
+<p-panel>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column md:flex-row card-container align-space-between text-center justify-content-between font-bold text-white">
+            
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
+                Cátegorias
+            </div>
+              
+        </div>
+    </ng-template>
+    <div class="layout-container">
+        <div  class="div-1">
+            <p-table #dt [value]="(categories$ | async)!" responsiveLayout="stack" [loading]="(loading | async)!" [breakpoint]="'960px'" 
+    styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
+    [globalFilterFields]="['name']"
+    [paginator]="true"
+    [rows]="5"
+    scrollHeight="flex"
+        [tableStyle]="{'min-width': '10rem'}">
         <ng-template pTemplate="caption">
-            <div class="flex flex-column md:flex-row card-container justify-content-between">
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <div class="col-12 md:col-6 lg:col-12 text-center">
-                        <h2 class="m-0">Categorías</h2>
-                    </div>
-                </div>
+            <div class="flex flex-column md:flex-row card-container justify-content-end">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
@@ -24,22 +33,26 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Nombre de categoría</th>
-                <th></th>
+                <th class="text-center">Acciones</th>
               </tr>
         </ng-template>
         <ng-template pTemplate="body" let-entity>
             <tr>
                 <td><span class="p-column-title">Categoría</span>{{entity.name}}</td>
-                <td class="text-right">
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(entity)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(entity)"></button>
+                <td class="text-center">
+                    <span class="p-column-title">Acciones</span>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2 p-button-sm" (click)="editEntity(entity)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm" (click)="deleteEntity(entity)"></button>
                 </td>
               </tr>
         </ng-template>
     </p-table>
-</div>
-</div>
-</p-card>
+        </div>
+    </div>
+</p-panel>
+
+
+
 
 
 <p-dialog [visible]="(modalForm | async)!" [closable]="false"  [header]="title" [style]="{width: '450px'}" [modal]="true" styleClass="p-fluid">

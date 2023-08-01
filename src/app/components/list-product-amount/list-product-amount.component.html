@@ -1,72 +1,62 @@
-<div class="grid flex flex-wrap align-items-center justify-content-center">
-    <div class="col-12 md:col-12 lg:col-10">
-        <p-table [value]="selectedProducts" [(selection)]="selectedProducts" dataKey="productId" editMode="row"
-             [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm" >
-            <ng-template pTemplate="caption">
-                <div class="flex flex-column md:flex-row card-container justify-content-between">
-                    <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                        <div class="col-12 md:col-6 lg:col-12 text-center">
-                            <h2 class="m-0">Establezca las cantidades para cada producto seleccionado</h2>
+
+    <p-panel>
+        <ng-template pTemplate="header">
+            <div class="col-12 font-bold text-white m-0">
+                Productos seleccionados
+            </div>
+        </ng-template>
+        <div class="layout-container">
+            <div  class="div-1">
+                <p-table 
+                [value]="products" 
+                styleClass="p-datatable-sm"
+                responsiveLayout="stack"
+                scrollHeight="flex" 
+                [paginator]="true"
+                [rows]="isMobileScreen ? 3 : 7"
+            >
+            
+                <ng-template pTemplate="caption">
+            
+                </ng-template>
+            
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Proveedor</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Cantidad pedida</th>
+                        <th class="text-center">Precio unitario vigente</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product>
+                    <tr>
+                        <td><span class="p-column-title">Producto</span>{{ product.productName }}</td>
+                        <td><span class="p-column-title">Proveedor</span>{{ product.supplierName }}</td>
+                        <td class="text-center"><span class="p-column-title">Cantidad</span>{{ product.amount }}</td>
+                        <td class="text-center"><span class="p-column-title">Cantidad pedida</span>{{ product.amountOrder }}</td>
+                        <td class="text-center"><span class="p-column-title">Precio unitario vigente</span>{{ product.validityPrice }}</td>
+                    </tr>
+                </ng-template>
+            
+                <ng-template pTemplate="emptymessage">
+                    <tr >
+                        <td colspan="5" class="text-center justify-content-center">No se han seleccionado productos</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <p-button label="Volver a seleccion de productos" (click)="returnToProducts()" styleClass="p-button-sm p-button-success"
+                            ></p-button>
+                            <p-button label="Confirmar productos" (click)="confirmAmounts()" class="ml-4" styleClass="p-button-sm p-button-success"
+                            ></p-button>
                         </div>
                     </div>
-                    <div class="flex align-items-center justify-content-center font-bold text-white border-round">
-                        <h4>Productos completados: {{getProductosCompletos()}} de {{getselectedProductsLenght()}} </h4>
-                    </div>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Razón Social</th>
-                    <th>Cantidad Disponible</th>
-                    <th>Precio vigente</th>
-                    <th colspan="2">Cantidad</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-entity let-ri="rowIndex" let-editing="editing">
-                <tr [pEditableRow]="entity">
-                    <td><span class="p-column-title">Razón Social</span>{{entity.supplierName}}</td>
-                    <td><span class="p-column-title">Cant. Disponible</span>{{entity.amount}}</td>
-                    <td><span class="p-column-title">Precio vigente</span>{{entity.validityPrice || "Sin precio"}}</td>
+                </ng-template>
+            </p-table>
+              </div>
+        </div>
+    </p-panel>
 
-                    <td [pEditableColumn]="entity.amountOrder">
-                        <span class="p-column-title">Cantidad</span>
-                        <p-cellEditor>
-                            <ng-template pTemplate="input">
-                                <p-inputNumber type="number" id="ri" [min]="0" [max]="entity.amount" [(ngModel)]="entity.amountOrder">
-                                
-                                </p-inputNumber>
-                            </ng-template>
-                            <ng-template pTemplate="output">
 
-                                    {{entity.amountOrder || 'Sin asignar'}}
-                                
-                            </ng-template>
-                    
-                        </p-cellEditor>
-                    </td>
-                    <td class="text-center">
-                        <div class="flex align-items-center justify-content-center gap-2">
-                            <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow label="Asignar" (click)="onRowEditInit(entity, ri)" class="p-button-rounded p-button-text"></button>
-                            <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow label="Aceptar" (click)="onRowEditSave(entity, ri)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
-                            <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow label="Cancelar" (click)="onRowEditCancel(entity, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td class="text-center" colspan="5">No se han seleccionado productos</td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="summary">
-                <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                        <p-button label="Confirmar" (onClick)="confirmAmounts()"
-                        styleClass="p-button-sm p-button-success"
-                        [disabled]="getselectedProductsLenght() === 0"></p-button>
-                    </div>
-                </div>
-            </ng-template>
-        </p-table>
-    </div>
-</div>

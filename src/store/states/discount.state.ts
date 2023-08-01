@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { DiscountStateModel } from "../model/discount.modelstate";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { DiscountService } from "src/services/discount/discount.service";
-import { AddDiscountAction, DiscountListAction } from "../actions/discount.action";
+import { AddDiscountAction, DiscountListAction, GetDiscountTodayAction } from "../actions/discount.action";
 import { BlockTable, ErrorApi, FormActivate, Success } from "../actions/util.actions";
 import { Discount, Price, ResponseHttp } from "src/models/models";
 import { catchError, of, tap } from "rxjs";
@@ -11,6 +11,7 @@ import { catchError, of, tap } from "rxjs";
     name: "discount",
     defaults: {
         items: [],
+        discountToday:[]
     },
 })
 @Injectable()
@@ -20,6 +21,11 @@ export class DiscountState {
     @Selector()
     static getDiscounts(state: DiscountStateModel) {
         return state.items;
+    }
+
+    @Selector()
+    static getDiscountToday(state: DiscountStateModel) {
+        return state.discountToday;
     }
 
     @Action(DiscountListAction)
@@ -52,5 +58,17 @@ export class DiscountState {
                 return of(ctx.dispatch(new ErrorApi("Error al crear descuento", error.error.errorMessage)));
               })
         )
+    }
+
+    @Action(GetDiscountTodayAction)
+    getDiscountToday(ctx: StateContext<DiscountStateModel>) {
+        return this.service.getDiscountsToday().pipe(
+            tap((response: ResponseHttp) => {
+                const state = ctx.getState();
+                ctx.patchState({
+                    discountToday: response.payload as Discount[]
+                })
+            })
+        );
     }
 }

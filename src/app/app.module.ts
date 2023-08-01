@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import {InputText, InputTextModule} from 'primeng/inputtext';
 import {MenubarModule} from 'primeng/menubar';
 import {Table, TableModule} from 'primeng/table';
+import {RadioButtonModule} from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { CardModule} from 'primeng/card';
 import { UsuariosComponent } from 'src/forms/usuarios/usuarios.component';
@@ -74,6 +75,11 @@ import { PriceState } from 'src/store/states/price.state';
 import { LoginState } from 'src/store/states/login.state';
 import { DiscountState } from 'src/store/states/discount.state';
 import { OrderDetailsComponent } from './order-details/order-details.component';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { SplitterModule } from 'primeng/splitter';
+import { environment } from 'src/environments/environment';
+import {SplitButton, SplitButtonModule} from 'primeng/splitbutton';
+import { OrderState } from 'src/store/states/order.state';
 
 @NgModule({
   declarations: [
@@ -136,10 +142,14 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
     StepsModule,
     InputNumberModule,
     CalendarModule,
+    SplitButtonModule,
     TranslateModule.forRoot(),
     JwtModule,
     BlockUIModule,
+    TabMenuModule,
     ProgressSpinnerModule,
+    RadioButtonModule,
+    SplitterModule,
     NgxsModule.forRoot([
       LocationState, 
       ProvinceState, 
@@ -152,11 +162,13 @@ import { OrderDetailsComponent } from './order-details/order-details.component';
       ProductSupplierState,
       PriceState,
       DiscountState,
+      OrderState,
      LoginState]),
     DialogModule,
     DynamicDialogModule,
     NgxsLoggerPluginModule.forRoot({
-
+      disabled: !environment.production,
+      logger: console
     })
   ],
   providers: [MessageService, LocationService, ConfirmationService,TranslateService,DialogService,

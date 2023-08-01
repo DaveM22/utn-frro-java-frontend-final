@@ -18,6 +18,10 @@ export class OrderService {
     return this.http.get<ResponseHttp>(this.baseUrl + "/api/orders");
   }
 
+  getOrderForReport(id:number) : Observable<ResponseHttp>{
+    return this.http.get<ResponseHttp>(this.baseUrl + "/api/orders/"+id);
+  }
+
   postOrder(order:Order){
     return this.http.post<ResponseHttp>(this.baseUrl + "/api/orders", order);
   }

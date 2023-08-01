@@ -1,6 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Discount, ProductSupplierOrder } from 'src/models/models';
+import { AfterViewInit, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Select, Store } from '@ngxs/store';
+import { Observable } from 'rxjs';
+import { Discount, OrderDetail, ProductSupplierOrder } from 'src/models/models';
 import { DiscountService } from 'src/services/discount/discount.service';
+import { GetDiscountTodayAction } from 'src/store/actions/discount.action';
+import { FinishOrderAction } from 'src/store/actions/order.action';
+import { DiscountState } from 'src/store/states/discount.state';
+import { OrderState } from 'src/store/states/order.state';
 
 @Component({
   selector: 'app-resume-order',
@@ -8,47 +14,70 @@ import { DiscountService } from 'src/services/discount/discount.service';
   styleUrls: ['./resume-order.component.scss']
 })
 export class ResumeOrderComponent implements OnInit {
-
+  @Select(OrderState.getOrderDetails) orders!:Observable<OrderDetail[]>
+  @Select(DiscountState.getDiscountToday) discountToday!:Observable<Discount[]>
+  @Select(OrderState.getSubtotal) getSubtotal!:Observable<number>
+  @Select(OrderState.getCustomer) customer$!:Observable<any>
   @Output() finishOrder$:EventEmitter<any> = new EventEmitter<any>();
+  
   @Input() productsOrder!:ProductSupplierOrder[]
   totals!:number;
   subtotal!:number;
   discounts!:Discount[]
+  discount!:number;
+  customer!:any;
 
   productOrders!: ProductSupplierOrder[]
+  descuentoSeleccionado!: number;
 
-  constructor(private discountService:DiscountService){
-    
-  }
-  ngOnInit(): void {
-    this.totals = 0;
-    this.productOrders = this.productsOrder;
-    this.discountService.getDiscountsToday().subscribe(x => {
-      this.discounts = x.payload as Discount[]
-      if(this.productOrders !== undefined){
-        this.calculateTotals(); 
-       };
+  constructor(private store:Store){
+    this.onResize();
+    this.customer$.subscribe(x => {
+      this.customer = x
     });
+  }
 
+
+  isMobileScreen: boolean = false;
+  isDesktopScreen: boolean = false;
+
+
+  // Suscribirse al evento "resize" del objeto window para detectar cambios en el tamaño de pantalla
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.isMobileScreen = window.innerWidth <= 514;
+    this.isDesktopScreen = window.innerWidth > 514;
+  }
+
+
+
+
+
+  ngOnInit(): void {
+    this.discountToday.subscribe(x => {
+      this.discounts = x
+    })
+
+    this.getSubtotal.subscribe(x => {
+      this.subtotal = x;
+    })
+
+    this.store.dispatch(new GetDiscountTodayAction);
  
-    
+    this.discountToday.subscribe( x => {
+      this.discounts = x
+      this.calcularDescuento();
+    })    
   }
 
-  finish(){
-    this.finishOrder$.emit(this.productOrders);
+  finishOrder(){
+    this.store.dispatch(new FinishOrderAction());
   }
 
-  calculateTotals(){
-    this.productOrders.forEach(element => {
-      element.total = element.validityPrice * element.amountOrder!;
-      this.totals += element.total
-    }
-    
-    );
-    this.subtotal = this.totals;
-    this.totals  = this.totals - this.totals * (this.getTotalDiscount(this.totals)/100);
-
+   getTotal(cantidad:number, precio:number): number {
+    return cantidad * precio;
   }
+
 
   getValidResume(){
     if(this.productOrders === undefined){
@@ -67,5 +96,18 @@ export class ResumeOrderComponent implements OnInit {
         }
     })
     return discount;
+  }
+
+  calcularDescuento() {
+    // Función para calcular el descuento según la cantidadPedida
+    this.descuentoSeleccionado = 0; // Establece el descuento predeterminado en 0
+
+    for (const descuento of this.discounts.sort(x => x.amountPrice!)) {
+       if(this.subtotal >= descuento.amountPrice!){
+        this.discount = descuento.discount!;
+        break;
+       }
+    }
+
   }
 }

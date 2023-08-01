@@ -1,52 +1,64 @@
-<p-card>
-    <div class="grid flex flex-wrap align-items-center justify-content-center">
-        <div class="col-12 md:col-12 lg:col-8">
-            <p-table #dt [value]="(provinces$ | async)!" 
-            [globalFilterFields]="['name']"
-            responsiveLayout="stack" 
-            [breakpoint]="'960px'" 
-            [tableStyle]="{'min-width': '10rem'}"
-            styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
-            dataKey="codigo">
-                <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row card-container justify-content-between">
-                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                            <div class="col-12 md:col-6 lg:col-12 text-center">
-                                <h2 class="m-0">Provincias</h2>
+<p-panel>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column md:flex-row card-container align-space-between text-center justify-content-between font-bold text-white">
+            
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
+                Provincias
+            </div>
+              
+        </div>
+    </ng-template>
+    <div class="layout-container">
+        <div  class="div-1">
+            <div class="grid flex flex-wrap align-items-center justify-content-center">
+                <div class="col-12 md:col-12 lg:col-8">
+                    <p-table #dt [value]="(provinces$ | async)!" 
+                    [globalFilterFields]="['name']"
+                    responsiveLayout="stack" 
+                    [breakpoint]="'960px'" 
+                    [tableStyle]="{'min-width': '10rem'}"
+                    [paginator]="true"
+                    [rows]="5"
+                    styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
+                    dataKey="codigo">
+                        <ng-template pTemplate="caption">
+                            <div class="flex flex-column md:flex-row card-container justify-content-end">
+                                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                                    <span class="p-input-icon-left">
+                                        <i class="pi pi-search"></i>
+                                        <input pInputText type="text" class="p-button-sm" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                                    </span>
+                                </div>
+                                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                                    <p-button label="Agregar provincia" icon="pi pi-plus" styleClass="p-button-sm p-button-secondary font-bold" (click)="openModalForm()"></p-button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                            <span class="p-input-icon-left">
-                                <i class="pi pi-search"></i>
-                                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
-                            </span>
-                        </div>
-                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                            <p-button label="Agregar provincia" icon="pi pi-plus" styleClass="p-button-sm p-button-success font-bold" (click)="openModalForm()"></p-button>
-                        </div>
-                    </div>
-
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Nombre</th>
-                        <th></th>
-                      </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-entity>
-                    <tr>
-                        <td><span class="p-column-title">Provincia</span>{{entity.name}}</td>
-                        <td class="text-right">
-                            <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-success mr-2 font-bold p-button-rounded" (click)="editEntity(entity)"></p-button>
-                            <p-button icon="pi pi-trash" styleClass="p-button-sm  mr-2 p-button-rounded font-bold p-button-danger" (click)="deleteEntity(entity)"></p-button>
-                        </td>
-                      </tr>
-                </ng-template>
-            </p-table>
+        
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Nombre</th>
+                                <th class="text-center">Acciones</th>
+                              </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-entity>
+                            <tr>
+                                <td><span class="p-column-title">Provincia</span>{{entity.name}}</td>
+                                <td class="text-right">
+                                    <span class="p-column-title">Acciones</span>
+                                    <p-button icon="pi pi-pencil" styleClass="p-button-sm p-button-secondary mr-2 font-bold p-button-rounded" (click)="editEntity(entity)"></p-button>
+                                    <p-button icon="pi pi-trash" styleClass="p-button-sm  mr-2 p-button-rounded font-bold p-button-danger" (click)="deleteEntity(entity)"></p-button>
+                                </td>
+                              </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
         </div>
     </div>
+</p-panel>
 
-</p-card>
+
 
 <p-dialog [visible]="(modalForm | async)!" [closable]="false"  [header]="title" [modal]="true" styleClass="p-fluid">
    

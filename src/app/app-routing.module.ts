@@ -19,6 +19,7 @@ import { MainComponent } from './main/main.component';
 import { UsersComponent } from './users/users.component';
 import { DiscountComponent } from './discount/discount.component';
 import { UsuariosComponent } from 'src/forms/usuarios/usuarios.component';
+import { OrderDetailsComponent } from './order-details/order-details.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
   {path:'productos-proveedores/:idProducto/nuevo', component:ProductSupplierFormComponent, canActivate: [permissionGuard]},
   {path:'provincias', component:ProvinciasComponent, canActivate: [adminGuard]},
   {path:'pedidos', component:PedidosComponent, canActivate: [permissionGuard]},
+  {path:'pedidos/detalle/:id', component:OrderDetailsComponent, canActivate: [permissionGuard]},
   {path:'pedidos/nuevo', component:NewOrderComponent, canActivate: [permissionGuard]},
   {path:'clientes', component:CostumerComponent, canActivate: [permissionGuard]},
   {path:'proveedores', component:SupplierComponent, canActivate: [permissionGuard]},

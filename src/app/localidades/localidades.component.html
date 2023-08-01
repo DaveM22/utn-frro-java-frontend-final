@@ -1,56 +1,66 @@
-<p-card>
-    <div class="grid flex flex-wrap align-items-center justify-content-center">
-        <div class="col-12 md:col-12 lg:col-8">
-    <p-table #dt [value]="(locations$ | async)!" 
-    styleClass="p-datatable-responsive-footer p-datatable-striped p-datatable-gridlines p-datatable-sm"
-    responsiveLayout="stack" [breakpoint]="'960px'" 
-    [tableStyle]="{'min-width': '10rem'}"
-    [globalFilterFields]="['postalCode','city','provinceName']">
-        <ng-template pTemplate="caption">
-            <div class="flex flex-column md:flex-row card-container justify-content-between">
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <div class="col-12 md:col-6 lg:col-12 text-center">
-                        <h2 class="m-0">Localidades</h2>
-                    </div>
-                </div>
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <span class="p-input-icon-left">
-                        <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
-                    </span>
-                </div>
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
-                </div>
+<p-panel>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column md:flex-row card-container align-space-between text-center justify-content-between font-bold text-white">
+            
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
+                Localidades
             </div>
-        </ng-template>
-        <ng-template pTemplate="loadingbody">
-            <tr >
-                <td class="text-center" colspan="3">Cargando...</td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="header">
-            <tr>
-                <th>Localidad</th>
-                <th>Provincia</th>
-                <th></th>
-              </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-localidad>
-            <tr>
-                <td><span class="p-column-title">Localidad</span>{{localidad.city}}</td>
-                <td><span class="p-column-title">Provincia</span>{{localidad.name}}</td>
-                <td class="text-right">
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEntity(localidad)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(localidad)"></button>
-                </td>
-              </tr>
-        </ng-template>
+              
+        </div>
+    </ng-template>
+    <div class="layout-container">
+        <div  class="div-1">
+            <p-table #dt [value]="(locations$ | async)!" 
+            styleClass=" p-datatable-striped p-datatable-gridlines p-datatable-sm"
+            responsiveLayout="stack" [breakpoint]="'960px'" 
+            [tableStyle]="{'min-width': '10rem'}"
+            [paginator]="true"
+            [rows]="5"
+            [globalFilterFields]="['postalCode','city','provinceName']">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row card-container justify-content-end">
 
-    </p-table>
-</div>
-</div>
-</p-card>
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar" />
+                            </span>
+                       
+                        </div>
+                        <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
+                            <button pButton pRipple label="Agregar nueva localidad" icon="pi pi-plus" class="p-button-secondary " (click)="openModalForm()" ></button>
+                        </div>
+
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="loadingbody">
+                    <tr >
+                        <td class="text-center" colspan="3">Cargando...</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Localidad</th>
+                        <th>Provincia</th>
+                        <th></th>
+                      </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-localidad>
+                    <tr>
+                        <td><span class="p-column-title">Localidad</span>{{localidad.city}}</td>
+                        <td><span class="p-column-title">Provincia</span>{{localidad.name}}</td>
+                        <td class="text-right">
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2" (click)="editEntity(localidad)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(localidad)"></button>
+                        </td>
+                      </tr>
+                </ng-template>
+        
+            </p-table>
+        </div>
+    </div>
+</p-panel>
+
 
 
 

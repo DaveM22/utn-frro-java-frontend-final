@@ -1,26 +1,25 @@
-<p-tabView styleClass="tabview-custom">
-    <p-tabPanel>
-        <ng-template pTemplate="header">
-            <span>Cliente particular</span>
-        </ng-template>
-        <p-card>
-            <div class="grid flex flex-wrap align-items-center justify-content-center">
-                <div class="col-12 md:col-12 lg:col-12">
-                    <app-list-particular [customerParticular]="customer" (selectedCustomer$)="selectedCustomerParticular()"   (confirmCustomer$)="confirmCustomerParticular($event)"></app-list-particular>
-                </div>
+<p-panel>
+    <ng-template pTemplate="header">
+        <div class="flex flex-column md:flex-row card-container align-space-between text-center justify-content-between font-bold text-white">
+            
+            <div class="flex align-items-center justify-content-center font-bold text-white border-round">
+                Seleccionar cliente
             </div>
-        </p-card>
-    </p-tabPanel>
-    <p-tabPanel>
-        <ng-template pTemplate="header">
-            <span>Cliente empresa</span>
-        </ng-template>
-        <p-card>
-            <div class="grid flex flex-wrap align-items-center justify-content-center">
-                <div class="col-12 md:col-12 lg:col-12">
-                   <app-list-company [customerCompany]="customer" (selectedCustomer$)="selectedCustomerCompany()" (confirmCustomer$)="confirmCustomerCompany($event)"></app-list-company>
-                </div>
-            </div>
-        </p-card>     
-    </p-tabPanel>
-</p-tabView>
+              
+              
+                <div class="flex-nowrap">
+                    Tipo cliente:
+                    <p-dropdown [options]="options" class="p-inputtext-sm" [(ngModel)]="selectedType"  optionLabel="name"></p-dropdown>
+                    
+               </div>
+        </div>
+    </ng-template>
+    <div class="layout-container">
+        <div  class="div-1">
+            <app-list-company *ngIf="selectedType.code === 1"></app-list-company>
+<app-list-particular *ngIf="selectedType.code === 2"></app-list-particular>
+        </div>
+    </div>
+</p-panel>
+
+
