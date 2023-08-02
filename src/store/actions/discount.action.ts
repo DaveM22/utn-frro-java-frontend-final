@@ -12,3 +12,8 @@ export class AddDiscountAction{
 export class GetDiscountTodayAction{
     static readonly type = "[Discount API] Get Discount today";
 }
+
+export class DeleteDiscount {
+    static readonly type = '[Discount API] Delete';
+    constructor(public discount:Discount){}
+}

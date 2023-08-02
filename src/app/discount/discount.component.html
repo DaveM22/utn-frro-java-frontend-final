@@ -41,7 +41,7 @@
                         <th>Fecha</th>
                         <th>Monto desde</th>
                         <th>Porcentaje de descuento</th>
-                        <th></th>
+                        <th class="text-center">Acciones</th>
                       </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-descuento>
@@ -49,8 +49,8 @@
                         <td><span class="p-column-title">Fecha</span>{{descuento.validityDate | date:'yyyy-MM-dd'}}</td>
                         <td><span class="p-column-title">Monto desde</span>{{descuento.amountPrice}}</td>
                         <td><span class="p-column-title">Porcentaje de descuento</span>{{descuento.discount}}</td>
-                        <td class="text-right">
-                            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2" (click)="editEntity(descuento)"></button>
+                        <td class="text-center">
+                            <span class="p-column-title">Acciones</span>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(descuento)"></button>
                         </td>
                       </tr> 
@@ -93,3 +93,10 @@
         </form>
     </ng-template>
 </p-dialog>
+
+<p-confirmDialog [breakpoints]="{'960px': '75vw', '640px': '100vw'}" [style]="{width: '50vw'}">
+    <ng-template pTemplate="footer">
+        <button type="button" pButton icon="pi pi-check" label="Aceptar" (click)="delete()" ></button>
+        <button type="button" pButton icon="pi pi-times" label="Cancelar" (click)="closeDialog()" ></button>
+    </ng-template>
+</p-confirmDialog>

@@ -22,4 +22,8 @@ export class DiscountService {
   post(discount:Discount){
     return this.http.post<ResponseHttp>(this.baseUrl + "/api/discount", discount);
   }
+
+  delete(discount:Discount){
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/discount/" + discount.validityDate + "/" + discount.amountPrice)
+  }
 }

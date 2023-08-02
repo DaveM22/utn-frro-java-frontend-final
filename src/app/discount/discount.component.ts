@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
+import { ConfirmationService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { Discount } from 'src/models/models';
-import { AddDiscountAction, DiscountListAction } from 'src/store/actions/discount.action';
+import { AddDiscountAction, DeleteDiscount, DiscountListAction } from 'src/store/actions/discount.action';
 import { FormActivate } from 'src/store/actions/util.actions';
 import { DiscountState } from 'src/store/states/discount.state';
 import { UtilState } from 'src/store/states/util.state';
@@ -14,7 +15,7 @@ import { CRUD } from 'src/util/abm-interface';
   templateUrl: './discount.component.html',
   styleUrls: ['./discount.component.scss']
 })
-export class DiscountComponent implements OnInit,CRUD {
+export class DiscountComponent implements OnInit {
 
   @Select(DiscountState.getDiscounts) discounts!:Observable<Discount[]> 
   @Select(UtilState.modalForm) modal!:Observable<boolean>
@@ -27,45 +28,46 @@ export class DiscountComponent implements OnInit,CRUD {
     discount:[0,Validators.required]
   });
 
-  constructor(private fb:FormBuilder, private store:Store){}
+  constructor(private fb:FormBuilder, private store:Store, private confirmationService:ConfirmationService){}
 
   ngOnInit(): void {
     this.store.dispatch(new DiscountListAction);
   }
   
   openModalForm(): void {
+    this.discountForm.reset();
     this.store.dispatch(new FormActivate(true));
   }
   closeModalForm(): void {
     this.store.dispatch(new FormActivate(false));
   }
   save(): void {
-    if(this.isEdit){
-      this.edit()
-    }
-    else{
+
       this.create();
-    }
+    
   }
   create(): void {
     this.isEdit = false;
     this.discount = this.discountForm.getRawValue()!;
     this.store.dispatch(new AddDiscountAction(this.discount));
   }
-  edit(): void {
-    throw new Error('Method not implemented.');
-  }
-  editEntity(entity: any): void {
-    throw new Error('Method not implemented.');
-  }
+
   deleteEntity(entity: any): void {
-    throw new Error('Method not implemented.');
+    this.discount = entity;
+    console.log('asd')
+    this.confirmationService.confirm({
+      message: '¿Estas seguro de borrar el descuento ?',
+      header: 'Eliminar descuento',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
+    });
   }
   delete(): void {
-    throw new Error('Method not implemented.');
+    this.store.dispatch(new DeleteDiscount(this.discount));
   }
   closeDialog(): void {
-  
+    this.confirmationService.close();
   }
 
 }

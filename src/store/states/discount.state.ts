@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { DiscountStateModel } from "../model/discount.modelstate";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { DiscountService } from "src/services/discount/discount.service";
-import { AddDiscountAction, DiscountListAction, GetDiscountTodayAction } from "../actions/discount.action";
-import { BlockTable, ErrorApi, FormActivate, Success } from "../actions/util.actions";
+import { AddDiscountAction, DeleteDiscount, DiscountListAction, GetDiscountTodayAction } from "../actions/discount.action";
+import { BlockTable, DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util.actions";
 import { Discount, Price, ResponseHttp } from "src/models/models";
 import { catchError, of, tap } from "rxjs";
 
@@ -68,6 +68,22 @@ export class DiscountState {
                 ctx.patchState({
                     discountToday: response.payload as Discount[]
                 })
+            })
+        );
+    }
+
+    @Action(DeleteDiscount)
+    deleteDiscount(ctx: StateContext<DiscountStateModel>, action:DeleteDiscount) {
+        return this.service.delete(action.discount).pipe(
+            tap((res: ResponseHttp) => {
+                const state=ctx.getState();
+                const filteredArray=state.items.filter(contents => contents.validityDate !== action.discount.validityDate || contents.amountPrice !== action.discount.amountPrice);
+  
+                ctx.patchState({
+                    items:filteredArray
+                })
+                ctx.dispatch(new Success("Borrar precio", res.message));
+                return ctx.dispatch(new DialogActivate(false));
             })
         );
     }
