@@ -169,7 +169,7 @@ import { SpecialDiv } from './components/special-div/specia-div';
     DialogModule,
     DynamicDialogModule,
     NgxsLoggerPluginModule.forRoot({
-      disabled: !environment.production,
+      disabled: environment.production,
       logger: console
     })
   ],
