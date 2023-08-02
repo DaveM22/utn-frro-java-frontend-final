@@ -49,6 +49,7 @@ export class SupplierComponent implements OnInit, CRUD {
     this.store.dispatch(new SupplierListAction());
   }
   openModalForm(): void {
+    this.isEdit = false;
     this.title = "Nuevo proveedor";
     this.store.dispatch(new FormActivate(true));
     this.supplierForm.reset();

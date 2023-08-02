@@ -112,7 +112,7 @@
 
             <div class="field">
                 <label for="postal">Código postal</label>
-                <p-inputNumber inputId="postal" formControlName="postalCode" placeholder="Código postal"></p-inputNumber>
+                <p-inputNumber inputId="postal" [useGrouping]="false" formControlName="postalCode" placeholder="Código postal"></p-inputNumber>
                 <small class="p-error block" *ngIf="supplierForm.controls['postalCode'].invalid && supplierForm.controls['postalCode'].dirty">
                     El campo Código postal es requerido
                 </small>
