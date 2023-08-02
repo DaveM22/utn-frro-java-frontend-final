@@ -95,7 +95,7 @@ export class ProductosComponent implements OnInit, CRUD {
   deleteEntity(entity: Product): void {
     this.product = entity;
     this.confirmationService.confirm({
-      message: '¿Estas seguro de borrar el siguiente producto: ' + entity.description + '?',
+      message: '¿Estas seguro de borrar el siguiente producto: ' + entity.description + '? ADVERTENCIA: Esto borrara tanto los precios como los proveedores asociados al producto',
       header: 'Eliminar producto',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Aceptar',
