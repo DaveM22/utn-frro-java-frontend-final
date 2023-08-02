@@ -100,8 +100,6 @@ export class LocalidadesComponent implements OnInit {
     this.locationForm.patchValue(location);
     this.provincia = this.store.selectSnapshot(ProvinceState.getProvinces).find(x => x.provinceCode === location.provinceCode)!;
     this.isEditForm = true;
-    console.log(this.locationForm.value);
-    console.log(this.provincia);
     this.store.dispatch(new FormActivate(true));
   }
 

@@ -80,10 +80,12 @@ import { SplitterModule } from 'primeng/splitter';
 import { environment } from 'src/environments/environment';
 import {SplitButton, SplitButtonModule} from 'primeng/splitbutton';
 import { OrderState } from 'src/store/states/order.state';
+import { SpecialDiv } from './components/special-div/specia-div';
 
 @NgModule({
   declarations: [
     AppComponent,
+    SpecialDiv,
     UsuariosComponent,
     LoginComponent,
     ProvinciasComponent,
@@ -167,7 +169,7 @@ import { OrderState } from 'src/store/states/order.state';
     DialogModule,
     DynamicDialogModule,
     NgxsLoggerPluginModule.forRoot({
-      disabled: environment.production,
+      disabled: !environment.production,
       logger: console
     })
   ],

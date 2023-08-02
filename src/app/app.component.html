@@ -1,7 +1,21 @@
 <p-toast [baseZIndex]="9999"></p-toast>
 
+<blockable-div #ui>
     <p-menubar [model]="items"  *ngIf="isLogged | async">
     </p-menubar>
 
 <router-outlet></router-outlet>
+</blockable-div>
+
+
+    <p-blockUI [target]="ui" [blocked]="bloquear" styleClass="spinner-flex">
+        <div>
+            <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)" animationDuration=".5s"></p-progressSpinner>
+            
+        </div>
+        <div>
+            <h3 style="font-family: Verdana, Geneva, Tahoma, sans-serif;">Procesando...</h3>
+        </div>
+        
+    </p-blockUI>
 

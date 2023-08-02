@@ -24,23 +24,7 @@ export class AuthService  {
 
   login(creds:any) : Observable<any>{
 
-    return this.http.post(this.baseUrl + "/auth/authenticate", creds);/* .subscribe(
-      {
-        next:(res:any) => {
-         
-          localStorage.setItem("token", res.token);
-          this.messageService.add({ severity: 'success', summary: 'Ingreso', detail: 'Login exitoso', life: 3000 });
-          this.isAuthenticated.next(true);
-          let decodedToken = jwtDecode(res.token) as any;
-          this.userRoles.next(decodedToken.roles);
-          this.router.navigate([history.state.returnUrl || '/']);
-        },
-        error: (err) => {
-          console.log(err);
-          this.messageService.add({ severity: 'error', summary: 'Ingreso', detail: err.error.errorMessage, life: 3000 });
-        }
-      });
-  ; */
+    return this.http.post(this.baseUrl + "/auth/authenticate", creds);
   }
 
   logout(){

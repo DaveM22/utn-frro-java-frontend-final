@@ -8,6 +8,7 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/services/auth/auth.service';
 import { IsLoginAction, LogoutAction } from 'src/store/actions/login.action';
 import { LoginState } from 'src/store/states/login.state';
+import { UtilState } from 'src/store/states/util.state';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,12 +16,14 @@ import { LoginState } from 'src/store/states/login.state';
 })
 export class AppComponent implements OnInit {
   @Select(LoginState.isLogged) isLogged!:Observable<boolean>;
+  @Select(UtilState.getBlockUI) blockUi$!:Observable<boolean>;
   mostrarMenu!:boolean;
   isAdmin!: boolean;
   data!: string;
   login!:boolean;
   roles!: string;
   items!:any;
+  bloquear!:boolean;
 
 
   constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router, private store:Store){
@@ -44,6 +47,7 @@ export class AppComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.blockUi$.subscribe(x => this.bloquear = x);
     this.store.dispatch(new IsLoginAction());
     this.translateService.setDefaultLang('es');
     this.setMenuBar();

@@ -31,7 +31,6 @@ export class LocationFormModalComponent implements OnInit {
   }
 
   onChange(event: any) {
-    console.log(event);
     this.provincia = event;
   }
 

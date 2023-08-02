@@ -37,7 +37,6 @@ export class ListProductAmountComponent implements OnInit {
 
   setTableMaxHeight() {
     const windowHeight = window.innerHeight;
-    console.log(windowHeight);
   }
 
 
@@ -86,6 +85,5 @@ export class ListProductAmountComponent implements OnInit {
   }
 
   onRowSelect(event:any){
-    console.log(event);
   }
 }

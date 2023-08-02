@@ -7,7 +7,7 @@ import { catchError, of, tap } from "rxjs";
 import { Location, ResponseHttp } from "src/models/models";
 import { MessageService } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
-import { ErrorApi, FormActivate, Success } from "../actions/util.actions";
+import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util.actions";
 
 
 @State<LocationStateModel>({
@@ -95,8 +95,8 @@ import { ErrorApi, FormActivate, Success } from "../actions/util.actions";
                   ...state,
                   items:filteredArray
               })
+              ctx.dispatch(new DialogActivate(false));
               ctx.dispatch(new Success("Eliminar localidad",res.message));
-              ctx.dispatch(new FormActivate(false));
             }),
             catchError(error => {
               return of(ctx.dispatch(new ErrorApi("Error al eliminar localidad", error.error.errorMessage)));

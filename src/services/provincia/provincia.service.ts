@@ -27,7 +27,6 @@ export class ProvinceService {
   }
 
   putProvince(province:Province):Observable<ResponseHttp> {
-    console.log(province)
     return this.http.put<ResponseHttp>(this.baseUrl + "/api/provinces", province);
   }
 }

@@ -32,7 +32,6 @@ export class LoginState {
         let obj = {email:action.userName, password:action.password}
         return this.loginService.login(obj).pipe(
             tap((res:any) => {
-                console.log(res);
                 localStorage.setItem("token", res.token);
                 let decodedToken = jwtDecode(res.token) as any;
                 ctx.setState({

@@ -38,3 +38,8 @@ export class ModalStockAction {
     static readonly type = '[Modal stock] Agregar stock';
     constructor(public visible:boolean){}
 }
+
+export class BlockUIAction{
+    static readonly type = '[Block UI] Bloqueando UI';
+    constructor(public bloquear:boolean){}
+}

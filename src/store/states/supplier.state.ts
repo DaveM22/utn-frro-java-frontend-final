@@ -6,7 +6,8 @@ import { MessageService } from "primeng/api";
 import { ResponseHttp, Supplier } from "src/models/models";
 import { AddSupplierAction, DeleteSupplierAction, EditSupplierAction, SupplierListAction as SupplierListAction } from "../actions/supplier.action";
 import { catchError, tap, of } from "rxjs";
-import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util.actions";
+import { BlockUIAction, DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util.actions";
+import { BlockUI } from "primeng/blockui";
 
 @State<SupplierStateModel>({
     name: "supplier",
@@ -49,6 +50,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
                 ctx.dispatch(new FormActivate(false));
               }),
               catchError(error => {
+                
                 return of(ctx.dispatch(new ErrorApi("Error al crear proveedor", error.error.errorMessage)));
               })
         );
@@ -78,6 +80,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
 
     @Action(DeleteSupplierAction)
     delete(ctx: StateContext<SupplierStateModel>, action:DeleteSupplierAction) {
+        ctx.dispatch(new BlockUIAction(true));
         return this.service.deleteSupplier(action.id).pipe(
             tap((res: ResponseHttp) => {
                 const state=ctx.getState();
@@ -88,10 +91,11 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
                     items:filteredArray
                 })
                 ctx.dispatch(new DialogActivate(false));
+                ctx.dispatch(new BlockUIAction(false));
                 ctx.dispatch(new Success("Eliminar proveedor", res.message));
               }),
               catchError(error => {
-
+                ctx.dispatch(new BlockUIAction(false));
                 return of(ctx.dispatch(new ErrorApi("Error al eliminar proveedor", error.error.errorMessage)));
               })
         );

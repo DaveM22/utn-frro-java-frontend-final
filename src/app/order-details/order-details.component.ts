@@ -50,7 +50,6 @@ export class OrderDetailsComponent implements OnInit {
     const filename = 'mypdf_'+'.pdf';
     // This should provide you latest element.
     const node = this.download.nativeElement;
-    console.log(node);
     import('jspdf').then((jsPDF) => {
         import('jspdf-autotable').then((x) => {
             const doc = new jsPDF.default('p', 'px', 'a4');

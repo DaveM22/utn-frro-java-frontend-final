@@ -67,7 +67,6 @@ export class ProductoProveedoresComponent implements OnInit {
   }
 
   addSupplier(){
-    console.log(this.productSupplierForm);
   }
 
   openModalAddStock(supplier:ProductSupplier){

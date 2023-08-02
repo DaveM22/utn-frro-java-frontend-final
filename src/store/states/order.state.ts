@@ -175,7 +175,6 @@ export class OrderState {
         let state = ctx.getState()
         state.order.personaId = state.customer.id;
         state.order.date = moment.now();
-        console.log(state.order.details)
         return this.service.postOrder(state.order).pipe(
             tap((res: ResponseHttp) => {
                 this.router.navigateByUrl("/pedidos")

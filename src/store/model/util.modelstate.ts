@@ -4,4 +4,5 @@ export interface UtilStateModel {
     blockTable:boolean;
     paso:number;
     modalStock:boolean
+    bloquearUi:boolean;
   }

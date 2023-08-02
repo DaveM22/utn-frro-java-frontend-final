@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { UtilStateModel } from "../model/util.modelstate";
-import { BlockTable, DialogActivate, ErrorApi, ErrorBusiness, FormActivate, ModalStockAction, StepCreatePedido, Success } from "../actions/util.actions";
+import { BlockTable, BlockUIAction, DialogActivate, ErrorApi, ErrorBusiness, FormActivate, ModalStockAction, StepCreatePedido, Success } from "../actions/util.actions";
 import { ConfirmationService, MessageService } from "primeng/api";
 
 @State<UtilStateModel>({
@@ -11,7 +11,8 @@ import { ConfirmationService, MessageService } from "primeng/api";
         dialog:false,
         blockTable:true,
         paso:1,
-        modalStock:false
+        modalStock:false,
+        bloquearUi:false
     },
 })
 @Injectable()
@@ -43,6 +44,11 @@ export class UtilState {
     static getModalAddStock(state: UtilStateModel){
         return state.modalStock;
     }
+
+    @Selector()
+    static getBlockUI(state: UtilStateModel){
+        return state.bloquearUi;
+    }
     
     @Action(FormActivate)
     modalForm(ctx: StateContext<UtilStateModel>, action: FormActivate) {
@@ -70,17 +76,17 @@ export class UtilState {
 
     @Action(Success)
     success(ctx: StateContext<UtilStateModel>, action:Success){
-        this.messageService.add({ severity: 'success', summary: action.title, detail: action.message, life: 3000 });
+        this.messageService.add({ severity: 'success', summary: action.title, detail: action.message, life: 6000 });
     }
 
     @Action(ErrorApi)
     error(ctx: StateContext<UtilStateModel>, action:ErrorApi){
-        this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 3000 });
+         this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 6000 });
     }
 
     @Action(ErrorBusiness)
     errorBusiness(ctx: StateContext<UtilStateModel>, action:ErrorBusiness){
-        this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 3000 });
+        this.messageService.add({ severity: 'error', summary: action.title, detail: action.message, life: 6000 });
     }
 
     @Action(BlockTable)
@@ -89,6 +95,14 @@ export class UtilState {
             blockTable: action.block
         });
     }
+
+    @Action(BlockUIAction)
+    blockUI(ctx: StateContext<UtilStateModel>, action:BlockUIAction){
+        ctx.patchState({
+            bloquearUi:action.bloquear
+        });
+    }
+
 
     @Action(StepCreatePedido)
     stepCreate(citx:StateContext<UtilStateModel>, action:StepCreatePedido){

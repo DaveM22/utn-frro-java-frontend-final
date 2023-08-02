@@ -32,11 +32,9 @@ export class ListProductsComponent implements OnInit {
 
   confirmProducts(){
     try{
-      console.log(this.selectedProducts)
       this.store.dispatch(new OrderProductAction(this.selectedProducts))
     }
     catch(error){
-      console.log(error)
     }
     
   }

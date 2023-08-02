@@ -3,14 +3,14 @@
         <div class="flex flex-column md:flex-row card-container align-space-between text-center justify-content-between font-bold text-white">
             
             <div class="flex align-items-center justify-content-center font-bold text-white border-round">
-                Cátegorias
+                Categorías
             </div>
               
         </div>
     </ng-template>
     <div class="layout-container">
         <div  class="div-1">
-            <p-table #dt [value]="(categories$ | async)!" responsiveLayout="stack" [loading]="(loading | async)!" [breakpoint]="'960px'" 
+            <p-table #dt [value]="(categories$ | async)!" responsiveLayout="stack"  [breakpoint]="'960px'" 
     styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm"
     [globalFilterFields]="['name']"
     [paginator]="true"
@@ -26,10 +26,12 @@
                     </span>
                 </div>
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
-                    <button pButton pRipple label="Agregar nueva categoria" icon="pi pi-plus" class="p-button-success mr-2" (click)="openModalForm()" ></button>
+                    <button pButton pRipple label="Agregar nueva categoría" icon="pi pi-plus" class="p-button-secondary mr-2" (click)="openModalForm()" ></button>
                 </div>
             </div>
         </ng-template>
+
+        
         <ng-template pTemplate="header">
             <tr>
                 <th>Nombre de categoría</th>
@@ -45,6 +47,11 @@
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm" (click)="deleteEntity(entity)"></button>
                 </td>
               </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td class="text-center" colspan="2">No se han cargado categorias</td>
+            </tr>
         </ng-template>
     </p-table>
         </div>

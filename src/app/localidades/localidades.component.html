@@ -69,7 +69,7 @@
         <form [formGroup]="locationForm" (ngSubmit)="save()">
             <div class="field">
                 <label for="postalCode">Código postal</label>
-                <p-inputNumber inputId="postalCode" formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
+                <p-inputNumber inputId="postalCode" [min]="0" formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
                 <small class="p-error block" *ngIf="locationForm.controls['postalCode'].invalid && locationForm.controls['postalCode'].dirty">El código postal es un campo obligatorio</small>
             </div>
             <div class="field">

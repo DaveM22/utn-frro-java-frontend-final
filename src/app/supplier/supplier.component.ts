@@ -29,12 +29,12 @@ export class SupplierComponent implements OnInit, CRUD {
   emptyMessage!:string;
   isEdit!:boolean;
   supplierForm = this.fb.group({
-    id:[0, Validators.required],
+    id:[0],
     cuit:['', Validators.required],
     businessName:['',Validators.required],
     direction:['',Validators.required],
-    email:['',Validators.required],
-    phoneNumber:['', Validators.required],
+    email:[''],
+    phoneNumber:[''],
     postalCode:[0,Validators.required]
   });
   title!: string;
@@ -65,6 +65,7 @@ export class SupplierComponent implements OnInit, CRUD {
     }
   }
   create(): void {
+    this.isEdit = false;
     this.suppler = this.supplierForm.getRawValue()!;
     this.store.dispatch(new AddSupplierAction(this.suppler));
   }
