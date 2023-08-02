@@ -4,8 +4,8 @@ import { OrderStateModel } from "../model/order.modelstate";
 import { OrderService } from "src/services/orders/order.service";
 import { ConfirmCustomerAction, CreateOrderDetailsAction, FinishOrderAction, GetOrderByIdForReportAction, ListOrderAction, OrderCustomerAction, OrderProductAction, ResetValueOrderAction } from "../actions/order.action";
 import { Order, OrderDetail, OrderReport, OrderView, ResponseHttp } from "src/models/models";
-import { ErrorBusiness, StepCreatePedido, Success } from "../actions/util.actions";
-import { of, tap, throwError } from "rxjs";
+import { ErrorApi, ErrorBusiness, StepCreatePedido, Success } from "../actions/util.actions";
+import { catchError, of, tap, throwError } from "rxjs";
 import { GetDiscountTodayAction } from "../actions/discount.action";
 import * as moment from "moment";
 import { Router } from "@angular/router";
@@ -203,7 +203,10 @@ export class OrderState {
                 this.router.navigateByUrl("/pedidos")
                 ctx.dispatch(new Success("Crear pedido", res.message));
                 ctx.dispatch(new StepCreatePedido(1));
-            })
+            }),
+            catchError(error => {
+                return of(ctx.dispatch(new ErrorApi("Error al borrar precio", error.error.errorMessage)));
+              })
         );
     }
 
