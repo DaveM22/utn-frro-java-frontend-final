@@ -36,7 +36,7 @@
             <td><span class="p-column-title">Nombre</span>{{entity.businessName}}</td>
             <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
             <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCode}}</td>
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
             <td class="text-center">
                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2 p-button-sm"
@@ -57,7 +57,7 @@
 
 
 
-<p-dialog [visible]="(modalForm | async)!" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true"
+<p-dialog [visible]="(modalForm | async)!" [closable]="false" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="customerCompanyForm" (ngSubmit)="save()">

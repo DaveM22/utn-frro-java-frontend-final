@@ -42,11 +42,13 @@
                     <tr>
                         <th>Localidad</th>
                         <th>Provincia</th>
+                        <th>Código postal</th>
                         <th class="text-center">Acciones</th>
                       </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-localidad>
                     <tr>
+                        <td><span class="p-column-title">Código postal</span>{{localidad.postalCode}}</td>
                         <td><span class="p-column-title">Localidad</span>{{localidad.city}}</td>
                         <td><span class="p-column-title">Provincia</span>{{localidad.name}}</td>
                         <td class="text-center">

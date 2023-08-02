@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
+import { ConfirmationService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { Price, ProductSupplier } from 'src/models/models';
 import { PriceService } from 'src/services/prices/price.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
-import { AddPriceAction, PriceListAction } from 'src/store/actions/price.action';
+import { AddPriceAction, DeletePriceAction, PriceListAction } from 'src/store/actions/price.action';
 import { FormActivate } from 'src/store/actions/util.actions';
 import { PriceState } from 'src/store/states/price.state';
 import { UtilState } from 'src/store/states/util.state';
@@ -20,18 +21,16 @@ export class PricesComponent implements OnInit {
   @Select(PriceState.getPrices) prices!:Observable<Price[]>
   @Select(UtilState.modalForm) modal!:Observable<boolean>
   productSupplier!:ProductSupplier;
-
+  price!:Price;
   showListPrices!:boolean;
   priceDialog!:boolean;
   showProductSupplier!:boolean;
   priceForm = this.fb.group({
-    id:[0, Validators.required],
     price:[0, Validators.required],
     date:[new Date,Validators.required]
   });
   constructor(
-    private priceService:PriceService, 
-    private route: ActivatedRoute,
+    private confirmationService:ConfirmationService,
     private fb:FormBuilder,
     private store:Store){
 
@@ -50,6 +49,7 @@ export class PricesComponent implements OnInit {
   }
 
   openDialog(){
+    this.priceForm.reset();
     this.store.dispatch(new FormActivate(true));
   }
 
@@ -59,9 +59,27 @@ export class PricesComponent implements OnInit {
     this.store.dispatch(new AddPriceAction(price));
   }
 
+  deleteEntity(price:Price){
+    this.price = price;
+    this.confirmationService.confirm({
+      message: '¿Estas seguro de borrar el precio?',
+      header: 'Borrar precio',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Aceptar',
+      rejectLabel: 'Cancelar'
+    });
+  }
+
   closeModalForm(){
     this.store.dispatch(new FormActivate(false));
   }
 
+  delete() {
+    this.store.dispatch(new DeletePriceAction(this.price));
+  }
+
+  closeDialog(){
+    this.confirmationService.close();
+  }
 
 }

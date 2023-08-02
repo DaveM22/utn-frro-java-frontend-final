@@ -21,4 +21,8 @@ export class PriceService {
   postPrice(price:Price) : Observable<ResponseHttp> {
     return this.http.post<ResponseHttp>(this.baseUrl + "/api/prices", price);
   }
+
+  deletePrice(price:Price): Observable<ResponseHttp> {
+    return this.http.delete<ResponseHttp>(this.baseUrl + "/api/prices/"+price.personaId + "/"+ price.productId + "/" + price.dateFrom);
+  }
 }

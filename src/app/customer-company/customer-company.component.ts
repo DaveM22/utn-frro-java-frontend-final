@@ -28,12 +28,12 @@ export class CustomerCompanyComponent implements CRUD {
   isEdit!:boolean;
   title!:string;
   customerCompanyForm = this.fb.group({
-    id:[0, Validators.required],
+    id:[0],
     cuit:['', Validators.required],
     businessName:['',Validators.required],
     direction:['',Validators.required],
-    email:['',Validators.required],
-    phoneNumber:['', Validators.required],
+    email:[''],
+    phoneNumber:[''],
     postalCode:[0,Validators.required]
   });
 
@@ -49,6 +49,7 @@ export class CustomerCompanyComponent implements CRUD {
   }
 
   openModalForm(): void {
+    this.customerCompanyForm.reset();
     this.title = "Nuevo cliente";
     this.isEdit = false;
     this.store.dispatch(new FormActivate(true));

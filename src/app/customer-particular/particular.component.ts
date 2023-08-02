@@ -30,13 +30,13 @@ export class ParticularComponent implements OnInit, CRUD {
   particularDialog!:boolean;
   emptyMessage!:string;
   customerParticularForm = this.fb.group({
-    id:[0, Validators.required],
+    id:[0],
     firstName:['', Validators.required],
     lastName:['', Validators.required],
     dni:['', Validators.required],
     direction:['',Validators.required],
-    email:['',Validators.required],
-    phoneNumber:['', Validators.required],
+    email:[''],
+    phoneNumber:[''],
     postalCode:[0,Validators.required]
   });
 
@@ -51,6 +51,7 @@ export class ParticularComponent implements OnInit, CRUD {
   }
 
   openModalForm(): void {
+    this.customerParticularForm.reset();
     this.title = "Nuevo cliente";
     this.isEdit = false;
     this.store.dispatch(new FormActivate(true));
@@ -90,7 +91,7 @@ export class ParticularComponent implements OnInit, CRUD {
   deleteEntity(entity: CustomerParticular): void {
     this.customerParticular = entity;
     this.confirmacionService.confirm(
-      {message: '¿Estas seguro de borrar el siguiente cliente: ' 
+      {message: '¿Estas seguro de borrar el precio?' 
       + this.customerParticular.dni + ' ' + this.customerParticular.firstName +' '+ this.customerParticular.lastName + ' ' + '?',
     header: 'Eliminar cliente',
     icon: 'pi pi-exclamation-triangle',

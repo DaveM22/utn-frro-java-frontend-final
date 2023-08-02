@@ -61,6 +61,7 @@ export class LocalidadesComponent implements OnInit {
   }
 
   openModalForm() {
+    this.locationForm.reset();
     this.isEditForm = false;
     this.store.dispatch(new FormActivate(true));
   }
