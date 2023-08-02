@@ -5,6 +5,7 @@ import { Select, Selector, Store } from '@ngxs/store';
 import { MenuItem } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
+import { ROLES } from 'src/models/models';
 import { AuthService } from 'src/services/auth/auth.service';
 import { IsLoginAction, LogoutAction } from 'src/store/actions/login.action';
 import { LoginState } from 'src/store/states/login.state';
@@ -17,6 +18,7 @@ import { UtilState } from 'src/store/states/util.state';
 export class AppComponent implements OnInit {
   @Select(LoginState.isLogged) isLogged!:Observable<boolean>;
   @Select(UtilState.getBlockUI) blockUi$!:Observable<boolean>;
+  @Select(LoginState.getRoles) getRoles$!:Observable<string>;
   mostrarMenu!:boolean;
   isAdmin!: boolean;
   data!: string;
@@ -26,7 +28,8 @@ export class AppComponent implements OnInit {
   bloquear!:boolean;
 
 
-  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private authService:AuthService, private router:Router, private store:Store){
+
+  constructor(private primengConfig: PrimeNGConfig, private translateService: TranslateService, private router:Router, private store:Store){
 
 
   }
@@ -48,6 +51,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.blockUi$.subscribe(x => this.bloquear = x);
+    this.getRoles$.subscribe(x => {
+      this.roles = x;
+      this.setMenuBar();
+    });
     this.store.dispatch(new IsLoginAction());
     this.translateService.setDefaultLang('es');
     this.setMenuBar();
@@ -56,8 +63,14 @@ export class AppComponent implements OnInit {
   setMenuBar(){
     this.items = [
       {
+        label:"Inicio",
+        routerLink:"/"
+      },
+      {
+        
         label:"Configuración",
         icon:'pi pi-cog',
+        visible:this.roles.includes(ROLES.ADMIN),
         items:[
 
           {
@@ -78,6 +91,7 @@ export class AppComponent implements OnInit {
       {
         label: 'Personal',
         icon:'pi pi-user',
+        visible:this.roles.includes(ROLES.ADMIN),
         items:[
           {
             label:'Proveedores',
@@ -92,6 +106,7 @@ export class AppComponent implements OnInit {
       {
         label:'Inventario',
         icon:'pi pi-calculator',
+        visible:this.roles.includes(ROLES.ADMIN),
         items:[
           {
             label:'Categorias',

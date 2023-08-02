@@ -136,3 +136,8 @@ export interface Discount {
      amountPrice:number | null;
      discount: number | null;
 }
+
+export enum ROLES{
+    ADMIN = "ROLE_ADMIN",
+    EMPLEADO = "ROLE_EMPLEADO"
+}

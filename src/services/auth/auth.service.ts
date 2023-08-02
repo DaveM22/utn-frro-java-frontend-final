@@ -31,41 +31,9 @@ export class AuthService  {
     localStorage.removeItem('token');
   }
 
-  getRoles(): string {
-    let token = localStorage.getItem('token');
-    let decodedToken = jwtDecode(token!) as any;
-    const roles = decodedToken.roles;
-    return roles;
-  }
-
-
-
   getToken(){
     return localStorage.getItem("token");
   }
-
-  isAdmin(){
-    const token = localStorage.getItem('token');
-    let decodedToken = jwtDecode(token!) as any;
-    const roles = decodedToken.roles;
-    if(roles.includes("ADMIN")){
-      return true;
-    }
-    return false;
-  }
-
-  isLoggedIn(){
-    const user =  localStorage.getItem("token");
-    if(user !== null && user !== undefined){
-      return !this.isExpirate(user);
-    }
-    return false;
-  }
-  
-  isExpirate(token:string) {
-    return this.jwtHelper.isTokenExpired(token);
-  }   
-
 
 
 }

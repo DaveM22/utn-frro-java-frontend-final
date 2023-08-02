@@ -10,6 +10,10 @@ export class GetOrderByIdForReportAction {
     constructor(public id:number){}
 }
 
+export class ResetValueOrderAction{
+    static readonly type = "[Crear pedido] Restablecer valores default";
+}
+
 
 export  class OrderCustomerAction {
     static readonly type = "[Crear pedido] Asignar Cliente"

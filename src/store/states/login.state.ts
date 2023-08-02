@@ -26,6 +26,11 @@ export class LoginState {
       return state.isLogged;
     }
 
+    @Selector()
+    static getRoles(state: LoginStateModel) {
+      return state.roles;
+    }
+
     @Action(LoginAction)
     login(ctx: StateContext<LoginStateModel>, action:LoginAction){
         localStorage.removeItem("token");
@@ -66,6 +71,12 @@ export class LoginState {
                     roles: decodedToken.roles
                 })
             }
+        }
+        else{
+            ctx.setState({
+                isLogged:false,
+                roles: ''
+            })
         }
     }
 

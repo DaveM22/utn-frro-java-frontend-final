@@ -16,7 +16,7 @@
             [tableStyle]="{'min-width': '10rem'}"
             [paginator]="true"
             [rows]="5"
-            [globalFilterFields]="['postalCode','city','provinceName']">
+            [globalFilterFields]="['name','city']">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row card-container justify-content-end">
 
@@ -42,14 +42,15 @@
                     <tr>
                         <th>Localidad</th>
                         <th>Provincia</th>
-                        <th></th>
+                        <th class="text-center">Acciones</th>
                       </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-localidad>
                     <tr>
                         <td><span class="p-column-title">Localidad</span>{{localidad.city}}</td>
                         <td><span class="p-column-title">Provincia</span>{{localidad.name}}</td>
-                        <td class="text-right">
+                        <td class="text-center">
+                            <span class="p-column-title">Acciones</span>
                             <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2" (click)="editEntity(localidad)"></button>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(localidad)"></button>
                         </td>

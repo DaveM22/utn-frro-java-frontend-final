@@ -1,0 +1,64 @@
+
+<p-panel header="Funense S.A">
+    <div class="flex flex-column md:flex-row flex-wrap card-container align-space-between justify-content-center font-bold text-white">
+        <p-card *ngIf="isAdmin" header="Configuración" class="flex justify-content-center font-bold text-white border-round m-2"  subheader="Permite realizar configuraciones no relacionadas al inventario" [style]="{ width: '18rem' }">
+            <ng-template pTemplate="header">
+                <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+            </ng-template>
+            <p>
+               Provincias: Permite la gestión de provincias
+            </p>
+            <p>
+               Localidades: Permite la gestión de localidades
+            </p>
+            <p>
+                Descuentos: Permite establecer descuentos que se aplicaran al realizar pedidos
+            </p>
+        </p-card>
+    
+        <p-card *ngIf="isAdmin" header="Personal" class="flex justify-content-center font-bold text-white border-round m-2" subheader="Permite gestionar todo el personal involucrado en los pedidos" [style]="{ width: '18rem' }">
+            <ng-template pTemplate="header">
+                <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+            </ng-template>
+            <p>
+               Proveedores: Permite la gestión de proveedores
+            </p>
+            <p>
+               Clientes: Permite la gestión de clientes tanto empresariales como particuales
+            </p>
+        </p-card>
+    
+        <p-card *ngIf="isAdmin" header="Inventario" class="flex align-items-center justify-content-center font-bold text-white border-round m-2" subheader="Permite toda la gestión referido a los productos como precios, proveedores o cantidades" [style]="{ width: '18rem' }">
+        <ng-template pTemplate="header">
+            <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+        </ng-template>
+        <p>
+          Categorias: Permite la gestión de categorias a la que perteneceran los productos
+        </p>
+        <p>
+          Productos: Permite la gestion de productos, la asignacion de proveedores y establecer sus cantidades
+        </p>
+        <p>
+          Precio: Permite para cada producto creado, establecer un precio para un periodo determinado
+        </p>
+    </p-card>  
+
+    <p-card header="Pedidos" class="flex justify-content-center font-bold text-white border-round m-2" subheader="Permite gestionar todo el personal involucrado en los pedidos" [style]="{ width: '18rem' }">
+        <ng-template pTemplate="header">
+            <img alt="Card" src="https://primefaces.org/cdn/primeng/images/usercard.png" />
+        </ng-template>
+        <p>
+           Pedidos: Permite la gestión y visualización de los pedidos finalizados
+        </p>
+        <p>
+           Crear pedido: Permite crear un pedido y realizar una venta
+        </p>
+    </p-card>
+   
+</div>
+    
+
+
+</p-panel>
+
+

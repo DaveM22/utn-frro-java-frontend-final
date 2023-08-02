@@ -31,12 +31,7 @@ export class ListProductsComponent implements OnInit {
   }
 
   confirmProducts(){
-    try{
-      this.store.dispatch(new OrderProductAction(this.selectedProducts))
-    }
-    catch(error){
-    }
-    
+    this.store.dispatch(new OrderProductAction(this.selectedProducts))
   }
 
   getSelectedProductsLength(){
@@ -58,6 +53,7 @@ export class ListProductsComponent implements OnInit {
 
   onRowUnselect(event:any){
     event.data.habilitado = false;
+    event.data.amountOrder = 0;
   }
 
 

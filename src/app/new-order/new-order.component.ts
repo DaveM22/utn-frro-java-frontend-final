@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { MenuItem, MessageService } from 'primeng/api';
@@ -10,6 +10,7 @@ import { ProductoProveedorService } from 'src/services/producto-proveedor/produc
 import { ProductoService } from 'src/services/productos/producto.service';
 import { CustomerCompanyListAction } from 'src/store/actions/customer-company.action';
 import { CustomerParticularListAction } from 'src/store/actions/customer-particular.action';
+import { ResetValueOrderAction } from 'src/store/actions/order.action';
 import { StepCreatePedido } from 'src/store/actions/util.actions';
 import { UtilState } from 'src/store/states/util.state';
 
@@ -18,7 +19,7 @@ import { UtilState } from 'src/store/states/util.state';
   templateUrl: './new-order.component.html',
   styleUrls: ['./new-order.component.scss']
 })
-export class NewOrderComponent implements OnInit {
+export class NewOrderComponent implements OnInit, OnDestroy {
 
   @Select(UtilState.getStepCreateOrder) step$!: Observable<number>;
   dialogVisible!: boolean;
@@ -58,6 +59,9 @@ export class NewOrderComponent implements OnInit {
     this.customerTypes = [
       { name: 'Particulares' },
       { name:'Empresas'}]
+  }
+  ngOnDestroy(): void {
+    this.store.dispatch(new ResetValueOrderAction());
   }
 
   checkScreenSize() {

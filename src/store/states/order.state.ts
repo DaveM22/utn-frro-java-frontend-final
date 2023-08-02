@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Action, Selector, State, StateContext } from "@ngxs/store";
 import { OrderStateModel } from "../model/order.modelstate";
 import { OrderService } from "src/services/orders/order.service";
-import { ConfirmCustomerAction, CreateOrderDetailsAction, FinishOrderAction, GetOrderByIdForReportAction, ListOrderAction, OrderCustomerAction, OrderProductAction } from "../actions/order.action";
+import { ConfirmCustomerAction, CreateOrderDetailsAction, FinishOrderAction, GetOrderByIdForReportAction, ListOrderAction, OrderCustomerAction, OrderProductAction, ResetValueOrderAction } from "../actions/order.action";
 import { Order, OrderDetail, OrderReport, OrderView, ResponseHttp } from "src/models/models";
 import { ErrorBusiness, StepCreatePedido, Success } from "../actions/util.actions";
 import { of, tap, throwError } from "rxjs";
@@ -106,6 +106,26 @@ export class OrderState {
         ctx.dispatch(new StepCreatePedido(2));
         ctx.patchState({
             customer: action.customer
+        })
+    }
+
+    
+    @Action(ResetValueOrderAction)
+    resetValues(ctx: StateContext<OrderStateModel>, action: ResetValueOrderAction){
+        ctx.dispatch(new StepCreatePedido(1));
+        ctx.patchState({
+            orders:[],
+            orderReport:null,
+            order: {
+                orderNumber: 0,
+                date: 0,
+                personaId: 0,
+                details: []
+            },
+            total:0,
+            subtotal:0,
+            customer:null,
+            productosSeleccionados:[]
         })
     }
 
