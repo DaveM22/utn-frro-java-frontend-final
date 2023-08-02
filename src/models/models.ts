@@ -61,6 +61,7 @@ export interface Price {
 export interface Order {
     orderNumber:number;
     date:number;
+    discount:number;
     personaId:number;
     details:OrderDetail[];
 }

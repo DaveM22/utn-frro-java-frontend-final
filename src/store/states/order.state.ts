@@ -21,7 +21,8 @@ import { Router } from "@angular/router";
             orderNumber: 0,
             date: 0,
             personaId: 0,
-            details: []
+            details: [],
+            discount:0
         },
         total:0,
         subtotal:0,
@@ -120,7 +121,8 @@ export class OrderState {
                 orderNumber: 0,
                 date: 0,
                 personaId: 0,
-                details: []
+                details: [],
+                discount:0
             },
             total:0,
             subtotal:0,
@@ -191,10 +193,11 @@ export class OrderState {
     }
 
     @Action(FinishOrderAction)
-    finishOrder(ctx:StateContext<OrderStateModel>){
+    finishOrder(ctx:StateContext<OrderStateModel>, action:FinishOrderAction){
         let state = ctx.getState()
         state.order.personaId = state.customer.id;
         state.order.date = moment.now();
+        state.order.discount = action.discount;
         return this.service.postOrder(state.order).pipe(
             tap((res: ResponseHttp) => {
                 this.router.navigateByUrl("/pedidos")

@@ -75,7 +75,7 @@ export class ProvinciasComponent implements OnInit, CRUD {
       this.province = entity;
       this.confirmationService.confirm({
         message: '¿Estas seguro de borrar la siguiente provincia: ' + entity.name + '?',
-        header: 'Eliminar localidad',
+        header: 'Eliminar provincia',
         icon: 'pi pi-exclamation-triangle',
         acceptLabel: 'Aceptar',
         rejectLabel: 'Cancelar'

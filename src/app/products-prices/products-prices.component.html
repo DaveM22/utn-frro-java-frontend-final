@@ -13,7 +13,7 @@
             <p-table #dt *ngIf="showProductSupplier" [value]="productSuppliers" 
             responsiveLayout="stack" [breakpoint]="'960px'" [tableStyle]="{'min-width': '10rem'}"
             [paginator]="true"
-            [rows]="5"
+            [rows]="8"
             styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped"
             [globalFilterFields]="['productName','supplierName', 'amount', 'validityPrice']">
                 <ng-template pTemplate="caption">

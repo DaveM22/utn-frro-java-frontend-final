@@ -37,5 +37,6 @@ export class CreateOrderDetailsAction {
 
 export class FinishOrderAction{
     static readonly type = "[Crear pedido] Finalizar orden";
+    constructor(public discount:number){}
 }
 

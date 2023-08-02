@@ -1,7 +1,7 @@
 
 <p-table #dt [value]="(customer$ | async)!" class="text-white-alpha-10" responsiveLayout="stack" [breakpoint]="'960px'"
     [tableStyle]="{'min-width': '10rem'}" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped"
-    [paginator]="true" [rows]="5"
+    [paginator]="true" [rows]="8"
     [globalFilterFields]="['cuit','businessName', 'direction', 'phoneNumber', 'postalCode', 'email']">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row card-container green-container justify-content-end">

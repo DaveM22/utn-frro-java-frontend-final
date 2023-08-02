@@ -71,7 +71,8 @@ export class ResumeOrderComponent implements OnInit {
   }
 
   finishOrder(){
-    this.store.dispatch(new FinishOrderAction());
+
+    this.store.dispatch(new FinishOrderAction(this.discount!));
   }
 
    getTotal(cantidad:number, precio:number): number {
@@ -100,7 +101,7 @@ export class ResumeOrderComponent implements OnInit {
 
   calcularDescuento() {
     // Función para calcular el descuento según la cantidadPedida
-    this.descuentoSeleccionado = 0; // Establece el descuento predeterminado en 0
+    this.discount = 0; // Establece el descuento predeterminado en 0
 
     for (const descuento of this.discounts.sort(x => x.amountPrice!)) {
        if(this.subtotal >= descuento.amountPrice!){

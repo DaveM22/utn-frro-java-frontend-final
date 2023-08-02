@@ -17,7 +17,7 @@
         <div  class="div-1">
             <p-table #dt [value]="products" dataKey="productId" [(selection)]="selectedProducts" responsiveLayout="stack"
             editMode="row" scrollHeight="26rem" [globalFilterFields]="['productName','supplierName']" [scrollHeight]="'flex'"
-            [breakpoint]="'960px'"  [paginator]="true" [rows]="10"
+            [breakpoint]="'960px'"  [paginator]="true" [rows]="8"
             [tableStyle]="{'min-width': '10rem'}"
             (onRowSelect)="onRowSelect($event)"
             (onRowUnselect)="onRowUnselect($event)"

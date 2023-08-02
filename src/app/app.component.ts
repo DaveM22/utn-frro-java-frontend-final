@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
         visible:this.roles.includes(ROLES.ADMIN),
         items:[
           {
-            label:'Categorias',
+            label:'Categorías',
             routerLink:'categorias'
           },
           {
