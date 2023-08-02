@@ -17,6 +17,8 @@ import { OrderState } from 'src/store/states/order.state';
 export class OrderDetailsComponent implements OnInit {
   @ViewChild('pdf', {read: ElementRef}) download!: ElementRef;
   @Select(OrderState.getOrderReport) orderReport$!:Observable<OrderReport>
+  totals!:number;
+  subtotal!:number;
   orderId!:number;
   orderReport!:OrderReport;
   cols!: any[];
