@@ -27,7 +27,7 @@
                 <th>Razón Social</th>
                 <th class="text-center">Cantidad</th>
                 <th class="text-center">Precio vigente</th>
-                <th></th>
+                <th>Acciones</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-supplier>
@@ -35,8 +35,9 @@
                 <td><span class="p-column-title">Razón Social</span>{{supplier.supplierName}}</td>
                 <td class="text-center"><span class="p-column-title">Cantidad</span>{{supplier.amount}}</td>
                 <td class="text-center"><span class="p-column-title">Precio
-                        vigente</span>{{supplier.validityPrice === null || supplier.validityPrice === 0  ?  "Sin precio" : supplier.validityPrice}}</td>
+                        vigente</span>{{supplier.validityPrice || 0}}</td>
                 <td class="text-center">
+                    <span class="p-column-title">Acciones</span>
                     <button pButton pRipple label="Agregar stock" class="p-button-rounded p-button-sm mr-2" (click)="openModalAddStock(supplier)"></button>
                 </td>
             </tr>

@@ -81,6 +81,7 @@ import { environment } from 'src/environments/environment';
 import {SplitButton, SplitButtonModule} from 'primeng/splitbutton';
 import { OrderState } from 'src/store/states/order.state';
 import { SpecialDiv } from './components/special-div/specia-div';
+import { CreatorPdfComponent } from './components/creator-pdf/creator-pdf.component';
 
 @NgModule({
   declarations: [
@@ -115,7 +116,8 @@ import { SpecialDiv } from './components/special-div/specia-div';
     UsersComponent,
     LocationFormModalComponent,
     DiscountComponent,
-    OrderDetailsComponent
+    OrderDetailsComponent,
+    CreatorPdfComponent
   ],
   imports: [
     BrowserModule,

@@ -5,7 +5,7 @@
     [rows]="8"
     [responsive]="true"
     [showCurrentPageReport]="true"
-    [globalFilterFields]="['cuit', 'businessName', 'direction', 'phoneNumber', 'postalCod', 'email']"
+    [globalFilterFields]="['cuit', 'businessName', 'direction', 'phoneNumber', 'postalCode', 'email']"
     styleClass="p-datatable-striped p-datatable-gridlines p-datatable-sm" 
     (onRowUnselect)="unselected()"
     (onRowSelect)="selected()"
@@ -55,7 +55,7 @@
             <td><span class="p-column-title">Nombre</span>{{entity.businessName}}</td>
             <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
             <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCode}}</td>
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
         </tr>
     </ng-template>

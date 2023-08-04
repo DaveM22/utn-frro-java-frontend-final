@@ -57,7 +57,7 @@
 
 
 
-<p-dialog [visible]="(modalForm | async)!" [closable]="false" [style]="{width: '450px'}" header="Agregar nuevo cliente" [modal]="true"
+<p-dialog [visible]="(modalForm | async)!" [closable]="false" [style]="{width: '450px'}" [header]="title" [modal]="true"
     styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="customerCompanyForm" (ngSubmit)="save()">

@@ -47,8 +47,8 @@
                 <ng-template pTemplate="body" let-descuento>
                     <tr>
                         <td><span class="p-column-title">Fecha</span>{{descuento.validityDate | date:'yyyy-MM-dd'}}</td>
-                        <td><span class="p-column-title">Monto desde</span>{{descuento.amountPrice}}</td>
-                        <td><span class="p-column-title">Porcentaje de descuento</span>{{descuento.discount}}</td>
+                        <td><span class="p-column-title">Monto desde</span>$ {{descuento.amountPrice}}</td>
+                        <td><span class="p-column-title">Porcentaje de descuento</span>{{descuento.discount}} %</td>
                         <td class="text-center">
                             <span class="p-column-title">Acciones</span>
                             <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(descuento)"></button>

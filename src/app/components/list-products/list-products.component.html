@@ -15,7 +15,7 @@
     </ng-template>
     <div class="layout-container">
         <div  class="div-1">
-            <p-table #dt [value]="products" dataKey="productId" [(selection)]="selectedProducts" responsiveLayout="stack"
+            <p-table #dt [value]="products"  [(selection)]="selectedProducts" responsiveLayout="stack"
             editMode="row" scrollHeight="26rem" [globalFilterFields]="['productName','supplierName']" [scrollHeight]="'flex'"
             [breakpoint]="'960px'"  [paginator]="true" [rows]="8"
             [tableStyle]="{'min-width': '10rem'}"
@@ -72,7 +72,7 @@
 
                     </td>
                     <td>
-                        <span class="p-column-title ">Precio vigente</span>{{entity.validityPrice}}
+                        <span class="p-column-title ">Precio vigente</span>$ {{entity.validityPrice}}
                     </td>
                 </tr>
             </ng-template>

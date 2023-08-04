@@ -59,12 +59,6 @@
               </tr>
         </ng-template>
         <ng-template pTemplate="summary">
-    
-            <div class="flex flex-column md:flex-row align-items-left justify-content-left font-bold text-white border-round m-2">
-                <div class="flex align-items-center justify-content-center font-bold text-white border-round">
-                    Total a pagar sin descuentos: ${{subtotal || 0}}
-                </div>
-            </div>
             <div class="flex flex-column md:flex-row align-items-left justify-content-left font-bold text-white border-round m-2">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                     Descuento: %{{orderReport.discount || 0}}
@@ -74,7 +68,7 @@
             <div class="flex flex-column md:flex-row align-items-left justify-content-left font-bold text-white border-round m-2">
                 <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                     
-                    Total a pagar con descuentos: ${{totals || 0}}
+                    Total: ${{orderReport.total || 0}}
                 </div>
             </div>  
     </ng-template>
@@ -82,7 +76,54 @@
         </div>
     </div>
 </p-panel>
+<fieldset hidden="true" >
+    <div class="factura-table-container" name="table">
+        <table class="factura-table">
+          <thead>
+            <tr>
+              <th colspan="6" class="encabezado-factura">Factura</th>
+            </tr>
+            <tr>
+              <th colspan="6">Cliente: {{orderReport.customerName}}</th>
+            </tr>
+            <tr>
+              <th colspan="6">Dirección: {{orderReport.direction}}</th>
+            </tr>
+            <tr>
+              <th colspan="6">Email: {{orderReport.email}}</th>
+            </tr>
+            <tr>
+              <th>#</th>
+              <th>Descripción</th>
+              <th>Proveedor</th>
+              <th>Cantidad</th>
+              <th>Precio</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí puedes agregar filas de ejemplo con información -->
+            <tr *ngFor="let detail of orderReport.details">
+              <td>1</td>
+              <td>{{detail.productName}}</td>
+              <td>{{detail.supplierName}}</td>
+              <td>{{detail.amount}}</td>
+              <td>{{detail.price}} $</td>
+              <td>{{detail.total}} $</td>
+            </tr>
+            <!-- Puedes agregar más filas según sea necesario -->
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2">Descuento: {{orderReport.discount}} %</td>
+              <td colspan="3" style="text-align: right;">Total:</td>
+              <td>{{orderReport.total}} $</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+</fieldset>
 
-    <div hidden="true" #pdf>HOAL</div>
+
 
 

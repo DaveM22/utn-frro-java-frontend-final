@@ -63,7 +63,7 @@
                         <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">
                             <div class="flex align-items-center justify-content-center font-bold text-white border-round">
                                 
-                                Total a pagar con descuentos: ${{totals || 0}} (Descuento aplicado: {{discount || 0}}%)
+                                Total a pagar con descuentos: ${{subtotal * (discount / 100) || subtotal}} (Descuento aplicado: {{discount || 0}}%)
                             </div>
                         </div>  
                     <div class="flex flex-column md:flex-row align-items-center justify-content-center font-bold text-white border-round m-2">

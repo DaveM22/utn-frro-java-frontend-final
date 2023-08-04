@@ -53,7 +53,6 @@ export class ListProductsComponent implements OnInit {
 
   onRowUnselect(event:any){
     event.data.habilitado = false;
-    event.data.amountOrder = 0;
   }
 
 
@@ -61,15 +60,9 @@ export class ListProductsComponent implements OnInit {
      this.products[index].amountOrder = product.amountOrder; 
   }
 
-  onRowEditSave(product: ProductSupplierOrder, index:number) {
-     if (product.amountOrder! > 0) {
-      this.products[index].amountOrder = product.amountOrder;
-    } 
-  }
-
-  onRowEditCancel(product: ProductSupplierOrder, index: number) {
-    this.products[index].amountOrder = 0;
-
-  }
+  someFunction(data: any) {
+    console.log(data);
+   return '';
+   }
 
 }

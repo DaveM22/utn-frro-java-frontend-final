@@ -84,6 +84,7 @@ export class CustomerCompanyComponent implements CRUD {
     this.title = "Editar cliente"
     this.isEdit = true;
     this.customerCompanyForm.patchValue(entity);
+    this.store.dispatch(new FormActivate(true));
   }
   deleteEntity(entity: any): void {
     this.customerCompany = entity;

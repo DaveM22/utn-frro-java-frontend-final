@@ -40,7 +40,7 @@
                         <ng-template pTemplate="body" let-price>
                             <tr>
                                 <td><span class="p-column-title">Producto</span>{{price.dateFrom | date:'yyyy-MM-dd' }}</td>
-                                <td><span class="p-column-title">Proveedor</span>{{price.price}}</td>
+                                <td><span class="p-column-title">Proveedor</span>$ {{price.price}}</td>
                                 <td class="text-center"><span class="p-column-title">Acciones</span>
                                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteEntity(price)"></button>
                                 </td>

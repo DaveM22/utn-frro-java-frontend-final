@@ -71,11 +71,11 @@ export class CustomerParticularState {
             tap((res: ResponseHttp) => {
                 const obj = res.payload as CustomerParticular;
                 const state = ctx.getState();
-                const provinces = [...state.items];
-                const provinceIndex = provinces.findIndex(item => item.id === obj.id);
-                provinces[provinceIndex] = res.payload as CustomerParticular;
+                const customers = [...state.items];
+                const customerIndex = customers.findIndex(item => item.id === obj.id);
+                customers[customerIndex] = res.payload as CustomerParticular;
                 ctx.patchState({
-                    items: provinces,
+                    items: customers,
                 });
    
                 ctx.dispatch(new Success("Editar cliente", res.message));

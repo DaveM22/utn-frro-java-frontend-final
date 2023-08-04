@@ -5,7 +5,7 @@
     (onRowUnselect)="unselected()"
     [responsive]="true"
     (onRowSelect)="selected()"
-    [globalFilterFields]="['dni', 'firstName', 'lastName', 'phoneNumber', 'postalCod', 'email']"
+    [globalFilterFields]="['dni', 'firstName', 'lastName', 'phoneNumber', 'postalCode', 'email']"
     [paginator]="true"
     [rows]="8"
     [showCurrentPageReport]="true"
@@ -61,7 +61,7 @@
             <td><span class="p-column-title">Apellido</span>{{entity.lastName}}</td>
             <td><span class="p-column-title">Dirección</span>{{entity.direction}}</td>
             <td><span class="p-column-title">Teléfono</span>{{entity.phoneNumber}}</td>
-            <td><span class="p-column-title">Código postal</span>{{entity.postalCod}}</td>
+            <td><span class="p-column-title">Código postal</span>{{entity.postalCode}}</td>
             <td><span class="p-column-title">Email</span>{{entity.email}}</td>
         </tr>
     </ng-template>

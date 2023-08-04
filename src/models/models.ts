@@ -72,6 +72,7 @@ export interface OrderReport {
     direction:string;
     email:string;
     discount:number;
+    total:number;
     details:OrderReportDetail[];
 }
 
