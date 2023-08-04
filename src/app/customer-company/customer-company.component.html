@@ -48,7 +48,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td class="text-center" colspan="8">{{emptyMessage}}</td>
+            <td class="text-center" colspan="8">No se han encontrado clientes</td>
         </tr>
     </ng-template>
 </p-table>
@@ -64,27 +64,30 @@
 
             <div class="field">
                 <label for="cuit">CUIT</label>
-                <input type="text" pInputText id="cuit" formControlName="cuit" placeholder="CUIT" />
-                <small class="p-error block" *ngIf="customerCompanyForm.controls['postalCode'].invalid && customerCompanyForm.controls['postalCode'].dirty">
-                    El campo CUIT es requerido
+                <input type="text" maxlength="20" pInputText id="cuit" formControlName="cuit" placeholder="CUIT" />
+                <small class="p-error block" *ngIf="customerCompanyForm.get('postalCode')?.errors?.required && customerCompanyForm.controls['postalCode'].dirty">
+                    El campo CUIT no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="customerCompanyForm.get('cuit')?.errors?.serverError">{{ customerCompanyForm.get('cuit')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
                 <label for="businessName">Razón social</label>
-                <input type="text" pInputText id="businessName" formControlName="businessName"
+                <input type="text" maxlength="40" pInputText id="businessName" formControlName="businessName"
                     placeholder="Razón social" />
-                    <small class="p-error block" *ngIf="customerCompanyForm.controls['businessName'].invalid && customerCompanyForm.controls['businessName'].dirty">
-                        El campo razón social es requerido
+                    <small class="p-error block" *ngIf="customerCompanyForm.get('businessName')?.errors?.required && customerCompanyForm.controls['businessName'].dirty">
+                        El campo razón social no puede estar vacío
                     </small>
+                    <small class="p-error" *ngIf="customerCompanyForm.get('businessName')?.errors?.serverError">{{ customerCompanyForm.get('businessName')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
                 <label for="direction">Dirección</label>
-                <input type="text" pInputText id="direction" formControlName="direction" placeholder="Direccíon" />
-                <small class="p-error block" *ngIf="customerCompanyForm.controls['direction'].invalid && customerCompanyForm.controls['direction'].dirty">
-                    El campo dirección es requerido
+                <input type="text" maxlength="40" pInputText id="direction" formControlName="direction" placeholder="Direccíon" />
+                <small class="p-error block" *ngIf="customerCompanyForm.get('direction')?.errors?.required && customerCompanyForm.controls['direction'].dirty">
+                    El campo Dirección no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="customerCompanyForm.get('direction')?.errors?.serverError">{{ customerCompanyForm.get('direction')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
@@ -101,8 +104,9 @@
                 <label for="postal">Código postal</label>
                 <input type="number" pInputText id="postal" formControlName="postalCode" placeholder="Código postal" />
                 <small class="p-error block" *ngIf="customerCompanyForm.controls['postalCode'].invalid && customerCompanyForm.controls['postalCode'].dirty">
-                    El campo código postal es requerido
+                    El campo Código postal no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="customerCompanyForm.get('amountPrice')?.errors?.serverError">{{ customerCompanyForm.get('amountPrice')?.errors?.serverError }}</small>
             </div>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <button type="submit" pButton label="Guardar" [disabled]="customerCompanyForm.invalid"

@@ -10,6 +10,7 @@ import { FormActivate } from 'src/store/actions/util.actions';
 import { CustomerCompanyState } from 'src/store/states/customer.company.state';
 import { UtilState } from 'src/store/states/util.state';
 import { CRUD } from 'src/util/abm-interface';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-customer-company',
@@ -18,6 +19,7 @@ import { CRUD } from 'src/util/abm-interface';
 })
 export class CustomerCompanyComponent implements CRUD {
   @Select(CustomerCompanyState.getCustomerCompany) customer$!: Observable<CustomerCompany[]>;
+  @Select(CustomerCompanyState.getErrors) errors$!: Observable<Object>
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
   customersCompany!:CustomerCompany[];
@@ -27,6 +29,8 @@ export class CustomerCompanyComponent implements CRUD {
   emptyMessage:string = "No se han agregado clientes";
   isEdit!:boolean;
   title!:string;
+  error!:Object;
+
   customerCompanyForm = this.fb.group({
     id:[0],
     cuit:['', Validators.required],
@@ -41,11 +45,14 @@ export class CustomerCompanyComponent implements CRUD {
     private confirmacionService:ConfirmationService,
     private store:Store,
     private fb:FormBuilder){
-
   }
 
   ngOnInit(): void {
     this.store.dispatch(new CustomerCompanyListAction());
+    this.errors$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.customerCompanyForm, this.error);
+    })
   }
 
   openModalForm(): void {

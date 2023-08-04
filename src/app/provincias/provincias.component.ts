@@ -10,6 +10,7 @@ import { DialogActivate, FormActivate } from 'src/store/actions/util.actions';
 import { ProvinceState } from 'src/store/states/province.state';
 import { UtilState } from 'src/store/states/util.state';
 import { CRUD } from 'src/util/abm-interface';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-provincias',
@@ -18,12 +19,13 @@ import { CRUD } from 'src/util/abm-interface';
 })
 export class ProvinciasComponent implements OnInit, CRUD {
   @Select(ProvinceState.getProvinces) provinces$!: Observable<Province[]>;
+  @Select(ProvinceState.getErrors) error$!: Observable<Object>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
   isEdit!:boolean;
   province!:Province;
   title!:string;
-
+  error!:Object;
   provinciaForm = this.fb.group({
     provinceCode:[0, Validators.required],
     name:['', Validators.required],
@@ -35,6 +37,10 @@ export class ProvinciasComponent implements OnInit, CRUD {
   
   ngOnInit(): void {
     this.store.dispatch(new ProvinceListAction());
+    this.error$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.provinciaForm, this.error);
+    })
   }
 
 

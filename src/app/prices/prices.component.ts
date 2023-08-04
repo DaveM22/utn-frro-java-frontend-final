@@ -11,6 +11,7 @@ import { AddPriceAction, DeletePriceAction, PriceListAction } from 'src/store/ac
 import { FormActivate } from 'src/store/actions/util.actions';
 import { PriceState } from 'src/store/states/price.state';
 import { UtilState } from 'src/store/states/util.state';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-prices',
@@ -19,12 +20,14 @@ import { UtilState } from 'src/store/states/util.state';
 })
 export class PricesComponent implements OnInit {
   @Select(PriceState.getPrices) prices!:Observable<Price[]>
+  @Select(PriceState.getPrices) errors$!:Observable<Object>
   @Select(UtilState.modalForm) modal!:Observable<boolean>
   productSupplier!:ProductSupplier;
   price!:Price;
   showListPrices!:boolean;
   priceDialog!:boolean;
   showProductSupplier!:boolean;
+  error!:Object;
   priceForm = this.fb.group({
     price:[0, Validators.required],
     date:[new Date,Validators.required]
@@ -41,6 +44,10 @@ export class PricesComponent implements OnInit {
     const state = history.state;
     this.productSupplier = state.supplier;
     this.store.dispatch(new PriceListAction(this.productSupplier.productId, this.productSupplier.personaId));
+    this.errors$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.priceForm, this.error);
+    })
   }
 
 

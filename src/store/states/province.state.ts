@@ -12,6 +12,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
     name: "province",
     defaults: {
         items: [],
+        errors:{}
     },
 })
 @Injectable()
@@ -22,6 +23,11 @@ export class ProvinceState {
     @Selector()
     static getProvinces(state: ProvinceStateModel) {
         return state.items;
+    }
+
+    @Selector()
+    static getErrors(state: ProvinceStateModel) {
+        return state.errors;
     }
 
 
@@ -49,8 +55,12 @@ export class ProvinceState {
                 ctx.dispatch(new Success("Crear provincia", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear provincia", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of();
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear provincia", errors.error.errorMessage)));
               })
         );
     }
@@ -71,8 +81,12 @@ export class ProvinceState {
                 ctx.dispatch(new Success("Editar provincia", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al editar provincia", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of();
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al editar provincia", errors.error.errorMessage)));
               })
         );
     }

@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
+import MapErrors from 'src/app/util/errorFormReactive';
 import { Category, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
 import { AddCategoryAction, CategoryListAction, DeleteCategoryAction, EditCategoryAction } from 'src/store/actions/category.action';
@@ -18,6 +19,7 @@ import { CRUD } from 'src/util/abm-interface';
 })
 export class CategoriasComponent implements OnInit, CRUD {
   @Select(CategoryState.getCategories) categories$!: Observable<Category[]>;
+  @Select(CategoryState.getErrors) errors$!: Observable<Object>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
   @Select(UtilState.blockTable) loading!:Observable<boolean>;
@@ -26,6 +28,7 @@ export class CategoriasComponent implements OnInit, CRUD {
   submitted!:boolean;
   categoryDialog!: boolean;
   isEdit!: boolean;
+  errors!:any;
 
   categoryForm = this.fb.group({
     categoryId:[0],
@@ -41,6 +44,10 @@ export class CategoriasComponent implements OnInit, CRUD {
 
   
   ngOnInit(): void {
+    this.errors$.subscribe(x => {
+      this.errors = x;
+      MapErrors(this.categoryForm, this.errors);
+    })
     this.store.dispatch(new CategoryListAction())
   }
 

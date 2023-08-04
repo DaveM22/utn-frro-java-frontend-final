@@ -78,26 +78,29 @@
             <div class="field">
                 <label for="cuit">CUIT</label>
                 <input type="text" pInputText id="cuit" formControlName="cuit" placeholder="CUIT" />
-                <small class="p-error block" *ngIf="supplierForm.controls['cuit'].invalid && supplierForm.controls['cuit'].dirty">
-                    El campo CUIT es requerido
+                <small class="p-error block" *ngIf="supplierForm.get('cuit')?.errors?.required && supplierForm.controls['cuit'].dirty">
+                    El campo CUIT no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="supplierForm.get('cuit')?.errors?.serverError">{{ supplierForm.get('cuit')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
                 <label for="businessName">Razón social</label>
                 <input type="text" pInputText id="businessName" formControlName="businessName"
                     placeholder="Razón social" />
-                    <small class="p-error block" *ngIf="supplierForm.controls['businessName'].invalid && supplierForm.controls['businessName'].dirty">
-                        El campo Razón social es requerido
+                    <small class="p-error block" *ngIf="supplierForm.get('businessName')?.errors?.required && supplierForm.controls['businessName'].dirty">
+                        El campo Razón social no puede estar vacío
                     </small>
+                    <small class="p-error" *ngIf="supplierForm.get('businessName')?.errors?.serverError">{{ supplierForm.get('businessName')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
                 <label for="direction">Dirección</label>
                 <input type="text" pInputText id="direction" formControlName="direction" placeholder="Dirección" />
-                <small class="p-error block" *ngIf="supplierForm.controls['direction'].invalid && supplierForm.controls['direction'].dirty">
-                    El campo Dirección es requerido
+                <small class="p-error block" *ngIf="supplierForm.get('direction')?.errors?.required && supplierForm.controls['direction'].dirty">
+                    El campo Dirección no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="supplierForm.get('direction')?.errors?.serverError">{{ supplierForm.get('direction')?.errors?.serverError }}</small>
             </div>
 
             <div class="field">
@@ -113,9 +116,10 @@
             <div class="field">
                 <label for="postal">Código postal</label>
                 <p-inputNumber inputId="postal" [useGrouping]="false" formControlName="postalCode" placeholder="Código postal"></p-inputNumber>
-                <small class="p-error block" *ngIf="supplierForm.controls['postalCode'].invalid && supplierForm.controls['postalCode'].dirty">
-                    El campo Código postal es requerido
+                <small class="p-error block" *ngIf="supplierForm.get('postalCode')?.errors?.required && supplierForm.controls['postalCode'].dirty">
+                    El campo Código postal no puede estar vacío
                 </small>
+                <small class="p-error" *ngIf="supplierForm.get('postalCode')?.errors?.serverError">{{ supplierForm.get('postalCode')?.errors?.serverError }}</small>
             </div>
             <div class="flex align-items-center">
                 <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="supplierForm.invalid"></button>

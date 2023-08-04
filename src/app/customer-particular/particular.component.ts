@@ -6,11 +6,12 @@ import { Observable } from 'rxjs';
 import { CustomerParticular } from 'src/models/models';
 import { PersonaService } from 'src/services/persona/persona.service';
 import { DeleteCategoryAction } from 'src/store/actions/category.action';
-import { AddCustomerParticularAction, CustomerParticularListAction, EditCustomerParticularAction } from 'src/store/actions/customer-particular.action';
+import { AddCustomerParticularAction, CustomerParticularListAction, DeleteCustomerParticularAction, EditCustomerParticularAction } from 'src/store/actions/customer-particular.action';
 import { FormActivate } from 'src/store/actions/util.actions';
 import { CustomerParticularState } from 'src/store/states/customer.particular.state';
 import { UtilState } from 'src/store/states/util.state';
 import { CRUD } from 'src/util/abm-interface';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-customer-particular',
@@ -19,6 +20,7 @@ import { CRUD } from 'src/util/abm-interface';
 })
 export class ParticularComponent implements OnInit, CRUD {
   @Select(CustomerParticularState.getCustomerParticular) customer$!: Observable<CustomerParticular[]>;
+  @Select(CustomerParticularState.getErrors) errors$!:Observable<Object>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
   isEdit!:boolean;
@@ -29,6 +31,7 @@ export class ParticularComponent implements OnInit, CRUD {
   submitted!:boolean;
   particularDialog!:boolean;
   emptyMessage!:string;
+  error!:Object;
   customerParticularForm = this.fb.group({
     id:[0],
     firstName:['', Validators.required],
@@ -48,6 +51,10 @@ export class ParticularComponent implements OnInit, CRUD {
 
   ngOnInit(): void {
     this.store.dispatch(new CustomerParticularListAction());
+    this.errors$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.customerParticularForm, this.error);
+    })
   }
 
   openModalForm(): void {
@@ -91,7 +98,7 @@ export class ParticularComponent implements OnInit, CRUD {
   deleteEntity(entity: CustomerParticular): void {
     this.customerParticular = entity;
     this.confirmacionService.confirm(
-      {message: '¿Estas seguro de borrar el precio?' 
+      {message: '¿Estas seguro de borrar el cliente: ' 
       + this.customerParticular.dni + ' ' + this.customerParticular.firstName +' '+ this.customerParticular.lastName + ' ' + '?',
     header: 'Eliminar cliente',
     icon: 'pi pi-exclamation-triangle',
@@ -101,7 +108,7 @@ export class ParticularComponent implements OnInit, CRUD {
   }
 
   delete(): void {
-    this.store.dispatch(new DeleteCategoryAction(this.customerParticular.id!));
+    this.store.dispatch(new DeleteCustomerParticularAction(this.customerParticular.id!));
   }
 
   closeDialog(): void {

@@ -27,7 +27,8 @@ import { Router } from "@angular/router";
         total:0,
         subtotal:0,
         customer:null,
-        productosSeleccionados:[]
+        productosSeleccionados:[],
+        errors:{}
     },
 })
 

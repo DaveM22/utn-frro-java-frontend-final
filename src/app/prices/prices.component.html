@@ -48,7 +48,7 @@
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
                             <tr>
-                                <td class="text-center" colspan="4">No se han cargado precios</td>
+                                <td class="text-center" colspan="4">No se han encontrado precios</td>
                             </tr>
                         </ng-template>
                     </p-table>
@@ -63,12 +63,16 @@
         <form [formGroup]="priceForm">
             <div class="field">
                 <label for="precio">Precio</label>
-                <p-inputNumber [min]="0" mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="price">
+                <p-inputNumber [min]="0" [max]="99999" mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="price">
                 </p-inputNumber>
+                <small class="p-error" *ngIf="priceForm.get('price')?.errors?.required && priceForm.get('price')?.dirty">El campo Precio no puede estar vacio</small>
+                <small class="p-error" *ngIf="priceForm.get('price')?.errors?.serverError">{{ priceForm.get('price')?.errors?.serverError }}</small>
             </div>
             <div class="field">
                 <label for="precio">Fecha vigencia</label>
                 <p-calendar [showIcon]="true" appendTo="body" formControlName="date"></p-calendar>
+                <small class="p-error" *ngIf="priceForm.get('date')?.errors?.required && priceForm.get('date')?.dirty">El campo Fecha vigencia no puede estar vacio</small>
+                <small class="p-error" *ngIf="priceForm.get('date')?.errors?.serverError">{{ priceForm.get('date')?.errors?.serverError }}</small>
             </div>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check"

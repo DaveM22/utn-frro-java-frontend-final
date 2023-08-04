@@ -14,6 +14,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
     name: "location",
     defaults: {
       items: [],
+      errors:{}
     },
   })
   @Injectable()
@@ -28,6 +29,11 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
       return state.items;
     }
 
+    @Selector()
+    static getErrors(state: LocationStateModel) {
+      return state.errors;
+    }
+
 
         @Action(LocationListAction)
         listLocations(ctx: StateContext<LocationStateModel>) {
@@ -39,6 +45,13 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
                         ...state,
                         items: locations.payload as Location[]
                     })
+                }),
+                catchError(errors => {
+                  if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                  return of(ctx.dispatch(new ErrorApi("Error al consultar localidades", errors.error.errorMessage)));
                 })
             );
           }
@@ -54,8 +67,12 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
               ctx.dispatch(new Success("Agregar localidad",res.message));
               ctx.dispatch(new FormActivate(false));
             }),
-            catchError(error => {
-              return of(ctx.dispatch(new ErrorApi("Error al agregar localidad", error.error.errorMessage)));
+            catchError(errors => {
+              if(errors.status === 422){
+                ctx.patchState({errors: errors.error})
+                return of()
+            }
+              return of(ctx.dispatch(new ErrorApi("Error al agregar localidad", errors.error.errorMessage)));
             })
           )
         }
@@ -76,8 +93,12 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
               ctx.dispatch(new Success("Editar localidad",res.message));
               ctx.dispatch(new FormActivate(false));
             }),
-            catchError(error => {
-              return of(ctx.dispatch(new ErrorApi("Error al editar localidad", error.error.errorMessage)));
+            catchError(errors => {
+              if(errors.status === 422){
+                ctx.patchState({errors: errors.error})
+                return of()
+               }
+              return of(ctx.dispatch(new ErrorApi("Error al editar localidad", errors.error.errorMessage)));
             })
           )
         }

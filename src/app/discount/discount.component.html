@@ -55,7 +55,11 @@
                         </td>
                       </tr> 
                 </ng-template>
-        
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4" class="text-center">No se han encontrado descuentos</td>
+                    </tr>
+                </ng-template>
             </p-table>
         </div>
     </div>
@@ -71,19 +75,25 @@
         <form [formGroup]="discountForm" (ngSubmit)="save()">
 
             <div class="field">
-                <label for="precio">Monto</label>
-                <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="amountPrice">
+                <label for="monto">Monto</label>
+                <p-inputNumber mode="decimal" [min]="0" id="monto" [max]="99999"  inputId="withoutgrouping" [useGrouping]="false" formControlName="amountPrice">
                 </p-inputNumber>
             </div>
+            <small class="p-error" *ngIf="discountForm.get('amountPrice')?.errors?.required && discountForm.get('amountPrice')?.dirty">El campo Monto no puede estar vacío</small>
+            <small class="p-error" *ngIf="discountForm.get('amountPrice')?.errors?.serverError">{{ discountForm.get('amountPrice')?.errors?.serverError }}</small>
             <div class="field">
-                <label for="precio">Porcentaje</label>
-                <p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" formControlName="discount">
+                <label for="porcentage">Porcentaje</label>
+                <p-inputNumber mode="decimal" [min]="0" [max]="50" inputId="porcentage" [useGrouping]="false" formControlName="discount">
                 </p-inputNumber>
             </div>
+            <small class="p-error" *ngIf="discountForm.get('discount')?.errors?.required && discountForm.get('discount')?.dirty">El campo Porcentaje no puede estar vacío</small>
+            <small class="p-error" *ngIf="discountForm.get('discount')?.errors?.serverError">{{ discountForm.get('discount')?.errors?.serverError }}</small>
             <div class="field">
                 <label for="precio">Fecha vigencia</label>
                 <p-calendar [showIcon]="true" appendTo="body" formControlName="validityDate"></p-calendar>
             </div>
+            <small class="p-error" *ngIf="discountForm.get('validityDate')?.errors?.required && discountForm.get('validityDate')?.dirty">El campo Fecha vigencia no puede estar vacío</small>
+            <small class="p-error" *ngIf="discountForm.get('validityDate')?.errors?.serverError">{{ discountForm.get('validityDate')?.errors?.serverError }}</small>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">
                 <button type="submit" pButton pRipple label="Guardar" icon="pi pi-check"
                     class="p-button-rounded p-button-sm p-button-success mr-2" [disabled]="discountForm.invalid"></button>

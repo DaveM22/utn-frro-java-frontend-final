@@ -11,7 +11,8 @@ import { catchError, of, tap } from "rxjs";
     name: "discount",
     defaults: {
         items: [],
-        discountToday:[]
+        discountToday:[],
+        errors:{}
     },
 })
 @Injectable()
@@ -28,6 +29,11 @@ export class DiscountState {
         return state.discountToday;
     }
 
+    @Selector()
+    static getErrors(state: DiscountStateModel) {
+        return state.errors;
+    }
+
     @Action(DiscountListAction)
     list(ctx: StateContext<DiscountStateModel>) {
         ctx.dispatch(new BlockTable(true));
@@ -39,6 +45,9 @@ export class DiscountState {
                     items: response.payload as Discount[]
                 })
                 ctx.dispatch(new BlockTable(false));
+            }),
+            catchError(errors => {
+                return of(ctx.dispatch(new ErrorApi("Error al consultar los descuentos", errors.error.errorMessage))) 
             })
         );
     }
@@ -54,8 +63,12 @@ export class DiscountState {
                 ctx.dispatch(new Success("Crear descuento", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear descuento", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear descuento", errors.error.errorMessage)));
               })
         )
     }
@@ -67,6 +80,9 @@ export class DiscountState {
                 const state = ctx.getState();
                 ctx.patchState({
                     discountToday: response.payload as Discount[]
+                })
+                catchError(errors => {
+                    return of(ctx.dispatch(new ErrorApi("Error al consultar los descuentos vigentes", errors.error.errorMessage))) 
                 })
             })
         );
@@ -84,6 +100,9 @@ export class DiscountState {
                 })
                 ctx.dispatch(new Success("Borrar precio", res.message));
                 return ctx.dispatch(new DialogActivate(false));
+            }),
+            catchError(errors => {
+                return of(ctx.dispatch(new ErrorApi("Error al borrar el descuento", errors.error.errorMessage))) 
             })
         );
     }

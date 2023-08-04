@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { Order, ProductSupplier, ProductSupplierOrder } from 'src/models/models';
+import { CustomerCompany, CustomerParticular, Order, ProductSupplier, ProductSupplierOrder } from 'src/models/models';
 import { Product, OrderDetail } from 'src/models/models';
 import { OrderService } from 'src/services/orders/order.service';
 import { ProductoProveedorService } from 'src/services/producto-proveedor/producto-proveedor.service';
@@ -11,7 +11,11 @@ import { ProductoService } from 'src/services/productos/producto.service';
 import { CustomerCompanyListAction } from 'src/store/actions/customer-company.action';
 import { CustomerParticularListAction } from 'src/store/actions/customer-particular.action';
 import { ResetValueOrderAction } from 'src/store/actions/order.action';
+import { ProductSupplierListAction } from 'src/store/actions/product-supplier.action';
 import { StepCreatePedido } from 'src/store/actions/util.actions';
+import { CustomerCompanyState } from 'src/store/states/customer.company.state';
+import { CustomerParticularState } from 'src/store/states/customer.particular.state';
+import { ProductSupplierState } from 'src/store/states/product-supplier.state,';
 import { UtilState } from 'src/store/states/util.state';
 
 @Component({
@@ -22,16 +26,15 @@ import { UtilState } from 'src/store/states/util.state';
 export class NewOrderComponent implements OnInit, OnDestroy {
 
   @Select(UtilState.getStepCreateOrder) step$!: Observable<number>;
-  dialogVisible!: boolean;
-  products!:ProductSupplierOrder[];
-  selectedProducts!:ProductSupplierOrder[];
-  orderDetails:OrderDetail[] = [];
-  items!:MenuItem[];
+  @Select(ProductSupplierState.getProductSupplier) productSuppliers$!: Observable<ProductSupplier[]>;
+  @Select(CustomerCompanyState.getCustomerCompany) CustomerCompany$!: Observable<CustomerCompany[]>;
+  @Select(CustomerParticularState.getCustomerParticular) customerParticular$!: Observable<CustomerParticular[]>;
   activeIndex: number = 0;
   customer:any;
-  order!:Order;
   customerTypes:any;
-  isMobile!: boolean;
+  existCustomerParticular!:boolean;
+  existCustomerCompany!:boolean;
+  existProducts!:boolean;
 
   step!:number;
 
@@ -41,20 +44,6 @@ export class NewOrderComponent implements OnInit, OnDestroy {
     private productoService:ProductoProveedorService,
      private messageService:MessageService, 
      private store:Store){
-    this.items = [
-      {
-          label: 'Seleccionar cliente'
-      },
-      {
-          label: 'Seleccionar productos'
-      },
-      {
-          label: 'Establecer cantidades para los productos'
-      },
-      {
-        label:'Finalizar'
-      }
-    ];
 
     this.customerTypes = [
       { name: 'Particulares' },
@@ -64,41 +53,22 @@ export class NewOrderComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ResetValueOrderAction());
   }
 
-  checkScreenSize() {
-    this.isMobile = window.innerWidth < 960; // Cambia el valor 768 según tu criterio de tamaño para considerar como "móvil"
-  }
-
-  onActiveIndexChange(event:any) {
-    this.activeIndex = event;
-  }
-
   ngOnInit(): void {
+    this.customerParticular$.subscribe(x => {
+      this.existCustomerParticular = x.length !== 0;
+    })
+    this.CustomerCompany$.subscribe(x => {
+      this.existCustomerCompany = x.length !== 0;
+    })
+    this.productSuppliers$.subscribe(x => {
+      this.existProducts = x.length !== 0;
+    })
     this.step$.subscribe(x => this.step = x);
     this.store.dispatch(new StepCreatePedido(1));
     this.store.dispatch(new CustomerCompanyListAction());
     this.store.dispatch(new CustomerParticularListAction());
-    this.productoService.getProductsSupplier().subscribe(x => this.products = x.payload as ProductSupplierOrder[]);
+    this.store.dispatch(new ProductSupplierListAction());
   }
-
-
-
-  showDialog() {
-    this.dialogVisible = true;
-  }
-
-  setIndex($event:any){
-    this.activeIndex = $event.nextIndex;
-    this.customer = $event.customer;
-    this.messageService.add({ severity: 'success', summary: 'Selección de cliente', detail: "Cliente seleccionado", life: 3000 });
-  }
-
-  confirmProductSelected(event:ProductSupplierOrder[]){
-    this.activeIndex = 2;
-    this.messageService.add({ severity: 'success', summary: 'Selección de productos', detail: "Productos seleccionados", life: 3000 });
-    this.selectedProducts = event;
-  }
-
-
 
 
 

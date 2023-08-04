@@ -13,6 +13,7 @@ import { BlockUI } from "primeng/blockui";
     name: "supplier",
     defaults: {
       items: [],
+      errors:{}
     },
   })
   @Injectable()
@@ -24,6 +25,12 @@ import { BlockUI } from "primeng/blockui";
         return state.items;
     }
 
+    @Selector()
+    static getError(state: SupplierStateModel) {
+        return state.errors;
+    }
+
+
 
     @Action(SupplierListAction)
     list(ctx: StateContext<SupplierStateModel>) {
@@ -34,6 +41,9 @@ import { BlockUI } from "primeng/blockui";
                     ...state,
                     items: provinces.payload as Supplier[]
                 })
+            }),
+            catchError(error => {
+                return of(ctx.dispatch(new ErrorApi("Error al consultar proveedores", error.error.errorMessage)));
             })
         );
     }
@@ -49,9 +59,12 @@ import { BlockUI } from "primeng/blockui";
                 ctx.dispatch(new Success("Crear proveedor", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                
-                return of(ctx.dispatch(new ErrorApi("Error al crear proveedor", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear proveedor", errors.error.errorMessage)));
               })
         );
     }
@@ -72,8 +85,12 @@ import { BlockUI } from "primeng/blockui";
                 ctx.dispatch(new Success("Editar proveedor", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al editar proveedor", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al editar proveedor", errors.error.errorMessage)));
               })
         );
     }

@@ -13,6 +13,8 @@ import { ProvinceState } from 'src/store/states/province.state';
 import { ProvinceListAction } from 'src/store/actions/province.actions';
 import { UtilState } from 'src/store/states/util.state';
 import { FormActivate } from 'src/store/actions/util.actions';
+import MapErrors from '../util/errorFormReactive';
+
 
 @Component({
   selector: 'app-localidades',
@@ -21,22 +23,23 @@ import { FormActivate } from 'src/store/actions/util.actions';
 })
 export class LocalidadesComponent implements OnInit {
   @Select(LocationState.getLocations) locations$!: Observable<Location[]>;
+  @Select(LocationState.getErrors) errors$!: Observable<Object>;
   @Select(ProvinceState.getProvinces) provinces$!: Observable<Province[]>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
   localidades: Location[] = [];
   provincias: Province[] = [];
-  location!: Location;
-  provincia!: Province;
+  location!: Location | null;
+  provincia!: Province
   blockedPanel!:boolean;
+  errors!:Object;
   isMobile = false;
   locationDialog!: boolean;
   loading: boolean = true;
   locationForm = this.fb.group({
     postalCode: [0, Validators.required],
     city: ['', Validators.required],
-    provinceCode: [0, Validators.required],
-    provinceName: ['']
+    provinceCode: [this.provincia?.provinceCode, Validators.required],
   });
   isEditForm!: boolean;
 
@@ -49,6 +52,10 @@ export class LocalidadesComponent implements OnInit {
     this.blockedPanel = false;
     this.store.dispatch(new LocationListAction());
     this.store.dispatch(new  ProvinceListAction());
+    this.errors$.subscribe(x => {
+      this.errors = x;
+      MapErrors(this.locationForm, this.errors);
+    })
   }
 
   @HostListener('window:resize', ['$event'])
@@ -83,14 +90,15 @@ export class LocalidadesComponent implements OnInit {
 
   create() {
     this.blockedPanel = true;
-    let obj = this.locationForm.value as Location;
+    let obj = this.locationForm.getRawValue();
     this.store.dispatch(new AddLocationAction(obj));
+ 
   }
 
   edit() {
-    let location = this.locationForm.value as Location;
-    this.location = { postalCode: location.postalCode!, city: location.city!, provinceCode: location.provinceCode, provinceName: this.provincia.name! };
-    this.store.dispatch(new EditLocationAction(this.location));
+    let location = this.locationForm.getRawValue();
+    this.location = { postalCode: location.postalCode!, city: location.city!, provinceCode: location.provinceCode!, provinceName: this.provincia!.name! };
+    this.store.dispatch(new EditLocationAction(this.location!));
   }
 
   onChange(event: any) {
@@ -117,7 +125,7 @@ export class LocalidadesComponent implements OnInit {
 
   delete() {
     this.blockedPanel = true;
-    this.store.dispatch(new DeleteLocationAction(this.location.postalCode));
+    this.store.dispatch(new DeleteLocationAction(this.location!.postalCode));
   }
 
   closeDialog() {

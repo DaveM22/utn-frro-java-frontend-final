@@ -11,6 +11,7 @@ import { UtilState } from 'src/store/states/util.state';
 import { SupplierState } from 'src/store/states/supplier.state';
 import { AddSupplierAction, DeleteSupplierAction, EditSupplierAction, SupplierListAction } from 'src/store/actions/supplier.action';
 import { FormActivate } from 'src/store/actions/util.actions';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-supplier',
@@ -19,6 +20,7 @@ import { FormActivate } from 'src/store/actions/util.actions';
 })
 export class SupplierComponent implements OnInit, CRUD {  
   @Select(SupplierState.getSuppliers) suppliers$!: Observable<Supplier[]>;
+  @Select(SupplierState.getError) errors$!:Observable<Object>
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
 
@@ -28,6 +30,7 @@ export class SupplierComponent implements OnInit, CRUD {
   supplierDialog!:boolean;
   emptyMessage!:string;
   isEdit!:boolean;
+  error!:Object;
   supplierForm = this.fb.group({
     id:[0],
     cuit:['', Validators.required],
@@ -47,6 +50,10 @@ export class SupplierComponent implements OnInit, CRUD {
 
   ngOnInit(): void {
     this.store.dispatch(new SupplierListAction());
+    this.errors$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.supplierForm, this.error);
+    })
   }
   openModalForm(): void {
     this.isEdit = false;
@@ -65,15 +72,18 @@ export class SupplierComponent implements OnInit, CRUD {
       this.create();
     }
   }
+
   create(): void {
     this.isEdit = false;
     this.suppler = this.supplierForm.getRawValue()!;
     this.store.dispatch(new AddSupplierAction(this.suppler));
   }
+
   edit(): void {
     this.suppler = this.supplierForm.getRawValue()!;
     this.store.dispatch(new EditSupplierAction(this.suppler));
   }
+
   editEntity(entity: Supplier): void {
     this.title = "Editar proveedor";
     this.supplierForm.patchValue(entity);

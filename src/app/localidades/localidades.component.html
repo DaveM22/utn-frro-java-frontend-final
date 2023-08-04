@@ -58,7 +58,11 @@
                         </td>
                       </tr>
                 </ng-template>
-        
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4" class="text-center">No se han encontrado localidades</td>
+                    </tr>
+                </ng-template>
             </p-table>
         </div>
     </div>
@@ -72,13 +76,15 @@
         <form [formGroup]="locationForm" (ngSubmit)="save()">
             <div class="field">
                 <label for="postalCode">Código postal</label>
-                <p-inputNumber inputId="postalCode" [min]="0" formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
-                <small class="p-error block" *ngIf="locationForm.controls['postalCode'].invalid && locationForm.controls['postalCode'].dirty">El código postal es un campo obligatorio</small>
+                <p-inputNumber inputId="postalCode" [min]=0 [max]=9999  [maxlength]=4 formControlName="postalCode" placeholder="Ingrese código postal"> </p-inputNumber>
+                <small class="p-error" *ngIf="locationForm.get('postalCode')?.errors?.required && locationForm.get('postalCode')?.dirty">El campo Código postal no puede estar vacio</small>
+                <small class="p-error" *ngIf="locationForm.get('postalCode')?.errors?.serverError">{{ locationForm.get('postalCode')?.errors?.serverError }}</small>
             </div>
             <div class="field">
                 <label for="city">Ciudad</label>
-                <input type="text" pInputText id="city" formControlName="city" />
-                <small class="p-error block" *ngIf="locationForm.controls['city'].invalid && locationForm.controls['city'].dirty">La ciudad es un campo obligatorio</small>
+                <input type="text" max="30" pInputText id="city" formControlName="city" />
+                <small class="p-error" *ngIf="locationForm.get('city')?.errors?.required && locationForm.get('city')?.dirty">El campo Ciudad no puede estar vacio</small>
+                <small class="p-error" *ngIf="locationForm.get('city')?.errors?.serverError">{{ locationForm.get('city')?.errors?.serverError }}</small>
             </div>
             <div class="field">
                 <label>Provincia</label>
@@ -98,10 +104,11 @@
                 </ng-template>
             
             </p-dropdown>
-              <small class="p-error block" *ngIf="locationForm.controls['provinceCode'].invalid && locationForm.controls['provinceCode'].dirty">Provincia es un campo obligatorio</small>
+            <small class="p-error" *ngIf="locationForm.get('provinceCode')?.errors?.required && locationForm.get('provinceCode')?.dirty">El campo Provincia no puede estar vacio</small>
+            <small class="p-error" *ngIf="locationForm.get('provinceCode')?.errors?.serverError">{{ locationForm.get('provinceCode')?.errors?.serverError }}</small>
             </div>
             <div class="flex align-items-center">
-                <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="locationForm.invalid"></button>
+                <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="locationForm.invalid && locationForm.dirty"></button>
                 <button type="button" pButton icon="pi pi-times" label="Cancelar"class="p-button-danger font-bold"  (click)="closeModalForm()"></button>      
             </div>
         </form>

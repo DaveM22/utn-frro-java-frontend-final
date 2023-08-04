@@ -11,6 +11,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
     name: "customer_company",
     defaults: {
         items: [],
+        errors:{}
     },
 })
 @Injectable()
@@ -22,6 +23,11 @@ export class CustomerCompanyState {
         return state.items;
     }
 
+    @Selector()
+    static getErrors(state: CustomerCompanyStateModel){
+        return state.errors;
+    }
+
 
     @Action(CustomerCompanyListAction)
     list(ctx: StateContext<CustomerCompanyStateModel>) {
@@ -31,6 +37,9 @@ export class CustomerCompanyState {
                 ctx.setState({
                     ...state,
                     items: provinces.payload as CustomerCompany[]
+                })
+                catchError(error =>{
+                    return of(ctx.dispatch(new ErrorApi("Error al consultar clientes empresariales", error.error.errorMessage)));
                 })
             })
         );
@@ -47,8 +56,12 @@ export class CustomerCompanyState {
                 ctx.dispatch(new Success("Crear cliente", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear cliente", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear cliente", errors.error.errorMessage)));
               })
         );
     }
@@ -69,8 +82,12 @@ export class CustomerCompanyState {
                 ctx.dispatch(new Success("Editar cliente", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al editar cliente", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al editar cliente", errors.error.errorMessage)));
               })
         );
     }

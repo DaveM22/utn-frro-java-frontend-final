@@ -9,6 +9,7 @@ import { FormActivate } from 'src/store/actions/util.actions';
 import { DiscountState } from 'src/store/states/discount.state';
 import { UtilState } from 'src/store/states/util.state';
 import { CRUD } from 'src/util/abm-interface';
+import MapErrors from '../util/errorFormReactive';
 
 @Component({
   selector: 'app-discount',
@@ -18,6 +19,7 @@ import { CRUD } from 'src/util/abm-interface';
 export class DiscountComponent implements OnInit {
 
   @Select(DiscountState.getDiscounts) discounts!:Observable<Discount[]> 
+  @Select(DiscountState.getErrors) errors$!:Observable<Object>
   @Select(UtilState.modalForm) modal!:Observable<boolean>
 
   discount!:Discount;
@@ -27,11 +29,16 @@ export class DiscountComponent implements OnInit {
     amountPrice:[0, Validators.required],
     discount:[0,Validators.required]
   });
-
+  error!:Object
+  
   constructor(private fb:FormBuilder, private store:Store, private confirmationService:ConfirmationService){}
 
   ngOnInit(): void {
     this.store.dispatch(new DiscountListAction);
+    this.errors$.subscribe(x => {
+      this.error = x;
+      MapErrors(this.discountForm, this.error);
+    })
   }
   
   openModalForm(): void {

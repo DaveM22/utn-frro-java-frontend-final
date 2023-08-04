@@ -11,7 +11,8 @@ import { ErrorApi, FormActivate, ModalStockAction, Success } from "../actions/ut
     name: "product_supplier",
     defaults: {
         items: [],
-        title:''
+        title:'',
+        errors:{}
     },
 })
 @Injectable()

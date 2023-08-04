@@ -11,6 +11,7 @@ import { BlockTable, DialogActivate, ErrorApi, FormActivate, Success } from "../
     name: "category",
     defaults: {
         items: [],
+        errors:{}
     },
 })
 @Injectable()
@@ -20,6 +21,11 @@ export class CategoryState {
     @Selector()
     static getCategories(state: CategoryStateModel) {
         return state.items;
+    }
+
+    @Selector()
+    static getErrors(state: CategoryStateModel) {
+        return state.errors;
     }
 
 
@@ -36,6 +42,9 @@ export class CategoryState {
                     items: categories.payload as Category[]
                 })
                 ctx.dispatch(new BlockTable(false));
+            }),
+            catchError(errors => {
+                return of(ctx.dispatch(new ErrorApi("Error al consultar categorías", errors.error.errorMessage)))
             })
         );
     }
@@ -51,8 +60,12 @@ export class CategoryState {
                 ctx.dispatch(new Success("Crear categoría", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear categoría", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear categoría", errors.error.errorMessage)));
               })
         );
     }
@@ -73,8 +86,12 @@ export class CategoryState {
                 ctx.dispatch(new Success("Editar categoría", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al editar categoría", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of();
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al editar categoría", errors.error.errorMessage)));
               })
         );
     }

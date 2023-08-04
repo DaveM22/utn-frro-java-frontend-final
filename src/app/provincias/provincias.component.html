@@ -51,6 +51,11 @@
                                 </td>
                               </tr>
                         </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="2" class="text-center">No se han encontrado provincias</td>
+                            </tr>
+                        </ng-template>
                     </p-table>
                 </div>
             </div>
@@ -66,10 +71,9 @@
             <form [formGroup]="provinciaForm" (ngSubmit)="save()">
             <div class="field">
                 <label for="provincia">Nombre de provincia</label>
-                <input type="text" required pInputText id="provincia" formControlName="name" placeholder="Nombre de provincia" />
-                <small class="p-error block" *ngIf="provinciaForm.controls['name'].invalid && provinciaForm.controls['name'].dirty">
-                    El campo nombre es requerido
-                </small>
+                <input type="text" maxlength="30" required pInputText id="provincia" formControlName="name" placeholder="Nombre de provincia" />
+                <small class="p-error" *ngIf="provinciaForm.get('name')?.errors?.required && provinciaForm.get('name')?.dirty">El campo Nombre de provincia no puede estar vacio</small>
+                <small class="p-error" *ngIf="provinciaForm.get('name')?.errors?.serverError">{{provinciaForm.get('name')?.errors?.serverError }}</small>
             </div>
             <div class="flex align-items-center">
                 <button type="submit" pButton pRipple icon="pi pi-check" label="Guardar" class="mr-2 font-bold p-button-success" [disabled]="provinciaForm.invalid"></button>

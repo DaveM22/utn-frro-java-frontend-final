@@ -7,5 +7,6 @@ export interface OrderStateModel {
     total:number;
     subtotal:number;
     customer:any;
-    productosSeleccionados:ProductSupplierOrder[]
+    productosSeleccionados:ProductSupplierOrder[],
+    errors:any;
   }

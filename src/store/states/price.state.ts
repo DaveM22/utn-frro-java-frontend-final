@@ -11,6 +11,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
     name: "price",
     defaults: {
         items: [],
+        errors:{}
     },
 })
 @Injectable()
@@ -22,6 +23,11 @@ export class PriceState {
         return state.items;
     }
 
+    @Selector()
+    static getErrors(state: PriceStateModel) {
+        return state.errors;
+    }
+
 
     @Action(PriceListAction)
     list(ctx: StateContext<PriceStateModel>, action:PriceListAction) {
@@ -31,6 +37,10 @@ export class PriceState {
                 ctx.setState({
                     ...state,
                     items: provinces.payload as Price[]
+                }),
+                catchError(errors => {
+  
+                    return of(ctx.dispatch(new ErrorApi("Error al consultar precios", errors.error.errorMessage)));
                 })
             })
         );
@@ -47,8 +57,12 @@ export class PriceState {
                 ctx.dispatch(new Success("Nueva vigencia de precio", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al asignar precio", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al asignar precio", errors.error.errorMessage)));
               })
         );
     }

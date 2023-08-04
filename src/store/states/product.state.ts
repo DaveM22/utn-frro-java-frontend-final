@@ -11,6 +11,7 @@ import { DialogActivate, ErrorApi, FormActivate, Success } from "../actions/util
     name: "product",
     defaults: {
         items: [],
+        errors:{}
     },
 })
 @Injectable()
@@ -20,6 +21,10 @@ export class ProductState {
     @Selector()
     static getProducts(state: ProductStateModel) {
         return state.items;
+    }
+    @Selector()
+    static getError(state: ProductStateModel) {
+        return state.errors;
     }
 
 
@@ -32,6 +37,13 @@ export class ProductState {
                     ...state,
                     items: provinces.payload as Product[]
                 })
+            }),
+            catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al consultar los productos", errors.error.errorMessage)));
             })
         );
     }
@@ -47,8 +59,12 @@ export class ProductState {
                 ctx.dispatch(new Success("Crear producto", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al crear producto", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al crear producto", errors.error.errorMessage)));
               })
         );
     }
@@ -69,8 +85,12 @@ export class ProductState {
                 ctx.dispatch(new Success("Editar producto", res.message));
                 ctx.dispatch(new FormActivate(false));
               }),
-              catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Error al editar producto", error.error.errorMessage)));
+              catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors: errors.error})
+                    return of()
+                }
+                return of(ctx.dispatch(new ErrorApi("Error al editar producto", errors.error.errorMessage)));
               })
         );
     }

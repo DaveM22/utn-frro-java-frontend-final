@@ -1,4 +1,5 @@
 export interface LoginStateModel {
     isLogged:boolean,
-    roles:string
+    roles:string,
+    errors:{}
 }

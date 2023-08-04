@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Select, Store } from '@ngxs/store';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Observable, catchError } from 'rxjs';
+import MapErrors from 'src/app/util/errorFormReactive';
 import { Category, Product, ResponseHttp } from 'src/models/models';
 import { CategoriasService } from 'src/services/categorias/categorias.service';
 import { LocationService } from 'src/services/localidad/localidad.service';
@@ -23,6 +24,7 @@ import { CRUD } from 'src/util/abm-interface';
 })
 export class ProductosComponent implements OnInit, CRUD {
   @Select(ProductState.getProducts) products$!: Observable<Product[]>;
+  @Select(ProductState.getError) errors$!: Observable<Object>;
   @Select(CategoryState.getCategories) categories$!: Observable<Category[]>;
   @Select(UtilState.modalForm) modalForm!: Observable<boolean>;
   @Select(UtilState.dialog) dialog!: Observable<boolean>;
@@ -31,10 +33,11 @@ export class ProductosComponent implements OnInit, CRUD {
   category!: Category;
   productDialog!: boolean;
   title!: string;
+  errors!:Object;
   productForm = this.fb.group({
     id: [0],
     description: ['', Validators.required],
-    categoryId: [0, Validators.required],
+    categoryId: [this.category?.categoryId, Validators.required],
     categoryName: [''],
     amount: [0]
   });
@@ -48,6 +51,10 @@ export class ProductosComponent implements OnInit, CRUD {
   ngOnInit(): void {
     this.store.dispatch(new ProductListAction());
     this.store.dispatch(new CategoryListAction());
+    this.errors$.subscribe(x => {
+      this.errors = x;
+      MapErrors(this.productForm, this.errors);
+    })
   }
 
   redirectToProductSupplier(entity: Product){

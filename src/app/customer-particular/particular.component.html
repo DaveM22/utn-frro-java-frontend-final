@@ -51,7 +51,7 @@
     </ng-template>
     <ng-template pTemplate="emptymessage">
         <tr>
-            <td colspan="8">{{emptyMessage}}</td>
+            <td colspan="8" class="text-center">No se han encontrado clientes</td>
         </tr>
     </ng-template>
 </p-table>
@@ -71,15 +71,15 @@
                 <label for="firstName">Nombre</label>
                 <input type="text" pInputText id="firstName" formControlName="firstName" placeholder="Nombre" />
                 <small class="p-error block"
-                    *ngIf="customerParticularForm.controls['firstName'].invalid && customerParticularForm.controls['firstName'].dirty">El
-                    campo nombre es requerido</small>
+                    *ngIf="customerParticularForm.get('firstName')?.errors?.required && customerParticularForm.controls['firstName'].dirty">El
+                    campo Nombre es requerido</small>
             </div>
 
             <div class="field">
                 <label for="lastName">Apellido</label>
                 <input type="text" pInputText id="lastName" formControlName="lastName" placeholder="Apellido" />
                 <small class="p-error block"
-                    *ngIf="customerParticularForm.controls['lastName'].invalid && customerParticularForm.controls['lastName'].dirty">El
+                    *ngIf="customerParticularForm.get('lastName')?.errors?.required && customerParticularForm.controls['lastName'].dirty">El
                     campo Apellido es requerido</small>
             </div>
 
@@ -87,7 +87,7 @@
                 <label for="direction">Dirección</label>
                 <input type="text" pInputText id="direction" formControlName="direction" placeholder="Direccíon" />
                 <small class="p-error block"
-                    *ngIf="customerParticularForm.controls['direction'].invalid && customerParticularForm.controls['direction'].dirty">El
+                    *ngIf="customerParticularForm.get('direction')?.errors?.required && customerParticularForm.controls['direction'].dirty">El
                     campo Dirección es requerido</small>
             </div>
 
@@ -105,7 +105,7 @@
                 <label for="postal">Código postal</label>
                 <input type="number" pInputText id="postal" formControlName="postalCode" placeholder="Código postal" />
                 <small class="p-error block"
-                    *ngIf="customerParticularForm.controls['postalCode'].invalid && customerParticularForm.controls['postalCode'].dirty">El
+                    *ngIf="customerParticularForm.get('postalCode')?.errors?.required && customerParticularForm.controls['postalCode'].dirty">El
                     campo Código postal es requerido</small>
             </div>
             <div class="flex align-items-center justify-content-center font-bold text-white border-round m-2">

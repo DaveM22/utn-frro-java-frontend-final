@@ -13,7 +13,8 @@ import { JwtHelperService } from "@auth0/angular-jwt";
     name: "login",
     defaults: {
         isLogged:false,
-        roles:''
+        roles:'',
+        errors:{}
     },
 })
 @Injectable()
@@ -24,6 +25,11 @@ export class LoginState {
     @Selector()
     static isLogged(state: LoginStateModel) {
       return state.isLogged;
+    }
+
+    @Selector()
+    static Errors(state: LoginStateModel){
+        return state.errors;
     }
 
     @Selector()
@@ -39,16 +45,25 @@ export class LoginState {
             tap((res:any) => {
                 localStorage.setItem("token", res.token);
                 let decodedToken = jwtDecode(res.token) as any;
-                ctx.setState({
+                ctx.patchState({
                     isLogged:true,
-                    roles: decodedToken.roles
+                    roles: decodedToken.roles,
+                    errors:[]
                 })
                 this.router.navigate([history.state.returnUrl || '/']);
                 ctx.dispatch(new Success("Login", "Login existoso, bienvenido/a"));
 
             }),
-            catchError(error => {
-                return of(ctx.dispatch(new ErrorApi("Ingresar al sistema", error.error.errorMessage)));
+            catchError(errors => {
+                if(errors.status === 422){
+                    ctx.patchState({errors:errors.error})
+                    return of();
+                }
+                else{
+                    return of(ctx.dispatch(new ErrorApi("Error al procesar login", errors.error.errorMessage)))
+                }
+
+
             })
         );
     }
@@ -60,20 +75,20 @@ export class LoginState {
             let decodedToken = jwtDecode(token!) as any;
             if(this.jwtService.isTokenExpired(token)){
                 localStorage.removeItem("token");
-                ctx.setState({
+                ctx.patchState({
                     isLogged:false,
                     roles: ''
                 })
             }
             else{
-                ctx.setState({
+                ctx.patchState({
                     isLogged:true,
                     roles: decodedToken.roles
                 })
             }
         }
         else{
-            ctx.setState({
+            ctx.patchState({
                 isLogged:false,
                 roles: ''
             })
@@ -83,7 +98,7 @@ export class LoginState {
     @Action(LogoutAction)
     logout(ctx:StateContext<LoginStateModel>, action:LogoutAction){
         localStorage.removeItem("token");
-        ctx.setState({
+        ctx.patchState({
             isLogged:false,
             roles: ''
         })
